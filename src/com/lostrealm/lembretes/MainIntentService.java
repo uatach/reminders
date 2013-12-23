@@ -81,6 +81,7 @@ public class MainIntentService extends IntentService {
 			final String action = intent.getAction();
 			if (ACTION_PARSE.equals(action)) {
 				handleActionParse();
+				// has parsed content, need to notify MainActivity so it can update it's view.
 			} else if (ACTION_UPDATE.equals(action)) {
 				handleActionUpdate();
 			}
@@ -156,6 +157,9 @@ public class MainIntentService extends IntentService {
 	}
 
 	public String parseContent() {
+		
+		// new URL!!! -> http://www.prefeitura.unicamp.br/cardapio_pref.php?pagina=1
+		
 		String url = null;
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default)).equals(getString(R.string.pref_restaurant_default))) {

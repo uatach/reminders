@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
 		MainIntentService.startActionParse(this);
 		MainIntentService.startActionUpdate(this);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -70,5 +70,5 @@ public class MainActivity extends Activity {
 		else
 			((TextView)findViewById(R.id.mainActivityMealView)).setText("Baixando cardápio...");
 	}
-	
+
 }
