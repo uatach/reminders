@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Lembretes</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_feedback">Feedback</string>
+    <string name="action_about">Sobre</string>
+    <string name="confirm_button">Confirmar</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="downloading_error">Baixando...</string>
+    <string name="no_internet_error">Sem conexão com a internet.</string>
+
+    <!-- Main Activity -->
+    <string name="main_activity_label">Próxima Refeição:</string>
+    <string name="main_activity_button">Atualizar</string>
+
+    <!-- Settings Activity -->
+    <string name="settings_activity_label">Opções</string>
+    <string name="pref_remind_title">Permitir Lembretes</string>
+    <string name="pref_remind_summary_on">Lembretes habilitados.</string>
+    <string name="pref_remind_summary_off">Lembretes desabilitados.</string>
+    <string name="pref_notify_title">Permitir Notificações</string>
+    <string name="pref_notify_summary">Notificações habilitadas.</string>
+    <string name="pref_vibrate_title">Vibrar ao Notificar</string>
+    <string name="pref_vibrate_summary_on">Vibrando.</string>
+    <string name="pref_vibrate_summary_off">Vibração desabilitada.</string>
+    <string name="pref_sound_title">Som ao Notificar</string>
+    <string name="pref_sound_summary_on">Som habilitado.</string>
+    <string name="pref_sound_summary_off">Som desabilitado.</string>
+    <string name="pref_restaurant_title">Local do Cardápio</string>
+    <string name="pref_restaurant_summary">De onde deve ser mostrado o cardápio.</string>
+    <string name="pref_restaurant_default">CAM</string>
+    <string name="pref_restaurant_CAM">http://www.prefeitura.unicamp.br/servicos.php?servID=119</string>
+    <string name="pref_restaurant_LIM">http://www.fca.unicamp.br/portal/institucional/restaurante/cardapio.html</string>
+
+    <string-array name="pref_restaurant_entries">
+        <item>COTUCA, RU, RA, RS</item>
+        <item>COTIL, FCA, FOP, FT, PFL</item>
+    </string-array>
+    <string-array name="pref_restaurant_values">
+        <item>CAM</item>
+        <item>LIM</item>
+    </string-array>
+
+    <string name="pref_reminder_type_title">Tipo de Lembrete</string>
+    <string name="pref_reminder_type_summary">Selecione o tipo de lembrete desejado.</string>
+    <string name="pref_reminder_type_default">refeicao</string>
+
+    <string-array name="pref_reminder_type_entries">
+        <item>Por Refeição</item>
+        <item>Por Palavra</item>
+    </string-array>
+    <string-array name="pref_reminder_type_values">
+        <item>refeicao</item>
+        <item>palavra</item>
+    </string-array>
+
+    <string name="pref_reminder_time_lunch_title">Horário de Lembrete no Almoço</string>
+    <string name="pref_reminder_time_dinner_title">Horário de Lembrete no Jantar</string>
+    <string name="pref_words_title">Lista de Palavras</string>
+    <string name="pref_words_summary">Palavras usadas nos lembretes, separadas por espaço.</string>
+
+</resources>

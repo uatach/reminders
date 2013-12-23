@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Activate reminders -->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_remind"
+        android:summaryOff="@string/pref_remind_summary_off"
+        android:summaryOn="@string/pref_remind_summary_on"
+        android:title="@string/pref_remind_title" />
+
+    <!-- Enable vibrating reminders -->
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:dependency="pref_remind"
+        android:enabled="false"
+        android:key="pref_vibrate"
+        android:summaryOff="@string/pref_vibrate_summary_off"
+        android:summaryOn="@string/pref_vibrate_summary_on"
+        android:title="@string/pref_vibrate_title" />
+
+    <!-- Enable sound reminders -->
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:dependency="pref_remind"
+        android:enabled="false"
+        android:key="pref_sound"
+        android:summaryOff="@string/pref_sound_summary_off"
+        android:summaryOn="@string/pref_sound_summary_on"
+        android:title="@string/pref_sound_title" />
+
+    <!-- Option to select desired restaurant -->
+    <ListPreference
+        android:defaultValue="@string/pref_restaurant_default"
+        android:dependency="pref_remind"
+        android:entries="@array/pref_restaurant_entries"
+        android:entryValues="@array/pref_restaurant_values"
+        android:key="pref_restaurant"
+        android:negativeButtonText="@string/cancel_button"
+        android:summary="@string/pref_restaurant_summary"
+        android:title="@string/pref_restaurant_title" />
+
+    <!-- Option to select desired type of reminders -->
+    <ListPreference
+        android:defaultValue="@string/pref_reminder_type_default"
+        android:dependency="pref_remind"
+        android:entries="@array/pref_reminder_type_entries"
+        android:entryValues="@array/pref_reminder_type_values"
+        android:key="pref_reminder_type"
+        android:negativeButtonText="@string/cancel_button"
+        android:summary="@string/pref_reminder_type_summary"
+        android:title="@string/pref_reminder_type_title" />
+
+    <!-- Option to select lunch's reminder's time -->
+    <com.lostrealm.lembretes.TimePickerPreference
+        android:dependency="pref_remind"
+        android:key="pref_reminder_time_lunch"
+        android:title="@string/pref_reminder_time_lunch_title" />
+
+    <!-- Option to select dinner's reminder's time -->
+    <com.lostrealm.lembretes.TimePickerPreference
+        android:dependency="pref_remind"
+        android:key="pref_reminder_time_dinner"
+        android:title="@string/pref_reminder_time_dinner_title" />
+
+    <!-- Option to add favorite words used on reminders -->
+    <EditTextPreference
+        android:defaultValue=""
+        android:dependency="pref_remind"
+        android:key="pref_words"
+        android:negativeButtonText="@string/cancel_button"
+        android:positiveButtonText="@string/confirm_button"
+        android:summary="@string/pref_words_summary"
+        android:title="@string/pref_words_title" />
+
+</PreferenceScreen>
