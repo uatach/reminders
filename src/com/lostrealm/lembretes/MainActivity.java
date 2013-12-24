@@ -36,7 +36,6 @@ public class MainActivity extends Activity {
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		setContentView(R.layout.activity_main);
 
-		MainIntentService.startActionParse(this);
 		MainIntentService.startActionUpdate(this);
 	}
 
@@ -44,6 +43,11 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		refresh(null);
+		
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true))
+			startActivity(new Intent(this, SettingsActivity.class));
+//		else
+//			MainIntentService.startActionUpdate(this);
 	}
 
 	@Override
@@ -58,7 +62,7 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			startActivity(new Intent(this, SettingsActivity.class));
-			getString(R.string.confirm_button);
+			//getString(R.string.confirm_button);
 		}
 		return true;
 	}

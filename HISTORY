@@ -1,0 +1,12 @@
+v0.3.1
+Removed notifications, will be re-added later;
+Changed URL of Campinas campus' meals to a easier one.
+
+v0.3
+Managed to add simple notifications.
+
+v0.2
+Managed to get the meals from Campinas campus' URL and display it in MainActivity.
+
+v0.1
+MainActivity and SettingsActivity working.

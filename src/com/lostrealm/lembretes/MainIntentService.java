@@ -72,7 +72,6 @@ public class MainIntentService extends IntentService {
 
 	public MainIntentService() {
 		super("MainIntentService");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -81,7 +80,7 @@ public class MainIntentService extends IntentService {
 			final String action = intent.getAction();
 			if (ACTION_PARSE.equals(action)) {
 				handleActionParse();
-				// has parsed content, need to notify MainActivity so it can update it's view.
+				// TODO has parsed content, need to notify MainActivity so it can update it's view.
 			} else if (ACTION_UPDATE.equals(action)) {
 				handleActionUpdate();
 			}

@@ -24,9 +24,9 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.view.Menu;
+import android.widget.Toast;
 
-public class SettingsActivity extends PreferenceActivity implements
-OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	public SettingsActivity() {
 		// TODO Auto-generated constructor stub
@@ -51,6 +51,10 @@ OnSharedPreferenceChangeListener {
 	protected void onResume() {
 		super.onResume();
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		if (getPreferenceScreen().getSharedPreferences().getBoolean("first_time", true)) {
+			Toast.makeText(this, "Ajuste os horários dos lembretes.", Toast.LENGTH_LONG).show();
+			getPreferenceScreen().getSharedPreferences().edit().putBoolean("first_time", false).commit();
+		}
 	}
 
 	@SuppressWarnings("deprecation")

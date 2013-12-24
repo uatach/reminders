@@ -30,6 +30,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
 
+// it's necessary to fix the initial reminder time.
+
 public class TimePickerPreference extends DialogPreference {
 	
 	private Calendar calendar = null;
