@@ -23,12 +23,15 @@ import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
+
+	private static final String LOG_TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +46,13 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		refresh(null);
-		
-		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true))
+
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true)) {
+			Log.d(LOG_TAG, "Running app for the first time.");
 			startActivity(new Intent(this, SettingsActivity.class));
-//		else
-//			MainIntentService.startActionUpdate(this);
+		}
+		//		else
+		//			MainIntentService.startActionUpdate(this);
 	}
 
 	@Override
@@ -62,7 +67,6 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			startActivity(new Intent(this, SettingsActivity.class));
-			//getString(R.string.confirm_button);
 		}
 		return true;
 	}

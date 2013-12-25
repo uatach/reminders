@@ -1,3 +1,8 @@
+v.0.3.2
+Managed to re-add notifications, still needs testing;
+Added default reminder times, 12h and 18h (They're hard-coded into MainIntentService, need to search if the custom TimePickerPreference can handle default values);
+Enabled ProGuard (I have no idea of how this works).
+
 v0.3.1
 Removed notifications, will be re-added later;
 Changed URL of Campinas campus' meals to a easier one.

@@ -1,11 +1,13 @@
 In Progress
 =========================
-* I'm currently fixing the application's flow.
+* I'm still fixing the application's flow;
+* Updates started to work, need testing;
+* By meal notifications seems to work.
 
 Next
 =========================
-* Need to define how and when the meal will be updated;
-* Need to define how the notifications will work;
+* Looks like the OS kills application after some time, need to look into it;
+* Main screen need to show meal after update.
 
 Future
 =========================
