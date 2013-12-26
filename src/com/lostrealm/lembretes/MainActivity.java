@@ -33,7 +33,9 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	private static final String CLASS_TAG = "com.lostrealm.lembretes.MainActivity";
+	public static final String CLASS_TAG = "com.lostrealm.lembretes.MainActivity";
+	
+	private static String content = null;
 
 	private TextView mealView;
 
@@ -41,7 +43,8 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			mealView.setText(Html.fromHtml(intent.getStringExtra(NetworkIntentService.CONTENT)));
+			setContent(intent.getStringExtra(NetworkIntentService.CONTENT));
+			mealView.setText(Html.fromHtml(getContent()));
 		}
 	};
 
@@ -52,7 +55,6 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		mealView = (TextView) findViewById(R.id.mainActivityMealView);
 
-		this.startService(new Intent(this, NetworkIntentService.class).putExtra(NetworkIntentService.FILTER, CLASS_TAG));
 		this.startService(new Intent(this, UpdateIntentService.class));
 	}
 
@@ -70,6 +72,11 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
 		unregisterReceiver(receiver);
 	}
 
@@ -87,6 +94,14 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
 		return true;
+	}
+
+	public static String getContent() {
+		return content;
+	}
+
+	private static void setContent(String content) {
+		MainActivity.content = content;
 	}
 
 }

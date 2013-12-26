@@ -106,7 +106,7 @@ public class NetworkIntentService extends IntentService {
 
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(content, "windows-1252"));
+				reader = new BufferedReader(new InputStreamReader(content, "windows-1252"), 8192);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

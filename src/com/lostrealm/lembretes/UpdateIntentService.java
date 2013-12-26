@@ -26,65 +26,49 @@ package com.lostrealm.lembretes;
 
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.util.Log;
 
 public class UpdateIntentService extends IntentService {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.UpdateIntentService";
-
-	private BroadcastReceiver receiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getIntExtra(NetworkIntentService.RESULT, Activity.RESULT_CANCELED) == Activity.RESULT_OK) {
-				scheduleReminder();
-				scheduleUpdate();
-			} else {
-			}
-		}
-	};
 
 	public UpdateIntentService() {
 		super(CLASS_TAG);
 	}
 
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		registerReceiver(receiver, new IntentFilter(CLASS_TAG));
-	}
-
-	@Override
-	public void onDestroy() {
-		unregisterReceiver(receiver);
-	}
-
-	@Override
 	protected void onHandleIntent(Intent intent) {
-		// TODO Auto-generated method stub
-
-		this.startService(new Intent(this, NetworkIntentService.class).putExtra(NetworkIntentService.FILTER, CLASS_TAG));
+		this.startService(new Intent(this, NetworkIntentService.class).putExtra(NetworkIntentService.FILTER, MainActivity.CLASS_TAG));
+		scheduleUpdate();
 	}
 
 	private void scheduleUpdate() {
+		final int HOUR = 3600000; // 1 hour 
+		final int LUNCH_TIME_UPDATE = 10; // 10 hours
+		final int DINNER_TIME_UPDATE = 16; // 16 hours
+		
 		Calendar calendar = Calendar.getInstance();
+		
+		if (calendar.get(Calendar.HOUR_OF_DAY) < LUNCH_TIME_UPDATE) {
+			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), LUNCH_TIME_UPDATE, 0, 0);
+		} else if (calendar.get(Calendar.HOUR_OF_DAY) < DINNER_TIME_UPDATE) {
+			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), DINNER_TIME_UPDATE, 0, 0);
+		} else {
+			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			calendar.setTimeInMillis(calendar.getTimeInMillis() + ((24+LUNCH_TIME_UPDATE)*HOUR));
+		}
 
 		Intent intent = new Intent(this, UpdateIntentService.class);
-		PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+		PendingIntent pintent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarm.set(1, 1000, pintent);
-	}
-
-	private void scheduleReminder() {
-
+		Log.d(CLASS_TAG, "Update in " + (calendar.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
+		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), pintent);
 	}
 
 }

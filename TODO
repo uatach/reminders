@@ -1,12 +1,15 @@
 In Progress
 =========================
 * I'm still fixing the application's flow, MainIntentService has been broken down into 3 services;
-* Updates stopped working due to changes on services;
-* Notifications stopped working due to same reason.
+* Updates looks to be working, but I don't trust this AlarmManager class;
+* Putting notifications up again;
+* OS does kill application and services, using AlarmManager to let the system manage next update and notifications.
 
 Next
 =========================
-* Looks like the OS kills application after some time, need to look into it;
+* Start to work on the notifications per word;
+* Will look how Content Providers work, to use with the content retrieved from the website;
+* Build some fake pages to test.
 
 Future
 =========================
