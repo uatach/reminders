@@ -48,7 +48,7 @@ import android.util.Log;
 
 public class MainIntentService extends IntentService {
 
-	private static final String LOG_TAG = "MainIntentService";
+	private static final String CLASS_TAG = "MainIntentService";
 
 	private static final int HOUR = 3600000; // 1 hour 
 	private static final int LUNCH_TIME_UPDATE = 10; // 10 hours
@@ -134,7 +134,7 @@ public class MainIntentService extends IntentService {
 
 			//			updateTime.setTimeInMillis(updateTime.getTimeInMillis()+10000); // test
 
-			Log.d(LOG_TAG, "Service will sleep for " + ((updateTime.getTimeInMillis()-System.currentTimeMillis())/HOUR) + " hour(s)");
+			Log.d(CLASS_TAG, "Service will sleep for " + ((updateTime.getTimeInMillis()-System.currentTimeMillis())/HOUR) + " hour(s)");
 			synchronized (this) {
 				try {
 					wait(updateTime.getTimeInMillis()-System.currentTimeMillis());
@@ -147,8 +147,8 @@ public class MainIntentService extends IntentService {
 			// TODO update this section with an approach using broadcast receiver???
 			NetworkInfo ni = ((ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 			while (ni == null || !ni.isConnected()) {
-				Log.d(LOG_TAG, "Waiting for internet connectivity.");
-				setContent(getString(R.string.no_internet_error));
+				Log.d(CLASS_TAG, "Waiting for internet connectivity.");
+				setContent(getString(R.string.downloading_error));
 				synchronized (this) {
 					try {
 						wait(60000); // waiting for 1 minute.
@@ -169,7 +169,7 @@ public class MainIntentService extends IntentService {
 				long sleepTime;
 				String meal;
 
-				Log.d(LOG_TAG, "" + System.currentTimeMillis() + " " + PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_lunch", DEFAULT_LUNCH_TIME_REMINDER) + " " + DEFAULT_LUNCH_TIME_REMINDER);
+				Log.d(CLASS_TAG, "" + System.currentTimeMillis() + " " + PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_lunch", DEFAULT_LUNCH_TIME_REMINDER) + " " + DEFAULT_LUNCH_TIME_REMINDER);
 
 				if (System.currentTimeMillis() < PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_lunch", DEFAULT_LUNCH_TIME_REMINDER)) {
 					meal = "Almoço";
@@ -181,7 +181,7 @@ public class MainIntentService extends IntentService {
 
 				synchronized (this) {
 					try {
-						Log.d(LOG_TAG, "Sleeping again for " + sleepTime/HOUR + " hour(s)");
+						Log.d(CLASS_TAG, "Sleeping again for " + sleepTime/HOUR + " hour(s)");
 						//						wait(1000);
 						wait(sleepTime);
 					} catch (InterruptedException e) {
@@ -208,7 +208,7 @@ public class MainIntentService extends IntentService {
 	}
 
 	private void notifyUser(String title, String text) {
-		Log.d(LOG_TAG, "Notifying the user");
+		Log.d(CLASS_TAG, "Notifying the user");
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(text).setContentTitle(title).setSmallIcon(R.drawable.ic_launcher);
 		Intent resultIntent = new Intent(this, MainActivity.class);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -247,8 +247,8 @@ public class MainIntentService extends IntentService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			Log.d(LOG_TAG, "No internet connection.");
-			return getString(R.string.no_internet_error);
+			Log.d(CLASS_TAG, "No internet connection.");
+			return getString(R.string.downloading_error);
 		}
 
 		StatusLine statusLine = response.getStatusLine();

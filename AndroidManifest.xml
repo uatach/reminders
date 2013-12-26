@@ -8,7 +8,7 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="7" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -36,6 +36,10 @@
 
         <service
             android:name="com.lostrealm.lembretes.MainIntentService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name="com.lostrealm.lembretes.NetworkIntentService"
             android:exported="false" >
         </service>
     </application>

@@ -30,11 +30,10 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_about=0x7f0a0006;
-        public static final int action_feedback=0x7f0a0005;
-        public static final int action_settings=0x7f0a0004;
-        public static final int mainActivityMealView=0x7f0a0003;
-        public static final int mainActivityRefreshButton=0x7f0a0002;
+        public static final int action_about=0x7f0a0005;
+        public static final int action_feedback=0x7f0a0004;
+        public static final int action_settings=0x7f0a0003;
+        public static final int mainActivityMealView=0x7f0a0002;
         public static final int mainActivityTitleView=0x7f0a0000;
         public static final int scrollView=0x7f0a0001;
     }
@@ -55,8 +54,8 @@ public final class R {
         public static final int main_activity_button=0x7f060009;
         /**  Main Activity 
          */
-        public static final int main_activity_label=0x7f060008;
-        public static final int no_internet_error=0x7f060007;
+        public static final int main_activity_label=0x7f060007;
+        public static final int main_activity_view=0x7f060008;
         public static final int pref_notify_summary=0x7f06000f;
         public static final int pref_notify_title=0x7f06000e;
         public static final int pref_remind_summary_off=0x7f06000d;

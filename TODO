@@ -1,13 +1,12 @@
 In Progress
 =========================
-* I'm still fixing the application's flow;
-* Updates started to work, need testing;
-* By meal notifications seems to work.
+* I'm still fixing the application's flow, MainIntentService has been broken down into 3 services;
+* Updates stopped working due to changes on services;
+* Notifications stopped working due to same reason.
 
 Next
 =========================
 * Looks like the OS kills application after some time, need to look into it;
-* Main screen need to show meal after update.
 
 Future
 =========================

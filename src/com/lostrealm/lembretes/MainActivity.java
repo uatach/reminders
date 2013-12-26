@@ -21,38 +21,56 @@ package com.lostrealm.lembretes;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	private static final String LOG_TAG = "MainActivity";
+	private static final String CLASS_TAG = "com.lostrealm.lembretes.MainActivity";
+
+	private TextView mealView;
+
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			mealView.setText(Html.fromHtml(intent.getStringExtra(NetworkIntentService.CONTENT)));
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		setContentView(R.layout.activity_main);
+		mealView = (TextView) findViewById(R.id.mainActivityMealView);
 
-		MainIntentService.startActionUpdate(this);
+		this.startService(new Intent(this, NetworkIntentService.class).putExtra(NetworkIntentService.FILTER, CLASS_TAG));
+		this.startService(new Intent(this, UpdateIntentService.class));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		refresh(null);
+		registerReceiver(receiver, new IntentFilter(CLASS_TAG));
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true)) {
-			Log.d(LOG_TAG, "Running app for the first time.");
+			Log.d(CLASS_TAG, "Running app for the first time.");
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
-		//		else
-		//			MainIntentService.startActionUpdate(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(receiver);
 	}
 
 	@Override
@@ -69,14 +87,6 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
 		return true;
-	}
-
-	public void refresh(View view) {
-		String content = MainIntentService.getContent();
-		if (content != null)
-			((TextView)findViewById(R.id.mainActivityMealView)).setText(Html.fromHtml(content));
-		else
-			((TextView)findViewById(R.id.mainActivityMealView)).setText("Baixando cardápio...");
 	}
 
 }

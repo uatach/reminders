@@ -7,11 +7,11 @@
     <string name="action_about">Sobre</string>
     <string name="confirm_button">Confirmar</string>
     <string name="cancel_button">Cancelar</string>
-    <string name="downloading_error">Baixando...</string>
-    <string name="no_internet_error">Sem conexão com a internet.</string>
+    <string name="downloading_error">Sem conexão com a internet.</string>
 
     <!-- Main Activity -->
     <string name="main_activity_label">Próxima Refeição:</string>
+    <string name="main_activity_view">Baixando cardápio!</string>
     <string name="main_activity_button">Atualizar</string>
 
     <!-- Settings Activity -->
