@@ -18,12 +18,6 @@
 
 package com.lostrealm.lembretes;
 
-/*
- * This class is responsible for scheduling content updates.
- * When there is no internet connection, it waits for it and retries.
- * Once updated, this class also schedules a reminder.
- */
-
 import java.util.Calendar;
 
 import android.app.AlarmManager;

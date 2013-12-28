@@ -29,7 +29,6 @@ import android.widget.Toast;
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	public SettingsActivity() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@SuppressWarnings("deprecation")

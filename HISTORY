@@ -1,3 +1,9 @@
+v0.4.2
+Added AboutActivity.
+
+v0.4.1
+Added UpdateIntentService using AlarmManager to schedule updates but is doesn't seem to work.
+
 v0.4
 Managed to add BroadcastReceiver functionalities;
 MainIntentService not used anymore and broken into 3 services;

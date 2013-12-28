@@ -1,7 +1,7 @@
 In Progress
 =========================
 * I'm still fixing the application's flow, MainIntentService has been broken down into 3 services;
-* Updates looks to be working, but I don't trust this AlarmManager class;
+* Updates aren't working because AlarmManager delivers intents using Broadcasts;
 * Putting notifications up again;
 * OS does kill application and services, using AlarmManager to let the system manage next update and notifications.
 

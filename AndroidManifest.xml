@@ -33,6 +33,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="android.preference.PreferenceActivity" />
         </activity>
+        <activity
+            android:name="com.lostrealm.lembretes.AboutActivity"
+            android:label="@string/about_activity_title" >
+        </activity>
 
         <service
             android:name="com.lostrealm.lembretes.MainIntentService"

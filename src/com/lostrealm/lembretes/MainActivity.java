@@ -51,8 +51,10 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		setContentView(R.layout.activity_main);
+		
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+		
 		mealView = (TextView) findViewById(R.id.mainActivityMealView);
 
 		this.startService(new Intent(this, UpdateIntentService.class));
@@ -92,6 +94,10 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			startActivity(new Intent(this, SettingsActivity.class));
+			break;
+		case R.id.action_about:
+			startActivity(new Intent(this, AboutActivity.class));
+			break;
 		}
 		return true;
 	}
