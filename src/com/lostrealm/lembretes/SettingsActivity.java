@@ -18,6 +18,7 @@
 
 package com.lostrealm.lembretes;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -65,7 +66,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		// TODO Auto-generated method stub
+		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
+
+		if (!key.equals("pref_vibrate")
+				&& !key.equals("pref_reminder_type")
+				&& !key.equals("pref_words"))
+			sendBroadcast(intent);
 	}
 
 }

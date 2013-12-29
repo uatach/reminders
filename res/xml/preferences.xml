@@ -4,6 +4,7 @@
     <!-- Activate reminders -->
     <CheckBoxPreference
         android:defaultValue="true"
+        android:enabled="true"
         android:key="pref_remind"
         android:summaryOff="@string/pref_remind_summary_off"
         android:summaryOn="@string/pref_remind_summary_on"
@@ -13,7 +14,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:dependency="pref_remind"
-        android:enabled="false"
+        android:enabled="true"
         android:key="pref_vibrate"
         android:summaryOff="@string/pref_vibrate_summary_off"
         android:summaryOn="@string/pref_vibrate_summary_on"

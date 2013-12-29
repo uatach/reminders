@@ -1,15 +1,9 @@
 In Progress
 =========================
-* I'm still fixing the application's flow, MainIntentService has been deleted;
 * working on the notifications per word;
-* looking into canceling reminders due to change in options.
+* Adding sound to notifications;
 
 Next
 =========================
 * Build some fake pages to test;
-* Add vibration and sound to notifications;
-* Add feedback screen.
-
-Future
-=========================
-* Support for Limeira's campus will be added.
+* Support for Limeira's campus.

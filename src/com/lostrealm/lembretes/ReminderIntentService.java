@@ -29,6 +29,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -45,27 +46,34 @@ public class ReminderIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		scheduleReminder();
-		notifyUser(intent);
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true)) {
+			scheduleReminder();
+			if (intent.getBooleanExtra("reminding", false)) { // test words
+				notifyUser();
+				if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate", false)) {
+					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+					vibrator.vibrate(2000);
+				}
+			}
+		} else
+			removeReminder();
 	}
 
-	private void notifyUser(Intent intent) {
-		if (intent.getBooleanExtra("reminding", false)) {
-			String content = Html.fromHtml(loadContent()).toString();
-			Log.d(CLASS_TAG, "Notifying the user");
-			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(content.substring(33)).setContentTitle(content.substring(0, 6)).setSmallIcon(R.drawable.ic_launcher);
-			Intent resultIntent = new Intent(this, MainActivity.class);
-			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-			// Adds the back stack for the Intent (but not the Intent itself)
-			//stackBuilder.addParentStack(MainActivity.class);
-			// Adds the Intent that starts the Activity to the top of the stack
-			stackBuilder.addNextIntent(resultIntent);
-			PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-			mBuilder.setContentIntent(resultPendingIntent);
-			NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			// mId allows you to update the notification later on.
-			mNotificationManager.notify(1000, mBuilder.build());
-		}
+	private void notifyUser() {
+		String content = Html.fromHtml(loadContent()).toString();
+		Log.d(CLASS_TAG, "Notifying the user");
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(content.substring(33)).setContentTitle(content.substring(0, 6)).setSmallIcon(R.drawable.ic_launcher);
+		Intent resultIntent = new Intent(this, MainActivity.class);
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		//stackBuilder.addParentStack(MainActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		mBuilder.setContentIntent(resultPendingIntent);
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(1000, mBuilder.build());
 	}
 
 	private void scheduleReminder() {
@@ -99,6 +107,14 @@ public class ReminderIntentService extends IntentService {
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Reminder in " + (reminder.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
 		alarmManager.set(AlarmManager.RTC_WAKEUP, reminder.getTimeInMillis(), pendingIntent);
+	}
+
+	private void removeReminder() {
+		Log.d(CLASS_TAG, "Removing reminder!"); // test
+		Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
 	}
 
 	private long getLong(Calendar calendar) {

@@ -2,9 +2,10 @@
 <resources>
 
     <string name="project_url">https://github.com/edsonduarte1990/reminders</string>
-    <string name="app_copyright">Copyright Edson Duarte</string>
+    <string name="app_copyright">Copyright (C) 2013 Edson Duarte</string>
+    <string name="app_license">Programa publicado com licença GPLv3.</string>
     <string name="app_name">Lembretes</string>
-    <string name="app_version">Lembretes v0.5</string>
+    <string name="app_version">Lembretes v0.5.1</string>
     <string name="action_settings">Settings</string>
     <string name="action_feedback">Feedback</string>
     <string name="action_about">Sobre</string>

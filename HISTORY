@@ -1,3 +1,8 @@
+v0.5.1
+Feedback option is now working;
+When preferences are changed, reminders are updated or disabled;
+Added vibration to notifications.
+
 v0.5
 Updates and Notifications are scheduled successfully.
 

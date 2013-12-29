@@ -27,7 +27,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -43,8 +42,7 @@ public class UpdateIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		this.startService(new Intent(this, NetworkIntentService.class));
-		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true))
-			this.startService(new Intent(this, ReminderIntentService.class));
+		this.startService(new Intent(this, ReminderIntentService.class));
 		scheduleUpdate();
 	}
 
@@ -52,9 +50,9 @@ public class UpdateIntentService extends IntentService {
 		final int HOUR = 3600000; // 1 hour // test
 		final int LUNCH_TIME_UPDATE = 9; // 9 hours
 		final int DINNER_TIME_UPDATE = 16; // 16 hours
-		
+
 		Calendar update = Calendar.getInstance();
-		
+
 		if (update.get(Calendar.HOUR_OF_DAY) < LUNCH_TIME_UPDATE) {
 			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH), LUNCH_TIME_UPDATE, 0, 0);
 		} else if (update.get(Calendar.HOUR_OF_DAY) < DINNER_TIME_UPDATE) {

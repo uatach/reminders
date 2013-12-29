@@ -76,6 +76,7 @@ public class NetworkIntentService extends IntentService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			Log.d(CLASS_TAG, "No internet connection.");
+			publishResults(false, null);
 			return;
 			//e.printStackTrace();
 		}
@@ -131,13 +132,15 @@ public class NetworkIntentService extends IntentService {
 		}
 		//Log.d(LOG_TAG, text);
 
-		publishResults(text.replaceAll("</th>", "<br /></th>").toString());
+		publishResults(true, text.replaceAll("</th>", "<br /></th>").toString());
 
 	}
 
-	private void publishResults(String text) {
+	private void publishResults(Boolean success, String text) {
+		if (success)
+			writeContent(text);
+		
 		Intent intent = new Intent(MainActivity.CLASS_TAG);
-		writeContent(text);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
 

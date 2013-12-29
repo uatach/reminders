@@ -101,6 +101,17 @@ public class MainActivity extends Activity {
 		case R.id.action_settings:
 			startActivity(new Intent(this, SettingsActivity.class));
 			break;
+		case R.id.action_feedback:
+			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+			String[] recipients = new String[]{"edsonduarte1990@gmail.com"};
+			
+			intent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
+			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Lembretes - Feedback]");
+			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+			intent.setType("text/plain");
+			
+			startActivity(Intent.createChooser(intent, "Enviar email com:"));
+			break;
 		case R.id.action_about:
 			startActivity(new Intent(this, AboutActivity.class));
 			break;
