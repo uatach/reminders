@@ -23,21 +23,25 @@ import java.util.Calendar;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class UpdateIntentService extends IntentService {
 
-	private static final String CLASS_TAG = "com.lostrealm.lembretes.UpdateIntentService";
+	public static final String CLASS_TAG = "com.lostrealm.lembretes.UpdateIntentService";
 
 	public UpdateIntentService() {
 		super(CLASS_TAG);
+		LocalBroadcastManager.getInstance(this).registerReceiver((BroadcastReceiver) new UpdateBroadcastReceiver(), new IntentFilter(CLASS_TAG));
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		this.startService(new Intent(this, NetworkIntentService.class).putExtra(NetworkIntentService.FILTER, MainActivity.CLASS_TAG));
+		this.startService(new Intent(this, NetworkIntentService.class));
 		scheduleUpdate();
 	}
 
@@ -57,12 +61,12 @@ public class UpdateIntentService extends IntentService {
 			calendar.setTimeInMillis(calendar.getTimeInMillis() + ((24+LUNCH_TIME_UPDATE)*HOUR));
 		}
 
-		Intent intent = new Intent(this, UpdateIntentService.class);
-		PendingIntent pintent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Log.d(CLASS_TAG, "Update in " + (calendar.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
-		alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), pintent);
+		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Update in " + (calendar.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
+		alarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 	}
 
 }

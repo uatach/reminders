@@ -19,6 +19,7 @@
 package com.lostrealm.lembretes;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,24 +33,19 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.app.Activity;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
-/*
- * This class is responsible for downloading.
- * After it finishes downloading, it broadcasts to whom has requested.
- */
 
 public class NetworkIntentService extends IntentService {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.NetworkIntentService";
-	
+
 	public static final String FILTER = "filter";
 	public static final String CONTENT = "content";
-	public static final String RESULT = "result";
 
 	public NetworkIntentService() {
 		super(CLASS_TAG);
@@ -57,7 +53,6 @@ public class NetworkIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		int result = Activity.RESULT_CANCELED;
 
 		// new URL!!! -> http://www.prefeitura.unicamp.br/cardapio_pref.php?pagina=1
 
@@ -81,7 +76,6 @@ public class NetworkIntentService extends IntentService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			Log.d(CLASS_TAG, "No internet connection.");
-			publishResults(intent.getStringExtra(FILTER), result, getString(R.string.downloading_error));
 			return;
 			//e.printStackTrace();
 		}
@@ -136,17 +130,26 @@ public class NetworkIntentService extends IntentService {
 			}
 		}
 		//Log.d(LOG_TAG, text);
-		
-		result = Activity.RESULT_OK;
 
-		publishResults(intent.getStringExtra(FILTER), result, text.replaceAll("</th>", "<br /></th>").toString());
-		
+		publishResults(text.replaceAll("</th>", "<br /></th>").toString());
+
 	}
 
-	private void publishResults(String filter, int result, String text) {
-		Intent intent = new Intent(filter);
-		intent.putExtra(RESULT, result);
-		intent.putExtra(CONTENT, text);
-		sendBroadcast(intent);
+	private void publishResults(String text) {
+		Intent intent = new Intent(MainActivity.CLASS_TAG);
+		writeContent(text);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+	}
+
+	private void writeContent(String content) {
+		FileOutputStream outputStream;
+
+		try {
+			outputStream = openFileOutput(getString(R.string.app_name), Context.MODE_PRIVATE);
+			outputStream.write(content.getBytes("UTF-8"));
+			outputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,3 +1,7 @@
+v0.4.3
+Content is now written to file and retrieved when there's no connection;
+Updates are working with AlarmManager. When there's no connection, MainActivity displays what's on file;
+
 v0.4.2
 Added AboutActivity.
 
@@ -14,7 +18,7 @@ Updates and notifications stopped working.
 v.0.3.3
 Managed to re-add notifications, still needs testing;
 Added default reminder times, 12h and 18h (They're hard-coded into MainIntentService, need to search if the custom TimePickerPreference can handle default values);
-Enabled ProGuard (I have no idea of how this works).
+Enabled ProGuard.
 
 v0.3.2
 On first run SettingsActivity is displayed.

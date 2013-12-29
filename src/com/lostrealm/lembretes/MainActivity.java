@@ -18,6 +18,10 @@
 
 package com.lostrealm.lembretes;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
@@ -25,6 +29,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -34,8 +39,6 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	public static final String CLASS_TAG = "com.lostrealm.lembretes.MainActivity";
-	
-	private static String content = null;
 
 	private TextView mealView;
 
@@ -43,8 +46,11 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			setContent(intent.getStringExtra(NetworkIntentService.CONTENT));
-			mealView.setText(Html.fromHtml(getContent()));
+			String content = loadContent();
+			if (content != null)
+				mealView.setText(Html.fromHtml(content));
+			else
+				mealView.setText(getString(R.string.downloading_error));
 		}
 	};
 
@@ -52,9 +58,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		
+
 		mealView = (TextView) findViewById(R.id.mainActivityMealView);
 
 		this.startService(new Intent(this, UpdateIntentService.class));
@@ -63,7 +69,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		registerReceiver(receiver, new IntentFilter(CLASS_TAG));
+		LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(CLASS_TAG));
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true)) {
 			Log.d(CLASS_TAG, "Running app for the first time.");
@@ -75,11 +81,11 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		unregisterReceiver(receiver);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 	}
 
 	@Override
@@ -102,12 +108,24 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	public static String getContent() {
-		return content;
-	}
+	private String loadContent() {
+		String content = new String();
+		FileInputStream inputStream = null;
+		BufferedReader reader = null;
+		String line = null;
 
-	private static void setContent(String content) {
-		MainActivity.content = content;
+		try {
+			inputStream = openFileInput(getString(R.string.app_name));
+			reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
+			while((line = reader.readLine()) != null) {
+				content = content.concat(line);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return content;
 	}
 
 }
