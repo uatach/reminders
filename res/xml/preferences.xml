@@ -53,12 +53,14 @@
 
     <!-- Option to select lunch's reminder's time -->
     <com.lostrealm.lembretes.TimePickerPreference
+        android:defaultValue="54000000"
         android:dependency="pref_remind"
         android:key="pref_reminder_time_lunch"
         android:title="@string/pref_reminder_time_lunch_title" />
 
     <!-- Option to select dinner's reminder's time -->
     <com.lostrealm.lembretes.TimePickerPreference
+        android:defaultValue="75600000"
         android:dependency="pref_remind"
         android:key="pref_reminder_time_dinner"
         android:title="@string/pref_reminder_time_dinner_title" />

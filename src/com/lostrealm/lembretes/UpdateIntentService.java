@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013  Edson Duarte
+ * Copyright (C) 2013  Edson Duarte (edsonduarte1990@gmail.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -42,31 +43,32 @@ public class UpdateIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		this.startService(new Intent(this, NetworkIntentService.class));
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true))
+			this.startService(new Intent(this, ReminderIntentService.class));
 		scheduleUpdate();
 	}
 
 	private void scheduleUpdate() {
-		final int HOUR = 3600000; // 1 hour 
-		final int LUNCH_TIME_UPDATE = 10; // 10 hours
+		final int HOUR = 3600000; // 1 hour // test
+		final int LUNCH_TIME_UPDATE = 9; // 9 hours
 		final int DINNER_TIME_UPDATE = 16; // 16 hours
 		
-		Calendar calendar = Calendar.getInstance();
+		Calendar update = Calendar.getInstance();
 		
-		if (calendar.get(Calendar.HOUR_OF_DAY) < LUNCH_TIME_UPDATE) {
-			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), LUNCH_TIME_UPDATE, 0, 0);
-		} else if (calendar.get(Calendar.HOUR_OF_DAY) < DINNER_TIME_UPDATE) {
-			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), DINNER_TIME_UPDATE, 0, 0);
+		if (update.get(Calendar.HOUR_OF_DAY) < LUNCH_TIME_UPDATE) {
+			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH), LUNCH_TIME_UPDATE, 0, 0);
+		} else if (update.get(Calendar.HOUR_OF_DAY) < DINNER_TIME_UPDATE) {
+			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH), DINNER_TIME_UPDATE, 0, 0);
 		} else {
-			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-			calendar.setTimeInMillis(calendar.getTimeInMillis() + ((24+LUNCH_TIME_UPDATE)*HOUR));
+			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+			update.setTimeInMillis(update.getTimeInMillis() + ((24+LUNCH_TIME_UPDATE)*HOUR));
 		}
 
 		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Update in " + (calendar.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
-		alarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Update in " + (update.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
+		alarmManager.set(AlarmManager.RTC_WAKEUP, update.getTimeInMillis(), pendingIntent);
 	}
 
 }

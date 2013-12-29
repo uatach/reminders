@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013  Edson Duarte
+ * Copyright (C) 2013  Edson Duarte (edsonduarte1990@gmail.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

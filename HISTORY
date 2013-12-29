@@ -1,3 +1,6 @@
+v0.5
+Updates and Notifications are scheduled successfully.
+
 v0.4.3
 Content is now written to file and retrieved when there's no connection;
 Updates are working with AlarmManager. When there's no connection, MainActivity displays what's on file;

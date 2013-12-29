@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013  Edson Duarte
+ * Copyright (C) 2013  Edson Duarte (edsonduarte1990@gmail.com)
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,8 +29,6 @@ import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
-
-// TODO it's necessary to fix the initial reminder time.
 
 public class TimePickerPreference extends DialogPreference {
 	
@@ -85,20 +83,20 @@ public class TimePickerPreference extends DialogPreference {
 	
 	@Override
 	protected Object onGetDefaultValue(TypedArray array, int index) {
-		return array.getIndex(index);
+		return array.getString(index);
 	}
 	
 	@Override
-	protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-		if (restoreValue) {
+	protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
+		if (restorePersistedValue) {
 			if (defaultValue == null) {
-				calendar.setTimeInMillis(getPersistedLong(System.currentTimeMillis()));
+				calendar.setTimeInMillis(getPersistedLong(0));
 			} else {
 				calendar.setTimeInMillis(Long.parseLong(getPersistedString((String) defaultValue)));
 			}
 		} else {
 			if (defaultValue == null) {
-				calendar.setTimeInMillis(System.currentTimeMillis());
+				calendar.setTimeInMillis(0);
 			} else {
 				calendar.setTimeInMillis(Long.parseLong((String) defaultValue));
 			}

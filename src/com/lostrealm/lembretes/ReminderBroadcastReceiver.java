@@ -22,13 +22,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class UpdateBroadcastReceiver extends BroadcastReceiver {
-	
-	public UpdateBroadcastReceiver() {
+public class ReminderBroadcastReceiver extends BroadcastReceiver {
+	public ReminderBroadcastReceiver() {
 	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		context.startService(new Intent(context, UpdateIntentService.class));
+		context.startService(new Intent(context, ReminderIntentService.class).putExtra("reminding", true));
 	}
 }

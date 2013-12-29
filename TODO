@@ -1,12 +1,14 @@
 In Progress
 =========================
-* I'm still fixing the application's flow, MainIntentService isn't used anymore, will be deleted soon;
-* Putting notifications up again;
+* I'm still fixing the application's flow, MainIntentService has been deleted;
 * working on the notifications per word;
+* looking into canceling reminders due to change in options.
 
 Next
 =========================
-* Build some fake pages to test.
+* Build some fake pages to test;
+* Add vibration and sound to notifications;
+* Add feedback screen.
 
 Future
 =========================
