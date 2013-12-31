@@ -26,11 +26,19 @@ import android.view.Menu;
 import android.view.View;
 
 public class AboutActivity extends Activity {
+	
+	private static final String CLASS_TAG = "com.lostrealm.lembretes.AboutActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Showing AboutActivity."));
 	}
 
 	@Override
@@ -40,6 +48,7 @@ public class AboutActivity extends Activity {
 	}
 	
 	public void openProjectPage(View view) {
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Openning webpage."));
 		this.startActivity(Intent.createChooser(new Intent(android.content.Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.project_url))), getString(R.string.about_activity_button_action)));
 	}
 

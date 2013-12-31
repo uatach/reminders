@@ -1,3 +1,8 @@
+v0.5.5
+Logs are now saved to disk file;
+Fixed vibrate, VIBRATE permission was missing;
+Fixed some minor issues.
+
 v0.5.1
 Feedback option is now working;
 When preferences are changed, reminders are updated or disabled;

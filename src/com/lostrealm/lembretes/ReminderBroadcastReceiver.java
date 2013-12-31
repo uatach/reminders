@@ -23,11 +23,16 @@ import android.content.Context;
 import android.content.Intent;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
+	
+	private static final String CLASS_TAG = "com.lostrealm.lembretes.ReminderBroadcastReceiver";
+	
 	public ReminderBroadcastReceiver() {
 	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "=============================="));
+		context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Broadcast received."));
 		context.startService(new Intent(context, ReminderIntentService.class).putExtra("reminding", true));
 	}
 }

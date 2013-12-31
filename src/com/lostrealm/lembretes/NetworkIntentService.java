@@ -38,7 +38,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 public class NetworkIntentService extends IntentService {
 
@@ -53,6 +52,7 @@ public class NetworkIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Intent received."));
 
 		// new URL!!! -> http://www.prefeitura.unicamp.br/cardapio_pref.php?pagina=1
 
@@ -75,7 +75,7 @@ public class NetworkIntentService extends IntentService {
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			Log.d(CLASS_TAG, "No internet connection.");
+			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Couldn't download, no connection."));
 			publishResults(false, null);
 			return;
 			//e.printStackTrace();
@@ -142,6 +142,7 @@ public class NetworkIntentService extends IntentService {
 		
 		Intent intent = new Intent(MainActivity.CLASS_TAG);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));
 	}
 
 	private void writeContent(String content) {
@@ -154,5 +155,6 @@ public class NetworkIntentService extends IntentService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Wrote content to disk."));
 	}
 }

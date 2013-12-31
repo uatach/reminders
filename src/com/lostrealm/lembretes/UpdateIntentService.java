@@ -18,6 +18,7 @@
 
 package com.lostrealm.lembretes;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.AlarmManager;
@@ -36,11 +37,12 @@ public class UpdateIntentService extends IntentService {
 
 	public UpdateIntentService() {
 		super(CLASS_TAG);
-		LocalBroadcastManager.getInstance(this).registerReceiver((BroadcastReceiver) new UpdateBroadcastReceiver(), new IntentFilter(CLASS_TAG));
+//		LocalBroadcastManager.getInstance(this).registerReceiver((BroadcastReceiver) new UpdateBroadcastReceiver(), new IntentFilter(CLASS_TAG)); // what is this line? should leak? appears to do nothing.
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Intent received."));
 		this.startService(new Intent(this, NetworkIntentService.class));
 		this.startService(new Intent(this, ReminderIntentService.class));
 		scheduleUpdate();
@@ -65,8 +67,10 @@ public class UpdateIntentService extends IntentService {
 		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Update in " + (update.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
+//		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Update in " + (update.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
 		alarmManager.set(AlarmManager.RTC_WAKEUP, update.getTimeInMillis(), pendingIntent);
+
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Update scheduled to " + SimpleDateFormat.getDateTimeInstance().format(update.getTime()) + "."));
 	}
 
 }

@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
+	private static final String CLASS_TAG = "com.lostrealm.lembretes.SettingsActivity";
+
 	public SettingsActivity() {
 	}
 
@@ -55,6 +57,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			Toast.makeText(this, "Ajuste os horários dos lembretes.", Toast.LENGTH_LONG).show();
 			getPreferenceScreen().getSharedPreferences().edit().putBoolean("first_time", false).commit();
 		}
+
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Showing SettingsActivity."));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -67,11 +71,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Preferences updated."));
 
-		if (!key.equals("pref_vibrate")
-				&& !key.equals("pref_reminder_type")
-				&& !key.equals("pref_words"))
+		if (!key.equals("pref_vibrate") && !key.equals("pref_reminder_type") && !key.equals("pref_words")) {
 			sendBroadcast(intent);
+			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));
+		}
 	}
 
 }
