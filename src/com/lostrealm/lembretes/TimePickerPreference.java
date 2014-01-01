@@ -90,13 +90,13 @@ public class TimePickerPreference extends DialogPreference {
 	protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
 		if (restorePersistedValue) {
 			if (defaultValue == null) {
-				calendar.setTimeInMillis(getPersistedLong(0));
+				calendar.setTimeInMillis(getPersistedLong(System.currentTimeMillis()));
 			} else {
 				calendar.setTimeInMillis(Long.parseLong(getPersistedString((String) defaultValue)));
 			}
 		} else {
 			if (defaultValue == null) {
-				calendar.setTimeInMillis(0);
+				calendar.setTimeInMillis(System.currentTimeMillis());
 			} else {
 				calendar.setTimeInMillis(Long.parseLong((String) defaultValue));
 			}

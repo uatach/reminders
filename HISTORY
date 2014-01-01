@@ -1,3 +1,8 @@
+v0.5.7
+Merged UpdateBroadcastReceiver and ReminderBroadcastReceiver into MainBroadcastReceiver;
+Simplified app's flow and added a button to MainActivity;
+Some minor improvements.
+
 v0.5.6
 Added proxy options;
 Added ActionBar to older SDK (AppCompat v7);

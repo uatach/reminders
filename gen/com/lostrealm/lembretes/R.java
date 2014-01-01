@@ -990,7 +990,7 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020058;
     }
     public static final class id {
-        public static final int action_about=0x7f060046;
+        public static final int action_about=0x7f060047;
         public static final int action_bar=0x7f06001c;
         public static final int action_bar_activity_content=0x7f060015;
         public static final int action_bar_container=0x7f06001b;
@@ -999,11 +999,11 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f060023;
         public static final int action_bar_title=0x7f060022;
         public static final int action_context_bar=0x7f06001d;
-        public static final int action_feedback=0x7f060045;
+        public static final int action_feedback=0x7f060046;
         public static final int action_menu_divider=0x7f060016;
         public static final int action_menu_presenter=0x7f060017;
         public static final int action_mode_close_button=0x7f060024;
-        public static final int action_settings=0x7f060044;
+        public static final int action_settings=0x7f060045;
         public static final int activity_chooser_view_content=0x7f060025;
         public static final int always=0x7f06000b;
         public static final int beginning=0x7f060011;
@@ -1027,7 +1027,7 @@ containing a value of this type.
         public static final int licenseTextView=0x7f060040;
         public static final int listMode=0x7f060001;
         public static final int list_item=0x7f060029;
-        public static final int mainActivityMealView=0x7f060043;
+        public static final int mainActivityMealView=0x7f060044;
         public static final int mainActivityTitleView=0x7f060041;
         public static final int middle=0x7f060012;
         public static final int never=0x7f060009;
@@ -1037,6 +1037,7 @@ containing a value of this type.
         public static final int progress_horizontal=0x7f060019;
         public static final int projectPageButton=0x7f06003e;
         public static final int radio=0x7f06002f;
+        public static final int refreshButton=0x7f060043;
         public static final int scrollView=0x7f060042;
         public static final int search_badge=0x7f060032;
         public static final int search_bar=0x7f060031;
@@ -1159,12 +1160,12 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000b;
-        public static final int about_activity_button_action=0x7f0b003b;
-        public static final int about_activity_button_text=0x7f0b003a;
-        public static final int about_activity_content_description=0x7f0b0039;
+        public static final int about_activity_button_action=0x7f0b003e;
+        public static final int about_activity_button_text=0x7f0b003d;
+        public static final int about_activity_content_description=0x7f0b003c;
         /**  AboutActivity 
          */
-        public static final int about_activity_title=0x7f0b0038;
+        public static final int about_activity_title=0x7f0b003b;
         public static final int action_about=0x7f0b0014;
         public static final int action_feedback=0x7f0b0013;
         public static final int action_settings=0x7f0b0012;
@@ -1175,44 +1176,47 @@ containing a value of this type.
         public static final int cancel_button=0x7f0b0016;
         public static final int confirm_button=0x7f0b0015;
         public static final int downloading_error=0x7f0b0017;
-        public static final int main_activity_button=0x7f0b001a;
+        public static final int main_activity_button=0x7f0b001d;
         /**  MainActivity 
          */
-        public static final int main_activity_label=0x7f0b0018;
-        public static final int main_activity_view=0x7f0b0019;
-        public static final int pref_host_summary=0x7f0b0035;
-        public static final int pref_host_title=0x7f0b0034;
-        public static final int pref_notify_summary=0x7f0b0021;
-        public static final int pref_notify_title=0x7f0b0020;
-        public static final int pref_port_summary=0x7f0b0037;
-        public static final int pref_port_title=0x7f0b0036;
-        public static final int pref_remind_summary_off=0x7f0b001f;
-        public static final int pref_remind_summary_on=0x7f0b001e;
-        public static final int pref_remind_title=0x7f0b001d;
-        public static final int pref_reminder_time_dinner_title=0x7f0b0031;
-        public static final int pref_reminder_time_lunch_title=0x7f0b0030;
-        public static final int pref_reminder_type_default=0x7f0b002f;
-        public static final int pref_reminder_type_summary=0x7f0b002e;
-        public static final int pref_reminder_type_title=0x7f0b002d;
-        public static final int pref_restaurant_CAM=0x7f0b002b;
-        public static final int pref_restaurant_LIM=0x7f0b002c;
-        public static final int pref_restaurant_default=0x7f0b002a;
-        public static final int pref_restaurant_summary=0x7f0b0029;
-        public static final int pref_restaurant_title=0x7f0b0028;
-        public static final int pref_sound_summary_off=0x7f0b0027;
-        public static final int pref_sound_summary_on=0x7f0b0026;
-        public static final int pref_sound_title=0x7f0b0025;
-        public static final int pref_vibrate_summary_off=0x7f0b0024;
-        public static final int pref_vibrate_summary_on=0x7f0b0023;
-        public static final int pref_vibrate_title=0x7f0b0022;
-        public static final int pref_words_summary=0x7f0b0033;
-        public static final int pref_words_title=0x7f0b0032;
+        public static final int main_activity_label=0x7f0b001b;
+        public static final int main_activity_view=0x7f0b001c;
+        public static final int pref_host_summary=0x7f0b0038;
+        public static final int pref_host_title=0x7f0b0037;
+        public static final int pref_notify_summary=0x7f0b0024;
+        public static final int pref_notify_title=0x7f0b0023;
+        public static final int pref_port_summary=0x7f0b003a;
+        public static final int pref_port_title=0x7f0b0039;
+        public static final int pref_remind_summary_off=0x7f0b0022;
+        public static final int pref_remind_summary_on=0x7f0b0021;
+        public static final int pref_remind_title=0x7f0b0020;
+        public static final int pref_reminder_time_dinner_title=0x7f0b0034;
+        public static final int pref_reminder_time_lunch_title=0x7f0b0033;
+        public static final int pref_reminder_type_default=0x7f0b0032;
+        public static final int pref_reminder_type_summary=0x7f0b0031;
+        public static final int pref_reminder_type_title=0x7f0b0030;
+        public static final int pref_restaurant_CAM=0x7f0b002e;
+        public static final int pref_restaurant_LIM=0x7f0b002f;
+        public static final int pref_restaurant_default=0x7f0b002d;
+        public static final int pref_restaurant_summary=0x7f0b002c;
+        public static final int pref_restaurant_title=0x7f0b002b;
+        public static final int pref_sound_summary_off=0x7f0b002a;
+        public static final int pref_sound_summary_on=0x7f0b0029;
+        public static final int pref_sound_title=0x7f0b0028;
+        public static final int pref_vibrate_summary_off=0x7f0b0027;
+        public static final int pref_vibrate_summary_on=0x7f0b0026;
+        public static final int pref_vibrate_title=0x7f0b0025;
+        public static final int pref_words_summary=0x7f0b0036;
+        public static final int pref_words_title=0x7f0b0035;
         public static final int project_url=0x7f0b000d;
         /**  SettingsActivity 
          */
-        public static final int settings_activity_label=0x7f0b001b;
-        public static final int settings_activity_toast=0x7f0b001c;
-        public static final int title_activity_test=0x7f0b003c;
+        public static final int settings_activity_label=0x7f0b001e;
+        public static final int settings_activity_toast=0x7f0b001f;
+        public static final int tag_remind=0x7f0b001a;
+        public static final int tag_scheduled=0x7f0b0018;
+        public static final int tag_update=0x7f0b0019;
+        public static final int title_activity_test=0x7f0b003f;
     }
     public static final class style {
         /** 

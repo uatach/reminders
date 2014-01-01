@@ -54,8 +54,8 @@ public class LoggerIntentService extends IntentService {
 	private void writeLog(String log) {
 		try {
 			File file = new File(Environment.getExternalStorageDirectory(), fileName); // for debug
-			//			File file = new File(this.getFilesDir(), fileName); // for release
-			if (file.length() > Math.pow(2, 20))
+			//			File file = new File(this.getFilesDir(), fileName); // for release (mail application can't read the file).
+			if (file.length() > Math.pow(2, 14))
 				file.delete();
 			FileOutputStream outputStream = new FileOutputStream(file, true);
 			outputStream.write(log.getBytes());

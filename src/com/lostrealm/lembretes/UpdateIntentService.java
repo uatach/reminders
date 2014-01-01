@@ -39,7 +39,6 @@ public class UpdateIntentService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Intent received."));
 		this.startService(new Intent(this, NetworkIntentService.class));
-		this.startService(new Intent(this, ReminderIntentService.class));
 		scheduleUpdate();
 	}
 
@@ -59,7 +58,7 @@ public class UpdateIntentService extends IntentService {
 			update.setTimeInMillis(update.getTimeInMillis() + ((24+LUNCH_TIME_UPDATE)*HOUR));
 		}
 
-		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
+		Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_update), true).putExtra(getString(R.string.tag_scheduled), true);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarmManager.set(AlarmManager.RTC_WAKEUP, update.getTimeInMillis(), pendingIntent);

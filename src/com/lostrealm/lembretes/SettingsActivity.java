@@ -49,7 +49,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		super.onDestroy();
 		
 		if (changed != null) {
-			Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
+			Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_remind), true);
 			sendBroadcast(intent);
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));
 		}
@@ -85,7 +85,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Preferences updated."));
 
-		if (!key.equals("pref_vibrate") && !key.equals("pref_reminder_type") && !key.equals("pref_words"))
+		if ((key.equals("pref_remind") || key.equals("pref_reminder_time_lunch") || key.equals("pref_reminder_time_dinner")))
 			changed = key;
 	}
 

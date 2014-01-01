@@ -12,14 +12,12 @@ There are two kinds of reminders:
 
 Requirements
 ------------
-Minimum Android 2.1 API 7 (tested).
-It has not been tested with later versions of Android yet.
+Minimum Android 2.1 API 7 (tested) and has been tested on Android 4.1.2 API 16.
 
 Usage
 -----
 On first run the settings screen is displayed for further configuration.
-That's it, no additional steps required.
-The application will (or not) reminder the user based on the configurations.
+That's it, no additional steps are required, the application will (or not, if disabled by user) reminder the user based on the configurations.
 
 License
 -------

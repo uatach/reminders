@@ -150,9 +150,9 @@ public class NetworkIntentService extends IntentService {
 			outputStream = openFileOutput(getString(R.string.app_name), Context.MODE_PRIVATE);
 			outputStream.write(content.getBytes("UTF-8"));
 			outputStream.close();
+			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Wrote content to disk."));
 		} catch (Exception e) {
-			e.printStackTrace();
+			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage()));
 		}
-		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Wrote content to disk."));
 	}
 }

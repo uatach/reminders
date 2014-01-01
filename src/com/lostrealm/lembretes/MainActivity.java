@@ -39,6 +39,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
@@ -46,20 +47,25 @@ public class MainActivity extends ActionBarActivity {
 	public static final String CLASS_TAG = "com.lostrealm.lembretes.MainActivity";
 
 	private TextView mealView;
+	private boolean loadedContent = false;
+
+	private void updateView(Context context) {
+		String content = loadContent();
+		if (content != null) {
+			mealView.setText(Html.fromHtml(content));
+			loadedContent = true;
+		} else
+			mealView.setText(R.string.downloading_error);
+
+		context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "View updated."));
+	}
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Broadcast received."));
-
-			String content = loadContent();
-			if (content != null)
-				mealView.setText(Html.fromHtml(content));
-			else
-				mealView.setText(getString(R.string.downloading_error));
-
-			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "View updated."));
+			updateView(context);
 		}
 	};
 
@@ -72,8 +78,6 @@ public class MainActivity extends ActionBarActivity {
 
 		mealView = (TextView) findViewById(R.id.mainActivityMealView);
 
-		this.startService(new Intent(this, UpdateIntentService.class));
-
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "=============================="));
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Started Application."));
 	}
@@ -85,22 +89,24 @@ public class MainActivity extends ActionBarActivity {
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true)) {
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Running Application for the first time."));
-			startActivity(new Intent(this, SettingsActivity.class));
-		}
+			this.startService(new Intent(this, UpdateIntentService.class));
+			this.startService(new Intent(this, ReminderIntentService.class));
+			this.startActivity(new Intent(this, SettingsActivity.class));
+		} else if (!loadedContent)
+			updateView(this);
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Showing MainActivity."));
 	}
 
 	@Override
-	protected void onPause() { // delete?
+	protected void onPause() {
 		super.onPause();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Terminated Application."));
 	}
 
@@ -115,27 +121,27 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
-			startActivity(new Intent(this, SettingsActivity.class));
+			this.startActivity(new Intent(this, SettingsActivity.class));
 			break;
 		case R.id.action_feedback:
 			String[] recipients = new String[]{"edsonduarte1990@gmail.com"};
 			File file = new File(Environment.getExternalStorageDirectory(), "log"); // for debug
-			//			File file = new File(this.getFilesDir(), "log"); // for release
+			//			File file = new File(this.getFilesDir(), "log"); // for release (mail application can't read file).
 			Uri uri = Uri.fromFile(file);
 
 			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 			intent.setType("message/rfc822");
 			intent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
 			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Lembretes - Feedback]");
-			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+			//			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
 			intent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
 
-			startActivity(Intent.createChooser(intent, "Enviar email com:"));
+			this.startActivity(Intent.createChooser(intent, "Enviar email com:"));
 
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Opened feedback."));
 			break;
 		case R.id.action_about:
-			startActivity(new Intent(this, AboutActivity.class));
+			this.startActivity(new Intent(this, AboutActivity.class));
 			break;
 		}
 		return true;
@@ -156,7 +162,7 @@ public class MainActivity extends ActionBarActivity {
 			reader.close();
 		} catch (FileNotFoundException e) {
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "File not found!"));
-			content = getString(R.string.downloading_error);
+			return getString(R.string.downloading_error);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -168,5 +174,11 @@ public class MainActivity extends ActionBarActivity {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Content loaded."));
 
 		return content;
+	}
+
+	public void refreshMealView(View view) {
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Refreshing."));
+		this.startService(new Intent(this, NetworkIntentService.class));
+		mealView.setText(R.string.main_activity_view);
 	}
 }

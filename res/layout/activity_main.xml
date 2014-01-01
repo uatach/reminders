@@ -24,7 +24,7 @@
         android:id="@+id/scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/refreshButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/mainActivityTitleView" >
@@ -42,5 +42,15 @@
                 android:text="@string/main_activity_view" />
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:onClick="refreshMealView"
+        android:text="@string/main_activity_button" />
 
 </RelativeLayout>
