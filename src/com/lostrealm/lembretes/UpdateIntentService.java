@@ -24,12 +24,8 @@ import java.util.Calendar;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 public class UpdateIntentService extends IntentService {
 
@@ -37,7 +33,6 @@ public class UpdateIntentService extends IntentService {
 
 	public UpdateIntentService() {
 		super(CLASS_TAG);
-//		LocalBroadcastManager.getInstance(this).registerReceiver((BroadcastReceiver) new UpdateBroadcastReceiver(), new IntentFilter(CLASS_TAG)); // what is this line? should leak? appears to do nothing.
 	}
 
 	@Override
@@ -67,7 +62,6 @@ public class UpdateIntentService extends IntentService {
 		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Update in " + (update.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
 		alarmManager.set(AlarmManager.RTC_WAKEUP, update.getTimeInMillis(), pendingIntent);
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Update scheduled to " + SimpleDateFormat.getDateTimeInstance().format(update.getTime()) + "."));

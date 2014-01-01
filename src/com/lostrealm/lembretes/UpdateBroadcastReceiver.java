@@ -33,6 +33,5 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Broadcast received."));
 		context.startService(new Intent(context, UpdateIntentService.class));
-		context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "test.")); // TODO need to test this after reboot.
 	}
 }

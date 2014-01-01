@@ -1,3 +1,8 @@
+v0.5.6
+Added proxy options;
+Added ActionBar to older SDK (AppCompat v7);
+And some minor changes and clean up.
+
 v0.5.5
 Logs are now saved to disk file;
 Fixed vibrate, VIBRATE permission was missing;

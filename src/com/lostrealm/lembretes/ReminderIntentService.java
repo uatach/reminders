@@ -35,7 +35,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.Html;
-import android.util.Log;
 
 public class ReminderIntentService extends IntentService {
 
@@ -46,7 +45,7 @@ public class ReminderIntentService extends IntentService {
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected void onHandleIntent(Intent intent) { // needs improvement
 		if (intent.getBooleanExtra("reminding", false)) {
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Reminder triggered."));
 		} else
@@ -67,24 +66,18 @@ public class ReminderIntentService extends IntentService {
 
 	private void notifyUser() {
 		String content = Html.fromHtml(loadContent()).toString();
-		Log.d(CLASS_TAG, "Notifying the user");
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(content.substring(33)).setContentTitle(content.substring(0, 6)).setSmallIcon(R.drawable.ic_launcher);
 		Intent resultIntent = new Intent(this, MainActivity.class);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		// Adds the back stack for the Intent (but not the Intent itself)
-		//stackBuilder.addParentStack(MainActivity.class);
-		// Adds the Intent that starts the Activity to the top of the stack
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
-		mNotificationManager.notify(1000, mBuilder.build());
+		mNotificationManager.notify(0, mBuilder.build());
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "User Notified."));
 	}
 
 	private void scheduleReminder() {
-		final int HOUR = 3600000; // 1 hour // test
 		long day = 86400000;
 
 		Calendar lunch = Calendar.getInstance();
@@ -92,7 +85,6 @@ public class ReminderIntentService extends IntentService {
 		Calendar dinner = Calendar.getInstance();
 		dinner.setTimeInMillis(PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_dinner", 0));
 		Calendar reminder = Calendar.getInstance();
-		//		Log.d(CLASS_TAG, reminder.get(Calendar.DAY_OF_MONTH) + "/" + reminder.get(Calendar.MONTH) + "/" + reminder.get(Calendar.YEAR) + " -- " + reminder.get(Calendar.HOUR_OF_DAY) + "h" + reminder.get(Calendar.MINUTE) + "m" + reminder.get(Calendar.SECOND) + "s"); // test
 		reminder.set(reminder.get(Calendar.YEAR), reminder.get(Calendar.MONTH), reminder.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 
 		Calendar time = Calendar.getInstance();
@@ -107,19 +99,15 @@ public class ReminderIntentService extends IntentService {
 		else
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + day + getLong(lunch));
 
-		//		Log.d(CLASS_TAG, reminder.get(Calendar.DAY_OF_MONTH) + "/" + reminder.get(Calendar.MONTH) + "/" + reminder.get(Calendar.YEAR) + " -- " + reminder.get(Calendar.HOUR_OF_DAY) + "h" + reminder.get(Calendar.MINUTE) + "m" + reminder.get(Calendar.SECOND) + "s"); // test
-
 		Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//		Log.d(CLASS_TAG, "Live " + System.currentTimeMillis() + " Reminder in " + (reminder.getTimeInMillis() - System.currentTimeMillis())/HOUR + " hour(s)."); // test
 		alarmManager.set(AlarmManager.RTC_WAKEUP, reminder.getTimeInMillis(), pendingIntent);
 		
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Reminder scheduled to " + SimpleDateFormat.getDateTimeInstance().format(reminder.getTime()) + "."));
 	}
 
 	private void removeReminder() {
-		Log.d(CLASS_TAG, "Removing reminder!"); // test
 		Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -129,13 +117,13 @@ public class ReminderIntentService extends IntentService {
 	}
 
 	private long getLong(Calendar calendar) {
-		long result = calendar.get(Calendar.HOUR_OF_DAY) * 60 * 60 * 1000; // this may be a problem (negative).
+		long result = calendar.get(Calendar.HOUR_OF_DAY) * 60 * 60 * 1000;
 		result += calendar.get(Calendar.MINUTE) * 60 * 1000;
 		return result;
 	}
 
 	private String loadContent() {
-		String content = new String();
+		StringBuffer content = new StringBuffer();
 		FileInputStream inputStream = null;
 		BufferedReader reader = null;
 		String line = null;
@@ -143,9 +131,8 @@ public class ReminderIntentService extends IntentService {
 		try {
 			inputStream = openFileInput(getString(R.string.app_name));
 			reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
-			while((line = reader.readLine()) != null) {
-				content = content.concat(line);
-			}
+			while((line = reader.readLine()) != null)
+				content.append(line);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -153,7 +140,7 @@ public class ReminderIntentService extends IntentService {
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Content Loaded."));
 
-		return content;
+		return content.toString();
 	}
 
 }

@@ -2,9 +2,7 @@ In Progress
 =========================
 * working on the notifications per word;
 * Adding sound to notifications;
-* adding file logging to help debugging.
 
 Next
 =========================
-* Build some fake pages to test;
-* Support for Limeira's campus.
+* Support for Limeira's campus;

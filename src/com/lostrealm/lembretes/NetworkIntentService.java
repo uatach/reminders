@@ -21,16 +21,13 @@ package com.lostrealm.lembretes;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
-import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.IntentService;
@@ -65,11 +62,19 @@ public class NetworkIntentService extends IntentService {
 		}
 
 		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(url);
+		
+		String host = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_host", "");
+		
+		if (!host.equals("")) {
+			String port = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_port", "");
+			HttpHost proxy = new HttpHost(host, Integer.parseInt(port));
+			client.getParams().setParameter(ConnRouteParams.DEFAULT_PROXY, proxy);
+		}
+		
 		HttpResponse response = null;
 
 		try {
-			response = client.execute(httpGet);
+			response = client.execute(new HttpGet(url));
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,16 +86,41 @@ public class NetworkIntentService extends IntentService {
 			//e.printStackTrace();
 		}
 
-		StatusLine statusLine = response.getStatusLine();
-		int statusCode = statusLine.getStatusCode();
-		String text = new String();
+		StringBuffer content = new StringBuffer();
+		BufferedReader reader = null;
+		String line = null;
+		String result = null;
 
-		if(statusCode == 200) {
-			HttpEntity entity = response.getEntity();
-			InputStream content = null;
-
-			try {
-				content = entity.getContent();
+		if(response.getStatusLine().getStatusCode() == 200) {
+			try {				
+				if (url.equals(getString(R.string.pref_restaurant_CAM))) { // Campinas
+					reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "windows-1252"), 8192);
+					while((line = reader.readLine()) != null) {
+						if (line.contains("<div id=\"conteudo_cardapio\">")) {
+							content.append(line.substring(28).trim());
+							while (!line.contains("</table>")) {
+								content.append(line.trim());
+								line = reader.readLine();
+							}
+							content.append(line.trim());
+						}
+					}
+					result = content.toString().replaceAll("</th>", "<br /></th>");
+				} else if (url.equals(getString(R.string.pref_restaurant_LIM))) { // Limeira
+					content.append("Lembretes ainda não funcionam corretamente para Limeira.\n");
+					reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"), 8192);
+					while((line = reader.readLine()) != null) {
+						if (line.contains("<div id=\"gkComponent\">")) {
+							content.append(line.trim());
+							while (!line.contains("</div>")) {
+								content.append(line.trim());
+								line = reader.readLine();								
+							}
+							content.append(line.trim());
+						}
+					}
+					result = content.toString();
+				}
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -98,45 +128,13 @@ public class NetworkIntentService extends IntentService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			BufferedReader reader = null;
-			try {
-				reader = new BufferedReader(new InputStreamReader(content, "windows-1252"), 8192);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			String line;
-			try {
-				if (url.equals(getString(R.string.pref_restaurant_CAM))) { // Campinas
-					while((line = reader.readLine()) != null) {
-						if (line.contains("<div id=\"conteudo_cardapio\">")) {
-							text = text.concat(line.substring(28).trim());
-							while (!line.contains("</table>")) {
-								text = text.concat(line.trim());
-								line = reader.readLine();
-							}
-							text = text.concat(line.trim());
-						}
-					}
-				} else if (url.equals(getString(R.string.pref_restaurant_LIM))) { // Limeira
-					while((line = reader.readLine()) != null) {
-						text = text.concat(line.trim()); // test!!!
-					}
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
-		//Log.d(LOG_TAG, text);
 
-		publishResults(true, text.replaceAll("</th>", "<br /></th>").toString());
+		publishResults(true, result);
 
 	}
 
-	private void publishResults(Boolean success, String text) {
+	private void publishResults(boolean success, String text) {
 		if (success)
 			writeContent(text);
 		

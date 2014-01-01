@@ -20,12 +20,12 @@ package com.lostrealm.lembretes;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends ActionBarActivity {
 	
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.AboutActivity";
 

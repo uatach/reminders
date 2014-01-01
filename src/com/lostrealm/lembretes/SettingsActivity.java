@@ -30,6 +30,8 @@ import android.widget.Toast;
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.SettingsActivity";
+	
+	private String changed = null;
 
 	public SettingsActivity() {
 	}
@@ -40,6 +42,17 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		if (changed != null) {
+			Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
+			sendBroadcast(intent);
+			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));
+		}
 	}
 
 	@Override
@@ -54,7 +67,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		super.onResume();
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 		if (getPreferenceScreen().getSharedPreferences().getBoolean("first_time", true)) {
-			Toast.makeText(this, "Ajuste os horários dos lembretes.", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.settings_activity_toast), Toast.LENGTH_LONG).show();
 			getPreferenceScreen().getSharedPreferences().edit().putBoolean("first_time", false).commit();
 		}
 
@@ -70,13 +83,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		Intent intent = new Intent(this, UpdateBroadcastReceiver.class);
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Preferences updated."));
 
-		if (!key.equals("pref_vibrate") && !key.equals("pref_reminder_type") && !key.equals("pref_words")) {
-			sendBroadcast(intent);
-			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));
-		}
+		if (!key.equals("pref_vibrate") && !key.equals("pref_reminder_type") && !key.equals("pref_words"))
+			changed = key;
 	}
 
 }

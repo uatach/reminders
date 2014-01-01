@@ -39,8 +39,6 @@ public class LoggerIntentService extends IntentService {
 	public static final String CLASS_EXTRA = "className";
 	public static final String MESSAGE_EXTRA = "message";
 
-	//			File file = new File(this.getFilesDir(), fileName);
-	File file = new File(Environment.getExternalStorageDirectory(), fileName);
 
 	public LoggerIntentService() {
 		super(CLASS_TAG);
@@ -55,6 +53,8 @@ public class LoggerIntentService extends IntentService {
 
 	private void writeLog(String log) {
 		try {
+			File file = new File(Environment.getExternalStorageDirectory(), fileName); // for debug
+			//			File file = new File(this.getFilesDir(), fileName); // for release
 			if (file.length() > Math.pow(2, 20))
 				file.delete();
 			FileOutputStream outputStream = new FileOutputStream(file, true);

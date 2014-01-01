@@ -8,7 +8,7 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="7" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -33,9 +33,6 @@
             android:name="com.lostrealm.lembretes.SettingsActivity"
             android:label="@string/settings_activity_label"
             android:parentActivityName="android.preference.PreferenceActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.preference.PreferenceActivity" />
         </activity>
         <activity
             android:name="com.lostrealm.lembretes.AboutActivity"
@@ -76,6 +73,11 @@
             android:enabled="true"
             android:exported="false" >
         </receiver>
+
+        <activity
+            android:name="com.lostrealm.lembretes.TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

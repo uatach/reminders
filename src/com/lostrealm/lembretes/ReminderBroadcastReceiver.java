@@ -22,6 +22,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+// maybe this class can be merged to UpdateBroadcastReceiver using some Extra.
+
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
 	
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.ReminderBroadcastReceiver";

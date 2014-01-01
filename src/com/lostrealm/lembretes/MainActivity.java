@@ -30,18 +30,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
 	public static final String CLASS_TAG = "com.lostrealm.lembretes.MainActivity";
 
@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Running Application for the first time."));
 			startActivity(new Intent(this, SettingsActivity.class));
 		}
-		
+
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Showing MainActivity."));
 	}
 
@@ -100,7 +100,7 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-		
+
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Terminated Application."));
 	}
 
@@ -119,14 +119,15 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.action_feedback:
 			String[] recipients = new String[]{"edsonduarte1990@gmail.com"};
-			File file = new File(Environment.getExternalStorageDirectory(), "log");
+			File file = new File(Environment.getExternalStorageDirectory(), "log"); // for debug
+			//			File file = new File(this.getFilesDir(), "log"); // for release
 			Uri uri = Uri.fromFile(file);
 
 			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 			intent.setType("message/rfc822");
 			intent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
 			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Lembretes - Feedback]");
-			intent.putExtra(android.content.Intent.EXTRA_TEXT, "test");
+			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
 			intent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
 
 			startActivity(Intent.createChooser(intent, "Enviar email com:"));
@@ -146,23 +147,23 @@ public class MainActivity extends Activity {
 		BufferedReader reader = null;
 		String line = null;
 
-			try {
-				inputStream = openFileInput(getString(R.string.app_name));
-				reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
-				while((line = reader.readLine()) != null) {
-					content = content.concat(line);
-				}
-				reader.close();
-			} catch (FileNotFoundException e) {
-				this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "File not found!"));
-				content = getString(R.string.downloading_error);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try {
+			inputStream = openFileInput(getString(R.string.app_name));
+			reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
+			while((line = reader.readLine()) != null) {
+				content = content.concat(line);
 			}
+			reader.close();
+		} catch (FileNotFoundException e) {
+			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "File not found!"));
+			content = getString(R.string.downloading_error);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Content loaded."));
 
