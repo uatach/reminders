@@ -41,6 +41,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -92,6 +93,13 @@ public class MainActivity extends ActionBarActivity {
 			this.startService(new Intent(this, UpdateIntentService.class));
 			this.startService(new Intent(this, ReminderIntentService.class));
 			this.startActivity(new Intent(this, SettingsActivity.class));
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				File file = new File(Environment.getExternalStorageDirectory(), "data/com.lostrealm.lembretes");
+				if (!file.exists()) {
+					file.mkdirs();
+					this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Created location on media."));
+				}
+			}
 		} else if (!loadedContent)
 			updateView(this);
 
@@ -119,22 +127,28 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		String fileName = "data/com.lostrealm.lembretes/log";
+		File file = null;
+
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			this.startActivity(new Intent(this, SettingsActivity.class));
 			break;
 		case R.id.action_feedback:
 			String[] recipients = new String[]{"edsonduarte1990@gmail.com"};
-			File file = new File(Environment.getExternalStorageDirectory(), "log"); // for debug
-			//			File file = new File(this.getFilesDir(), "log"); // for release (mail application can't read file).
-			Uri uri = Uri.fromFile(file);
 
 			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 			intent.setType("message/rfc822");
 			intent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
 			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Lembretes - Feedback]");
 			//			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-			intent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
+
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				file = new File(Environment.getExternalStorageDirectory(), fileName);
+				intent.putExtra(android.content.Intent.EXTRA_STREAM, Uri.fromFile(file));
+			} else {
+				Toast.makeText(this, R.string.file_error, Toast.LENGTH_LONG).show();
+			}
 
 			this.startActivity(Intent.createChooser(intent, "Enviar email com:"));
 
@@ -143,19 +157,19 @@ public class MainActivity extends ActionBarActivity {
 		case R.id.action_about:
 			this.startActivity(new Intent(this, AboutActivity.class));
 			break;
+		default:
+			super.onOptionsItemSelected(item);
 		}
 		return true;
 	}
 
 	private String loadContent() {
 		String content = new String();
-		FileInputStream inputStream = null;
-		BufferedReader reader = null;
-		String line = null;
 
 		try {
-			inputStream = openFileInput(getString(R.string.app_name));
-			reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
+			FileInputStream inputStream = openFileInput(getString(R.string.app_name));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
+			String line = null;
 			while((line = reader.readLine()) != null) {
 				content = content.concat(line);
 			}
@@ -164,11 +178,9 @@ public class MainActivity extends ActionBarActivity {
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "File not found!"));
 			return getString(R.string.downloading_error);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
 		}
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Content loaded."));

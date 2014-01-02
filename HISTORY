@@ -1,3 +1,8 @@
+v0.6
+Added Action items;
+Finished reminder by words;
+Added some checking for the log file's location.
+
 v0.5.7
 Merged UpdateBroadcastReceiver and ReminderBroadcastReceiver into MainBroadcastReceiver;
 Simplified app's flow and added a button to MainActivity;

@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -76,14 +77,11 @@ public class NetworkIntentService extends IntentService {
 		try {
 			response = client.execute(new HttpGet(url));
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Couldn't download, no connection."));
 			publishResults(false, null);
 			return;
-			//e.printStackTrace();
 		}
 
 		StringBuffer content = new StringBuffer();
@@ -121,12 +119,8 @@ public class NetworkIntentService extends IntentService {
 					}
 					result = content.toString();
 				}
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
 			}
 		}
 

@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -45,25 +46,38 @@ public class ReminderIntentService extends IntentService {
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) { // TODO needs improvement
+	protected void onHandleIntent(Intent intent) {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Intent received."));
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true)) {
 			scheduleReminder();
-			if (intent.getBooleanExtra(getString(R.string.tag_scheduled), false)) { // test words
-				notifyUser();
-				if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate", false)) {
-					Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-					vibrator.vibrate(2000);
-				}
+			if (intent.getBooleanExtra(getString(R.string.tag_scheduled), false)) {
+				Meal meal = new Meal(loadContent());
+				if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_reminder_type", getString(R.string.pref_reminder_type_default)).equals(getString(R.string.pref_reminder_type_default))) {// need to check date
+					notifyUser(meal);
+					vibrate();
+				} else // check words
+					for (String word : PreferenceManager.getDefaultSharedPreferences(this).getString("pref_words", "").split(" ")) {
+						if (meal.getMeal().contains(word.toUpperCase(new Locale("pt", "BR")))) { // TODO maybe will be a problem
+							notifyUser(meal);
+							vibrate();
+							break;
+						}
+					}
 			}
 		} else
 			removeReminder();
 	}
 
-	private void notifyUser() {
-		String content = Html.fromHtml(loadContent()).toString();
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(content.substring(33)).setContentTitle(content.substring(0, 6)).setSmallIcon(R.drawable.ic_launcher);
+	private void vibrate() {
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate", false)) {
+			Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			vibrator.vibrate(2000);
+		}
+	}
+
+	private void notifyUser(Meal meal) {
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(meal.getMeal()).setContentTitle(meal.getTime()).setSmallIcon(R.drawable.ic_launcher);
 		Intent resultIntent = new Intent(this, MainActivity.class);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addNextIntent(resultIntent);
@@ -131,13 +145,40 @@ public class ReminderIntentService extends IntentService {
 			while((line = reader.readLine()) != null)
 				content.append(line);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
 		}
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Content Loaded."));
 
-		return content.toString();
+		return Html.fromHtml(content.toString()).toString();
+	}
+
+	private class Meal {
+		private String time, day, meal, obs;
+
+		Meal(String content) {
+			String[] tmp = content.split("\n");
+			time = tmp[0];
+			day = tmp[1];
+			meal = new String();
+			for (int i = 2; i < 8; i++)
+				meal = meal.concat(tmp[i]);
+			obs = new String();
+			for (int i = 8; i < tmp.length; i++)
+				obs = obs.concat(tmp[i]);
+		}
+
+		public String getTime() {
+			return time;
+		}
+
+		public String getDay() {
+			return day;
+		}
+
+		public String getMeal() {
+			return meal;
+		}
 	}
 
 }

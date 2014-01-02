@@ -30,6 +30,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.widget.Toast;
 
 public class LoggerIntentService extends IntentService {
 
@@ -53,19 +54,22 @@ public class LoggerIntentService extends IntentService {
 
 	private void writeLog(String log) {
 		try {
-			File file = new File(Environment.getExternalStorageDirectory(), fileName); // for debug
-			//			File file = new File(this.getFilesDir(), fileName); // for release (mail application can't read the file).
-			if (file.length() > Math.pow(2, 14))
+			File file = null;
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+				file = new File(Environment.getExternalStorageDirectory(), "data/com.lostrealm.lembretes/" + fileName);
+			else
+				file = new File(this.getFilesDir(), fileName); // mail application can't read the file
+			
+			if (file.length() > Math.pow(2, 15))
 				file.delete();
 			FileOutputStream outputStream = new FileOutputStream(file, true);
 			outputStream.write(log.getBytes());
 			outputStream.write("\n".getBytes());
 			outputStream.close();
 		} catch (FileNotFoundException e) {
-			LoggerIntentService.newLogIntent(this, CLASS_TAG, "File not found!");
+			Toast.makeText(this, CLASS_TAG + "\nError: Log file not found", Toast.LENGTH_LONG).show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
 		}
 	}
 

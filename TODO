@@ -1,9 +1,13 @@
 In Progress
 =========================
-* working on the notifications per word;
 * Adding sound to notifications.
 
 Next
 =========================
 * Support for Limeira's campus;
-* When screen rotates, TimePickerPreference sets time to 00:00.
+* When screen rotates, TimePickerPreference loses current value;
+* When entering application, if there's a notification, it should be removed;
+* Check date of meal before reminding;
+* new application icon;
+* new theme; (?)
+* check date when reminding. (necessary?)
