@@ -1,3 +1,10 @@
+v0.6.5
+Added LogActivity, to enable who doesn't have external media to see logs;
+When starting app if there's a notification, it is removed;
+Fixed theme error occurring on Android 4;
+Fixed TimePicker rotation issue;
+Fixed reminders on saturday morning.
+
 v0.6
 Added Action items;
 Finished reminder by words;

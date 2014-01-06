@@ -30,7 +30,7 @@ import android.widget.Toast;
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.SettingsActivity";
-	
+
 	private String changed = null;
 
 	public SettingsActivity() {
@@ -42,12 +42,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+
+		findPreference("pref_logging_view").setIntent(new Intent(this, LogActivity.class));
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
+
 		if (changed != null) {
 			Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_remind), true);
 			sendBroadcast(intent);
@@ -87,6 +89,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 		if ((key.equals("pref_remind") || key.equals("pref_reminder_time_lunch") || key.equals("pref_reminder_time_dinner")))
 			changed = key;
+		else if (key.equals("pref_logging")) { 
+			if (sharedPreferences.getBoolean("pref_logging", true))
+				this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Logging enabled."));
+			else
+				this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Logging disabled."));
+		}
 	}
 
 }

@@ -24,17 +24,19 @@ import java.util.GregorianCalendar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.preference.DialogPreference;
+import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
 
 public class TimePickerPreference extends DialogPreference {
-	
+
 	private Calendar calendar = null;
 	private TimePicker timePicker = null;
-	
+
 	public TimePickerPreference(Context context) {
 		this(context, null);
 	}
@@ -50,17 +52,18 @@ public class TimePickerPreference extends DialogPreference {
 		setNegativeButtonText(context.getString(R.string.cancel_button));
 		calendar = new GregorianCalendar();
 	}
-	
+
 	@Override
 	protected View onCreateDialogView() {
 		timePicker = new TimePicker(getContext());
-		timePicker.setIs24HourView(true);
+		timePicker.setIs24HourView(Settings.System.getString(this.getContext().getContentResolver(), Settings.System.TIME_12_24).equals("24") ? true : false);
 		return timePicker;
 	}
-	
+
 	@Override
-	protected void onBindDialogView(View view) {
-		super.onBindDialogView(view);
+	protected void showDialog(Bundle state) {
+		super.showDialog(state);
+
 		timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
 		timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
 	}
@@ -68,11 +71,11 @@ public class TimePickerPreference extends DialogPreference {
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);
-		
+
 		if (positiveResult) {
 			calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
 			calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-			
+
 			setSummary(getSummary());
 			if (callChangeListener(calendar.getTimeInMillis())) {
 				persistLong(calendar.getTimeInMillis());
@@ -80,12 +83,12 @@ public class TimePickerPreference extends DialogPreference {
 			}
 		}
 	}
-	
+
 	@Override
 	protected Object onGetDefaultValue(TypedArray array, int index) {
 		return array.getString(index);
 	}
-	
+
 	@Override
 	protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
 		if (restorePersistedValue) {
@@ -103,7 +106,7 @@ public class TimePickerPreference extends DialogPreference {
 		}
 		setSummary(getSummary());
 	}
-	
+
 	@Override
 	public CharSequence getSummary() {
 		if (calendar == null) {
@@ -111,4 +114,5 @@ public class TimePickerPreference extends DialogPreference {
 		}
 		return DateFormat.getTimeFormat(getContext()).format(new Date(calendar.getTimeInMillis()));
 	}
+
 }

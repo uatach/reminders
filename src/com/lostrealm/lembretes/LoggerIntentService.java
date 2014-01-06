@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,6 +29,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class LoggerIntentService extends IntentService {
@@ -47,9 +47,8 @@ public class LoggerIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Date d = new Date(System.currentTimeMillis());
-		DateFormat df = SimpleDateFormat.getDateTimeInstance();
-		writeLog(df.format(d) + " -> "+ intent.getStringExtra(CLASS_EXTRA) + " -- " + intent.getStringExtra(MESSAGE_EXTRA));
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_logging", true)) // TODO default should be false
+			writeLog(SimpleDateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis())) + " -> "+ intent.getStringExtra(CLASS_EXTRA) + " -- " + intent.getStringExtra(MESSAGE_EXTRA));
 	}
 
 	private void writeLog(String log) {

@@ -99,5 +99,24 @@
             android:summary="@string/pref_port_summary"
             android:title="@string/pref_port_title" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/category_logging" >
+
+        <!-- Option to enable logging ===== TODO default should be false -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:enabled="true"
+            android:key="pref_logging"
+            android:summaryOff="@string/pref_logging_summary_off"
+            android:summaryOn="@string/pref_logging_summary_on"
+            android:title="@string/pref_logging_title" />
+
+        <!-- Option to display log -->
+        <Preference
+            android:enabled="true"
+            android:key="pref_logging_view"
+            android:dependency="pref_logging"
+            android:summary="@string/pref_logging_view_summary"
+            android:title="@string/pref_logging_view_title" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

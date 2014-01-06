@@ -5,9 +5,6 @@ In Progress
 Next
 =========================
 * Support for Limeira's campus;
-* When screen rotates, TimePickerPreference loses current value;
-* When entering application, if there's a notification, it should be removed;
-* Check date of meal before reminding;
+* Check date of meal before reminding; (really necessary?)
 * new application icon;
-* new theme; (?)
-* check date when reminding. (necessary?)
+* new theme. (?)

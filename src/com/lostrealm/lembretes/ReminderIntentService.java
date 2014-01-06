@@ -40,6 +40,8 @@ import android.text.Html;
 public class ReminderIntentService extends IntentService {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.ReminderIntentService";
+	
+	public static final int REMINDER_ID = 24702581;
 
 	public ReminderIntentService() {
 		super(CLASS_TAG);
@@ -84,7 +86,7 @@ public class ReminderIntentService extends IntentService {
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(0, mBuilder.build());
+		mNotificationManager.notify(REMINDER_ID, mBuilder.build());
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "User Notified."));
 	}
 
@@ -107,6 +109,8 @@ public class ReminderIntentService extends IntentService {
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + getLong(lunch));
 		else if (getLong(time) < getLong(dinner))
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + getLong(dinner));
+		else if (reminder.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
+			reminder.setTimeInMillis(reminder.getTimeInMillis() + 3*day + getLong(lunch));
 		else
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + day + getLong(lunch));
 

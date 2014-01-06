@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -103,6 +104,8 @@ public class MainActivity extends ActionBarActivity {
 		} else if (!loadedContent)
 			updateView(this);
 
+		((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ReminderIntentService.REMINDER_ID);
+
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Showing MainActivity."));
 	}
 
@@ -143,11 +146,13 @@ public class MainActivity extends ActionBarActivity {
 			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Lembretes - Feedback]");
 			//			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
 
-			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-				file = new File(Environment.getExternalStorageDirectory(), fileName);
-				intent.putExtra(android.content.Intent.EXTRA_STREAM, Uri.fromFile(file));
-			} else {
-				Toast.makeText(this, R.string.file_error, Toast.LENGTH_LONG).show();
+			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_logging", false)) {
+				if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+					file = new File(Environment.getExternalStorageDirectory(), fileName);
+					intent.putExtra(android.content.Intent.EXTRA_STREAM, Uri.fromFile(file));
+					Toast.makeText(this, R.string.file_success, Toast.LENGTH_SHORT).show();
+				} else
+					Toast.makeText(this, R.string.file_error, Toast.LENGTH_SHORT).show();
 			}
 
 			this.startActivity(Intent.createChooser(intent, "Enviar email com:"));

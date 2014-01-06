@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lostrealm.lembretes"
     android:versionCode="1"
-    android:versionName="0.6" >
+    android:versionName="0.6.5" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -33,7 +33,7 @@
             android:name="com.lostrealm.lembretes.SettingsActivity"
             android:label="@string/settings_activity_label"
             android:parentActivityName="com.lostrealm.lembretes.MainActivity"
-            android:theme="@android:style/Theme.Black" >
+            android:theme="@style/Theme.AppCompat" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lostrealm.lembretes.MainActivity" />
@@ -45,6 +45,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lostrealm.lembretes.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.lostrealm.lembretes.LogActivity"
+            android:label="@string/log_activity_title"
+            android:parentActivityName="com.lostrealm.lembretes.SettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lostrealm.lembretes.SettingsActivity" />
         </activity>
 
         <service
