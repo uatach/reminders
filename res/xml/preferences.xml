@@ -12,6 +12,15 @@
             android:negativeButtonText="@string/cancel_button"
             android:summary="@string/pref_restaurant_summary"
             android:title="@string/pref_restaurant_title" />
+
+        <!-- Vegetarian menu -->
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:key="pref_menu"
+            android:summaryOff="@string/pref_menu_summary_off"
+            android:summaryOn="@string/pref_menu_summary_on"
+            android:title="@string/pref_menu_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_reminders" >
 
@@ -60,7 +69,8 @@
             android:defaultValue="54000000"
             android:dependency="pref_remind"
             android:key="pref_reminder_time_lunch"
-            android:title="@string/pref_reminder_time_lunch_title" />
+            android:title="@string/pref_reminder_time_lunch_title"
+            android:dialogMessage="test" />
 
         <!-- Option to select dinner's reminder's time -->
         <com.lostrealm.lembretes.TimePickerPreference
@@ -101,9 +111,9 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_logging" >
 
-        <!-- Option to enable logging ===== TODO default should be false -->
+        <!-- Option to enable logging -->
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:enabled="true"
             android:key="pref_logging"
             android:summaryOff="@string/pref_logging_summary_off"
@@ -112,9 +122,9 @@
 
         <!-- Option to display log -->
         <Preference
+            android:dependency="pref_logging"
             android:enabled="true"
             android:key="pref_logging_view"
-            android:dependency="pref_logging"
             android:summary="@string/pref_logging_view_summary"
             android:title="@string/pref_logging_view_title" />
     </PreferenceCategory>

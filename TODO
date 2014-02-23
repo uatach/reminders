@@ -1,10 +1,10 @@
 In Progress
 =========================
-* Adding sound to notifications.
 
 Next
 =========================
-* Support for Limeira's campus;
+* Add sound to notifications;
+* Write "no connection" error to file and use it on reminders;
 * Check date of meal before reminding; (really necessary?)
-* new application icon;
-* new theme. (?)
+* Listen for change in connectivity after error;
+* Need to change how updates are scheduled.

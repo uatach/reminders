@@ -22,7 +22,7 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.util.Calendar;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -58,20 +58,24 @@ public class NetworkIntentService extends IntentService {
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default)).equals(getString(R.string.pref_restaurant_default))) {
 			url = getString(R.string.pref_restaurant_CAM);
+			Calendar calendar = Calendar.getInstance();
+			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_menu", false) && (calendar.get(Calendar.HOUR_OF_DAY) < 15 || calendar.get(Calendar.HOUR_OF_DAY) > 22)) {
+				url = url + "?pagina=2";
+			}
 		} else {
 			url = getString(R.string.pref_restaurant_LIM);
 		}
 
 		HttpClient client = new DefaultHttpClient();
-		
+
 		String host = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_host", "");
-		
+
 		if (!host.equals("")) {
 			String port = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_port", "");
 			HttpHost proxy = new HttpHost(host, Integer.parseInt(port));
 			client.getParams().setParameter(ConnRouteParams.DEFAULT_PROXY, proxy);
 		}
-		
+
 		HttpResponse response = null;
 
 		try {
@@ -91,7 +95,7 @@ public class NetworkIntentService extends IntentService {
 
 		if(response.getStatusLine().getStatusCode() == 200) {
 			try {				
-				if (url.equals(getString(R.string.pref_restaurant_CAM))) { // Campinas
+				if (url.contains(getString(R.string.pref_restaurant_CAM))) { // Campinas
 					reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "windows-1252"), 8192);
 					while((line = reader.readLine()) != null) {
 						if (line.contains("<div id=\"conteudo_cardapio\">")) {
@@ -105,18 +109,31 @@ public class NetworkIntentService extends IntentService {
 					}
 					result = content.toString().replaceAll("</th>", "<br /></th>");
 				} else if (url.equals(getString(R.string.pref_restaurant_LIM))) { // Limeira
-					content.append("Lembretes ainda não funcionam corretamente para Limeira.\n");
 					reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"), 8192);
+					Calendar calendar = Calendar.getInstance();
+					String timeOfDay = "ALMOÇO";
+					if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
+						calendar.setTimeInMillis(calendar.getTimeInMillis() + (1000*60*60*48));
+					else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+						calendar.setTimeInMillis(calendar.getTimeInMillis() + (1000*60*60*24));
+					else if (calendar.get(Calendar.HOUR_OF_DAY) > 14 && calendar.get(Calendar.HOUR_OF_DAY) < 22)
+						timeOfDay = "JANTAR";
+					String search = timeOfDay + " – DIA " + calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH)<10 ? "0" + (calendar.get(Calendar.MONDAY)+1) : calendar.get(Calendar.MONTH));
+					boolean found = false;
+
 					while((line = reader.readLine()) != null) {
-						if (line.contains("<div id=\"gkComponent\">")) {
-							content.append(line.trim());
-							while (!line.contains("</div>")) {
+						if (line.contains(search)) {
+							found = true;
+							for (int i = 0; i < 9; i++) {
 								content.append(line.trim());
-								line = reader.readLine();								
+								line = reader.readLine();
 							}
-							content.append(line.trim());
+							//							content.append(line.trim());
 						}
 					}
+					content.append("\nObs.: Lembretes ainda não funcionam corretamente para Limeira.\n");
+					if (!found)
+						content.append("\nCardápio não está disponível no momento.\n");
 					result = content.toString();
 				}
 			} catch (Exception e) {
@@ -131,7 +148,7 @@ public class NetworkIntentService extends IntentService {
 	private void publishResults(boolean success, String text) {
 		if (success)
 			writeContent(text);
-		
+
 		Intent intent = new Intent(MainActivity.CLASS_TAG);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));

@@ -1,3 +1,8 @@
+v0.8
+New icon;
+Added support for vegetarian food;
+Now displays Limeira's menu, reminders seem to work.
+
 v0.6.5
 Added LogActivity, to enable who doesn't have external media to see logs;
 When starting app if there's a notification, it is removed;

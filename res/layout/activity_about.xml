@@ -44,12 +44,23 @@
         android:id="@+id/copyrightTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/licenseTextView"
+        android:layout_above="@+id/iconCopyrightTextView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/app_copyright"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/iconCopyrightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/licenseTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/icon_copyright"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/licenseTextView"
