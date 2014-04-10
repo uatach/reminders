@@ -7,4 +7,11 @@ Next
 * Write "no connection" error to file and use it on reminders;
 * Check date of meal before reminding; (really necessary?)
 * Listen for change in connectivity after error;
-* Need to change how updates are scheduled.
+* Need to change how updates are scheduled;
+* Add proxy settings for Orbot support;
+* Regular expressions support.
+
+* Update links to:
+https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas
+https://www1.sistemas.unicamp.br/Mobile/CardapioFCA
+https://www1.sistemas.unicamp.br/Mobile/CardapioPFL

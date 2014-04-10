@@ -22,7 +22,8 @@ That's it, no additional steps are required, the application will (or not, if di
 License
 -------
 
-Copyright (C) 2013-2014 Edson Duarte (edsonduarte1990@gmail.com)
+Copyright (C) 2013-2014 Edson Duarte (edsonduarte1990@gmail.com).
+
 Icon's Copyright (C) 2014 Filipe Marques (fi.marques33@gmail.com) with licenses CC-BY-SA and GPLv3+.
 
 This program is free software: you can redistribute it and/or modify

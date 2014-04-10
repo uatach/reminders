@@ -47,7 +47,7 @@ public class LoggerIntentService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_logging", true)) // TODO default should be false
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_logging", false))
 			writeLog(SimpleDateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis())) + " -> "+ intent.getStringExtra(CLASS_EXTRA) + " -- " + intent.getStringExtra(MESSAGE_EXTRA));
 	}
 

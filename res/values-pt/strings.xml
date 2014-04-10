@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_license">Programa publicado com licença GPLv3+.</string>
+    <string name="app_name">Lembretes</string>
+    <string name="app_version">Lembretes v0.8.1</string>
+    <string name="action_settings">Opções</string>
+    <string name="action_feedback">Feedback/Ajuda</string>
+    <string name="action_about">Sobre</string>
+    <string name="confirm_button">Confirmar</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="downloading_error">Sem conexão com a internet.</string>
+    <string name="file_success">Log anexado com sucesso.</string>
+    <string name="file_error">Arquivo log não pode ser anexado, aparelho não possui cartão de memória.</string>
+    <string name="tag_scheduled">scheduled</string>
+    <string name="tag_update">update</string>
+    <string name="tag_remind">remind</string>
+    <string name="server_error">Site está offline</string>
+
+    <!-- MainActivity -->
+    <string name="main_activity_label">Próxima Refeição:</string>
+    <string name="main_activity_view">Baixando cardápio!</string>
+    <string name="main_activity_button">Atualizar</string>
+
+    <!-- SettingsActivity -->
+    <string name="settings_activity_label">Opções</string>
+    <string name="settings_activity_toast">Ajuste os horários dos lembretes.</string>
+    <string name="category_restaurant">Restaurante</string>
+    <string name="category_reminders">Lembretes</string>
+    <string name="category_proxy">Servidor de Proxy</string>
+    <string name="category_logging">Logging</string>
+    <string name="pref_remind_title">Permitir Lembretes</string>
+    <string name="pref_remind_summary_on">Lembretes habilitados.</string>
+    <string name="pref_remind_summary_off">Lembretes desabilitados.</string>
+    <string name="pref_menu_title">Cardápio Vegetariano</string>
+    <string name="pref_menu_summary_on">Monstrando cardápio vegetariano (quando disponível).</string>
+    <string name="pref_menu_summary_off">Cardápio vegetariano não é mostrado.</string>
+    <string name="pref_vibrate_title">Vibrar ao Notificar</string>
+    <string name="pref_vibrate_summary_on">Vibrando.</string>
+    <string name="pref_vibrate_summary_off">Vibração desabilitada.</string>
+    <string name="pref_sound_title">Som ao Notificar</string>
+    <string name="pref_sound_summary_on">Som habilitado.</string>
+    <string name="pref_sound_summary_off">Som desabilitado.</string>
+    <string name="pref_restaurant_title">Local do Cardápio</string>
+    <string name="pref_restaurant_summary">De onde deve ser mostrado o cardápio.</string>
+
+    <string name="pref_reminder_type_title">Tipo de Lembrete</string>
+    <string name="pref_reminder_type_summary">Selecione o tipo de lembrete desejado.</string>
+    <string name="pref_reminder_type_default">refeicao</string>
+
+    <string-array name="pref_reminder_type_entries">
+        <item>Por Refeição</item>
+        <item>Por Palavra</item>
+    </string-array>
+
+    <string name="pref_reminder_time_lunch_title">Horário de Lembrete no Almoço</string>
+    <string name="pref_reminder_time_dinner_title">Horário de Lembrete no Jantar</string>
+    <string name="pref_words_title">Lista de Palavras</string>
+    <string name="pref_words_summary">Palavras usadas nos lembretes, separadas por espaço.</string>
+    <string name="pref_host_title">Endereço de proxy</string>
+    <string name="pref_host_summary">O hostname ou IP do servidor de proxy HTTP.</string>
+    <string name="pref_port_title">Porta de proxy</string>
+    <string name="pref_port_summary">A porta para o servidor de proxy HTTP.</string>
+    <string name="pref_logging_title">Habilitar Log</string>
+    <string name="pref_logging_summary_on">Log habilitado. Você pode enviá-lo usando a opção de feedback.</string>
+    <string name="pref_logging_summary_off">Log desabilitado.</string>
+    <string name="pref_logging_view_title">Exibir log</string>
+    <string name="pref_logging_view_summary">O log será exibido em uma nova tela.</string>
+
+    <!-- AboutActivity -->
+    <string name="about_activity_title">Sobre</string>
+    <string name="about_activity_content_description">Imagem do Projeto</string>
+    <string name="about_activity_button_text">Página do Projeto</string>
+    <string name="about_activity_button_action">Abrir Página</string>
+
+	<!-- LogActivity -->
+    <string name="log_activity_title">Log</string>
+    <string name="log_activity_button">Apagar Log</string>
+    <string name="log_not_found">Não foi possível carregar o arquivo de log.</string>
+
+</resources>

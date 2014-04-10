@@ -143,7 +143,7 @@ public class MainActivity extends ActionBarActivity {
 			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 			intent.setType("message/rfc822");
 			intent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
-			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[Lembretes - Feedback]");
+			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + " - Feedback]");
 			//			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
 
 			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_logging", false)) {
@@ -176,7 +176,7 @@ public class MainActivity extends ActionBarActivity {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
 			String line = null;
 			while((line = reader.readLine()) != null) {
-				content = content.concat(line);
+				content = content.concat(line + "\n");
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {

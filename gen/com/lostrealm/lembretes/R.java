@@ -1167,12 +1167,14 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000b;
-        public static final int about_activity_button_action=0x7f0b004d;
-        public static final int about_activity_button_text=0x7f0b004c;
-        public static final int about_activity_content_description=0x7f0b004b;
+        public static final int about_activity_button_action=0x7f0b004e;
+        public static final int about_activity_button_text=0x7f0b004d;
+        public static final int about_activity_content_description=0x7f0b004c;
         /**  AboutActivity 
+ AboutActivity 
+ AboutActivity 
          */
-        public static final int about_activity_title=0x7f0b004a;
+        public static final int about_activity_title=0x7f0b004b;
         public static final int action_about=0x7f0b0015;
         public static final int action_feedback=0x7f0b0014;
         public static final int action_settings=0x7f0b0013;
@@ -1181,65 +1183,75 @@ containing a value of this type.
         public static final int app_name=0x7f0b0011;
         public static final int app_version=0x7f0b0012;
         public static final int cancel_button=0x7f0b0017;
-        public static final int category_logging=0x7f0b0026;
-        public static final int category_proxy=0x7f0b0025;
-        public static final int category_reminders=0x7f0b0024;
-        public static final int category_restaurant=0x7f0b0023;
+        public static final int category_logging=0x7f0b0029;
+        public static final int category_proxy=0x7f0b0028;
+        public static final int category_reminders=0x7f0b0027;
+        public static final int category_restaurant=0x7f0b0026;
         public static final int confirm_button=0x7f0b0016;
         public static final int downloading_error=0x7f0b0018;
         public static final int file_error=0x7f0b001a;
         public static final int file_success=0x7f0b0019;
         public static final int icon_copyright=0x7f0b000f;
-        public static final int log_activity_button=0x7f0b004f;
+        /**  text in portuguese because it is displayed with the restaurant\'s menu. 
+         */
+        public static final int limeira_warning=0x7f0b0020;
+        public static final int log_activity_button=0x7f0b0050;
         /**  LogActivity 
+ LogActivity 
+ LogActivity 
          */
-        public static final int log_activity_title=0x7f0b004e;
-        public static final int log_not_found=0x7f0b0050;
-        public static final int main_activity_button=0x7f0b0020;
-        /**  MainActivity 
+        public static final int log_activity_title=0x7f0b004f;
+        public static final int log_not_found=0x7f0b0051;
+        public static final int main_activity_button=0x7f0b0023;
+        /**  text in portuguese because it is displayed with the restaurant\'s menu. 
+ MainActivity 
+ MainActivity 
+ MainActivity 
          */
-        public static final int main_activity_label=0x7f0b001e;
-        public static final int main_activity_view=0x7f0b001f;
-        public static final int pref_host_summary=0x7f0b0042;
-        public static final int pref_host_title=0x7f0b0041;
-        public static final int pref_logging_summary_off=0x7f0b0047;
-        public static final int pref_logging_summary_on=0x7f0b0046;
-        public static final int pref_logging_title=0x7f0b0045;
-        public static final int pref_logging_view_summary=0x7f0b0049;
-        public static final int pref_logging_view_title=0x7f0b0048;
-        public static final int pref_menu_summary_off=0x7f0b002c;
-        public static final int pref_menu_summary_on=0x7f0b002b;
-        public static final int pref_menu_title=0x7f0b002a;
-        public static final int pref_notify_summary=0x7f0b002e;
-        public static final int pref_notify_title=0x7f0b002d;
-        public static final int pref_port_summary=0x7f0b0044;
-        public static final int pref_port_title=0x7f0b0043;
-        public static final int pref_remind_summary_off=0x7f0b0029;
-        public static final int pref_remind_summary_on=0x7f0b0028;
-        public static final int pref_remind_title=0x7f0b0027;
-        public static final int pref_reminder_time_dinner_title=0x7f0b003e;
-        public static final int pref_reminder_time_lunch_title=0x7f0b003d;
-        public static final int pref_reminder_type_default=0x7f0b003c;
-        public static final int pref_reminder_type_summary=0x7f0b003b;
-        public static final int pref_reminder_type_title=0x7f0b003a;
-        public static final int pref_restaurant_CAM=0x7f0b0038;
-        public static final int pref_restaurant_LIM=0x7f0b0039;
-        public static final int pref_restaurant_default=0x7f0b0037;
-        public static final int pref_restaurant_summary=0x7f0b0036;
-        public static final int pref_restaurant_title=0x7f0b0035;
-        public static final int pref_sound_summary_off=0x7f0b0034;
-        public static final int pref_sound_summary_on=0x7f0b0033;
-        public static final int pref_sound_title=0x7f0b0032;
-        public static final int pref_vibrate_summary_off=0x7f0b0031;
-        public static final int pref_vibrate_summary_on=0x7f0b0030;
-        public static final int pref_vibrate_title=0x7f0b002f;
-        public static final int pref_words_summary=0x7f0b0040;
-        public static final int pref_words_title=0x7f0b003f;
+        public static final int main_activity_label=0x7f0b0021;
+        public static final int main_activity_view=0x7f0b0022;
+        public static final int not_found=0x7f0b001f;
+        public static final int pref_host_summary=0x7f0b0043;
+        public static final int pref_host_title=0x7f0b0042;
+        public static final int pref_logging_summary_off=0x7f0b0048;
+        public static final int pref_logging_summary_on=0x7f0b0047;
+        public static final int pref_logging_title=0x7f0b0046;
+        public static final int pref_logging_view_summary=0x7f0b004a;
+        public static final int pref_logging_view_title=0x7f0b0049;
+        public static final int pref_menu_summary_off=0x7f0b002f;
+        public static final int pref_menu_summary_on=0x7f0b002e;
+        public static final int pref_menu_title=0x7f0b002d;
+        public static final int pref_port_summary=0x7f0b0045;
+        public static final int pref_port_title=0x7f0b0044;
+        public static final int pref_remind_summary_off=0x7f0b002c;
+        public static final int pref_remind_summary_on=0x7f0b002b;
+        public static final int pref_remind_title=0x7f0b002a;
+        public static final int pref_reminder_time_dinner_title=0x7f0b003f;
+        public static final int pref_reminder_time_lunch_title=0x7f0b003e;
+        public static final int pref_reminder_type_default=0x7f0b003d;
+        public static final int pref_reminder_type_summary=0x7f0b003c;
+        public static final int pref_reminder_type_title=0x7f0b003b;
+        public static final int pref_restaurant_CAM=0x7f0b0039;
+        public static final int pref_restaurant_LIM=0x7f0b003a;
+        public static final int pref_restaurant_default=0x7f0b0038;
+        public static final int pref_restaurant_summary=0x7f0b0037;
+        public static final int pref_restaurant_title=0x7f0b0036;
+        public static final int pref_sound_summary_off=0x7f0b0035;
+        public static final int pref_sound_summary_on=0x7f0b0034;
+        public static final int pref_sound_title=0x7f0b0033;
+        public static final int pref_vibrate_summary_off=0x7f0b0032;
+        public static final int pref_vibrate_summary_on=0x7f0b0031;
+        public static final int pref_vibrate_title=0x7f0b0030;
+        public static final int pref_words_summary=0x7f0b0041;
+        public static final int pref_words_title=0x7f0b0040;
         public static final int project_url=0x7f0b000d;
+        public static final int server_error=0x7f0b001e;
         /**  SettingsActivity 
+ SettingsActivity 
+ SettingsActivity 
          */
-        public static final int settings_activity_label=0x7f0b0021;
-        public static final int settings_activity_toast=0x7f0b0022;
+        public static final int settings_activity_label=0x7f0b0024;
+        public static final int settings_activity_toast=0x7f0b0025;
         public static final int tag_remind=0x7f0b001d;
         public static final int tag_scheduled=0x7f0b001b;
         public static final int tag_update=0x7f0b001c;

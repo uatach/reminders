@@ -40,7 +40,7 @@ import android.text.Html;
 public class ReminderIntentService extends IntentService {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.ReminderIntentService";
-	
+
 	public static final int REMINDER_ID = 24702581;
 
 	public ReminderIntentService() {
@@ -55,17 +55,30 @@ public class ReminderIntentService extends IntentService {
 			scheduleReminder();
 			if (intent.getBooleanExtra(getString(R.string.tag_scheduled), false)) {
 				Meal meal = new Meal(loadContent());
-				if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_reminder_type", getString(R.string.pref_reminder_type_default)).equals(getString(R.string.pref_reminder_type_default))) {// need to check date
-					notifyUser(meal);
-					vibrate();
-				} else // check words
-					for (String word : PreferenceManager.getDefaultSharedPreferences(this).getString("pref_words", "").split(" ")) {
-						if (meal.getMeal().contains(word.toUpperCase(new Locale("pt", "BR")))) { // TODO maybe will be a problem
-							notifyUser(meal);
-							vibrate();
-							break;
+				Calendar calendar = Calendar.getInstance();
+				String date;
+				if (calendar.get(Calendar.DAY_OF_MONTH) < 10)
+					date = "0" + calendar.get(Calendar.DAY_OF_MONTH) + "/";
+				else
+					date = calendar.get(Calendar.DAY_OF_MONTH) + "/";
+				if ((calendar.get(Calendar.MONTH)+1) < 10)
+					date += "0" + (calendar.get(Calendar.MONTH)+1) + "/" + calendar.get(Calendar.YEAR);
+				else
+					date += (calendar.get(Calendar.MONTH)+1) + "/" + calendar.get(Calendar.YEAR);
+				
+				if (meal.getDay().contains(date)) {
+					if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_reminder_type", getString(R.string.pref_reminder_type_default)).equals(getString(R.string.pref_reminder_type_default))) {// need to check date
+						notifyUser(meal);
+						vibrate();
+					} else // check words
+						for (String word : PreferenceManager.getDefaultSharedPreferences(this).getString("pref_words", "").split(" ")) {
+							if (meal.getMeal().contains(word.toUpperCase(new Locale("pt", "BR")))) { // TODO maybe will be a problem
+								notifyUser(meal);
+								vibrate();
+								break;
+							}
 						}
-					}
+				}
 			}
 		} else
 			removeReminder();
