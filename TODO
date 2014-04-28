@@ -1,17 +1,22 @@
-In Progress
-=========================
-
-Next
-=========================
 * Add sound to notifications;
 * Write "no connection" error to file and use it on reminders;
 * Check date of meal before reminding; (really necessary?)
 * Listen for change in connectivity after error;
 * Need to change how updates are scheduled;
-* Add proxy settings for Orbot support;
 * Regular expressions support.
 
-* Update links to:
-https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas
-https://www1.sistemas.unicamp.br/Mobile/CardapioFCA
-https://www1.sistemas.unicamp.br/Mobile/CardapioPFL
+
+* Add welcome text:
+"Thanks:
+This is Free Software, GPLv3+ licensed!
+Thanks for trying it!
+
+You can contribute to the project by giving feedback and/or by enabling logs from the settings screen to send it to the developer when a error occurs.
+
+Usage:
+This app doesn't require user interaction.
+On scheduled times it will notify the user with the meal info.
+Optionally, you can go to the settings screen to change the default reminder's time.
+
+License:
+For license info please visit the project's website."

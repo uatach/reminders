@@ -35,7 +35,7 @@
 
         <!-- Enable vibrating reminders -->
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:dependency="pref_remind"
             android:enabled="true"
             android:key="pref_vibrate"
@@ -90,6 +90,15 @@
             android:title="@string/pref_words_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_proxy" >
+        
+        <!-- Option to enable Orbot proxy settings -->
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:enabled="true"
+            android:key="pref_orbot"
+            android:summaryOff="@string/pref_orbot_summary_off"
+            android:summaryOn="@string/pref_orbot_summary_on"
+            android:title="@string/pref_orbot_title" />
 
         <!-- Proxy Host -->
         <EditTextPreference

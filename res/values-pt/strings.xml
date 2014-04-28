@@ -3,19 +3,23 @@
 
     <string name="app_license">Programa publicado com licença GPLv3+.</string>
     <string name="app_name">Lembretes</string>
-    <string name="app_version">Lembretes v0.8.1</string>
+    <string name="action_refresh">Atualizar</string>
     <string name="action_settings">Opções</string>
     <string name="action_feedback">Feedback/Ajuda</string>
     <string name="action_about">Sobre</string>
     <string name="confirm_button">Confirmar</string>
     <string name="cancel_button">Cancelar</string>
-    <string name="downloading_error">Sem conexão com a internet.</string>
     <string name="file_success">Log anexado com sucesso.</string>
     <string name="file_error">Arquivo log não pode ser anexado, aparelho não possui cartão de memória.</string>
     <string name="tag_scheduled">scheduled</string>
     <string name="tag_update">update</string>
     <string name="tag_remind">remind</string>
-    <string name="server_error">Site está offline</string>
+    
+    <!-- Errors -->
+    <string name="update_warning">Não foi possível atualizar.</string>
+    <string name="error">Erro desconhecido, envie log para o desenvolvedor.</string>
+    <string name="downloading_error">Sem conexão com a internet.</string>
+    <string name="server_error">O servidor está offline</string>
 
     <!-- MainActivity -->
     <string name="main_activity_label">Próxima Refeição:</string>
@@ -57,6 +61,9 @@
     <string name="pref_reminder_time_dinner_title">Horário de Lembrete no Jantar</string>
     <string name="pref_words_title">Lista de Palavras</string>
     <string name="pref_words_summary">Palavras usadas nos lembretes, separadas por espaço.</string>
+    <string name="pref_orbot_title">Usar Orbot</string>
+    <string name="pref_orbot_summary_on">Orbot está sendo utilizado.</string>
+    <string name="pref_orbot_summary_off">Orbot não é utilizado.</string>
     <string name="pref_host_title">Endereço de proxy</string>
     <string name="pref_host_summary">O hostname ou IP do servidor de proxy HTTP.</string>
     <string name="pref_port_title">Porta de proxy</string>

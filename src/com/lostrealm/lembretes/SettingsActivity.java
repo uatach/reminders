@@ -31,6 +31,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.SettingsActivity";
 
+	// variable used to check if it's needed to update scheduled reminders.
 	private String changed = null;
 
 	public SettingsActivity() {
@@ -68,6 +69,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	protected void onResume() {
 		super.onResume();
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		
 		if (getPreferenceScreen().getSharedPreferences().getBoolean("first_time", true)) {
 			Toast.makeText(this, getString(R.string.settings_activity_toast), Toast.LENGTH_LONG).show();
 			getPreferenceScreen().getSharedPreferences().edit().putBoolean("first_time", false).commit();
@@ -83,17 +85,35 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Preferences updated."));
 
-		if ((key.equals("pref_remind") || key.equals("pref_reminder_time_lunch") || key.equals("pref_reminder_time_dinner")))
+		// Changing this settings is necessary to change scheduled reminder.
+		if ((key.equals("pref_remind") || key.equals("pref_reminder_time_lunch") || key.equals("pref_reminder_time_dinner"))) {
 			changed = key;
+		}
+		// Logging that the log option has been enabled.
 		else if (key.equals("pref_logging")) { 
 			if (sharedPreferences.getBoolean("pref_logging", true))
 				this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Logging enabled."));
-			else
-				this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Logging disabled."));
+		}
+		// Changing availability of proxy manual options.
+		else if (key.equals("pref_orbot")) {
+			if (sharedPreferences.getBoolean("pref_orbot", false)) {
+				this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Orbot enabled."));
+				findPreference("pref_host").setEnabled(false);
+				findPreference("pref_port").setEnabled(false);
+				getPreferenceScreen().getSharedPreferences().edit().putString("pref_host", "127.0.0.1").commit();
+				getPreferenceScreen().getSharedPreferences().edit().putString("pref_port", "8118").commit();
+			} else {
+				this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Orbot disabled."));
+				findPreference("pref_host").setEnabled(true);
+				findPreference("pref_port").setEnabled(true);
+				getPreferenceScreen().getSharedPreferences().edit().putString("pref_host", "").commit();
+				getPreferenceScreen().getSharedPreferences().edit().putString("pref_port", "").commit();
+			}
 		}
 	}
 

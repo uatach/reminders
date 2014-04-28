@@ -22,12 +22,13 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.SocketException;
+import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRouteParams;
@@ -55,15 +56,15 @@ public class NetworkIntentService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Intent received."));
 
-		String result = null;
-
 		String url = null;
 
 		// Selecting the correct URL
-		if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default)).equals(getString(R.string.pref_restaurant_default))) {
+		if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default)).equals(getResources().getStringArray(R.array.pref_restaurant_values)[0])) {
 			url = getString(R.string.pref_restaurant_CAM);
+		} else if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default)).equals(getResources().getStringArray(R.array.pref_restaurant_values)[1])) {
+			url = getString(R.string.pref_restaurant_FCA);
 		} else {
-			url = getString(R.string.pref_restaurant_LIM);
+			url = getString(R.string.pref_restaurant_PFL);
 		}
 
 		HttpClient client = new DefaultHttpClient();
@@ -79,16 +80,19 @@ public class NetworkIntentService extends IntentService {
 
 		HttpResponse response = null;
 
+		// Getting content from URL.
 		try {
-			response = client.execute(new HttpGet(url));
-		} catch (SocketException e) {
-			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
-			result = getString(R.string.server_error);
-		} catch (ClientProtocolException e) {
-			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
+			HttpGet request = new HttpGet();
+			request.setURI(new URI(url));
+			response = client.execute(request);
 		} catch (IOException e) {
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Couldn't download, no connection."));
-			publishResults(false, null);
+			publishResults(false, getString(R.string.downloading_error));
+			return;
+		} catch (Exception e) {
+			// TODO SocketException, ClientProtocolException and URISyntaxException are not handled.
+			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
+			publishResults(false, getString(R.string.error));
 			return;
 		}
 
@@ -98,92 +102,60 @@ public class NetworkIntentService extends IntentService {
 
 		// Parsing content
 		if(response != null && response.getStatusLine().getStatusCode() == 200) {
-			try {				
-				if (url.contains(getString(R.string.pref_restaurant_CAM))) { // Campinas
-					reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "windows-1252"), 8192);
-					int tableNumber = 0, tempTableNumber = 0;
+			try {
+				reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"), 8192);
 
-					Calendar calendar = Calendar.getInstance();
+				while ((line = reader.readLine()) != null) {
+					content.append(line.trim().replace("\\r\\n", "<br />").replace("\\", "").replaceAll("^.*\\[\"", "").replaceAll("\"\\].*$", ""));
+				}
 
-					if (calendar.get(Calendar.HOUR_OF_DAY) > 0 && calendar.get(Calendar.HOUR_OF_DAY) < 15 && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_menu", false))
-						tableNumber = 1;
-					else if (calendar.get(Calendar.HOUR_OF_DAY) >= 15 && calendar.get(Calendar.HOUR_OF_DAY) < 24)
-						tableNumber = 2;
-
-					while((line = reader.readLine()) != null) {
-						if (line.contains("<div id=\"sistema_cardapio\">")) {
-							while (line != null && !line.contains("</div>")) {
-								if (line.contains("<p class=\"titulo\">"))
-									content.append(line.trim());
-								else if (line.contains("<table width=\"80%\" class=\"fundo_cardapio\">") && tableNumber == tempTableNumber++) {
-									switch (tableNumber) {
-									case 0:
-										content.append("ALMOÇO<br/><br />");
-										break;
-									case 1:
-										content.append("ALMOÇO VEGETARIANO<br/><br />");
-										break;
-									case 2:
-										content.append("JANTAR<br/><br />");
-										break;
-									}
-
-									while (line != null && !line.contains("</table>")) {
-										content.append(line.trim().replace("</td>", "</td><br />"));
-										line = reader.readLine();
-									}
-									content.append("</table>");
-								}
-								line = reader.readLine();
+				// will be used to keep meals for the entire week.
+				String[] meals = content.toString().split("\",\"");
+				
+				Calendar calendar = Calendar.getInstance();
+				
+				// Searching every meal for the correct one.
+				String meal = null;
+				for (String m : meals) {
+					String date = (calendar.get(Calendar.DAY_OF_MONTH) < 10
+							? "0"+calendar.get(Calendar.DAY_OF_MONTH) : calendar.get(Calendar.DAY_OF_MONTH))
+							+ "/" + (calendar.get(Calendar.MONTH)+1 < 10
+									? "0"+(calendar.get(Calendar.MONTH)+1) : (calendar.get(Calendar.MONTH)+1))
+									+ "/" + calendar.get(Calendar.YEAR);
+					
+					if (m.contains(date) || m.contains(calendar.get(Calendar.DAY_OF_MONTH) + " DE ")) { // some workaround because one of the links gives a different date string. 
+						meal = m;
+						if (calendar.get(Calendar.HOUR_OF_DAY) >= 5 && calendar.get(Calendar.HOUR_OF_DAY) < 15 && m.contains("ALMOÇO")) {
+							if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_menu", false) && !m.contains("ALMOÇO VEGETARIANO")) {
+								break;
+							} else if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_menu", false) && m.contains("ALMOÇO VEGETARIANO")) {
+								break;
 							}
+						} else if (!(calendar.get(Calendar.HOUR_OF_DAY) >= 5 && calendar.get(Calendar.HOUR_OF_DAY) < 15) && m.contains("JANTAR")) {
 							break;
 						}
 					}
-					result = content.toString();
-				} else if (url.equals(getString(R.string.pref_restaurant_LIM))) { // Limeira
-					reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"), 8192);
-					Calendar calendar = Calendar.getInstance();
-					String timeOfDay = "ALMOÇO";
-					if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
-						calendar.setTimeInMillis(calendar.getTimeInMillis() + (1000*60*60*48));
-					else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
-						calendar.setTimeInMillis(calendar.getTimeInMillis() + (1000*60*60*24));
-					else if (calendar.get(Calendar.HOUR_OF_DAY) > 15 && calendar.get(Calendar.HOUR_OF_DAY) < 24)
-						timeOfDay = "JANTAR";
-
-					String search = "^.*" + timeOfDay + ".*–.*DIA " + calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH)<10 ? "0" + (calendar.get(Calendar.MONDAY)+1) : calendar.get(Calendar.MONTH)) + ".*$";
-					boolean found = false;
-
-					while((line = reader.readLine()) != null) {
-						if (line.matches(search)) {
-							found = true;
-							for (int i = 0; i < 6; i++) {
-								if ((timeOfDay == "ALMOÇO" && line.contains("JANTAR")) || (timeOfDay == "JANTAR" && line.contains("ALMOÇO")))
-									break;
-								content.append(line.trim());
-								line = reader.readLine();
-							}
-						}
-					}
-
-					if (!found)
-						content.append(getString(R.string.not_found));
-
-					content.append(getString(R.string.limeira_warning));
-					result = content.toString();
 				}
+				
+				if (meal != null)
+					publishResults(true, meal);
+				else
+					publishResults(false, getString(R.string.not_found_error));
 			} catch (Exception e) {
 				LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
 			}
 		}
 
-		publishResults(true, result);
 
 	}
 
 	private void publishResults(boolean success, String text) {
 		if (success)
-			writeContent(text);
+			this.getSharedPreferences("last_update", MODE_PRIVATE).edit().putString("last_update", SimpleDateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()))).commit();
+		else
+			this.getSharedPreferences("last_update", MODE_PRIVATE).edit().putString("last_update", getString(R.string.update_warning)).commit();
+		
+		writeContent(text);
 
 		Intent intent = new Intent(MainActivity.CLASS_TAG);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

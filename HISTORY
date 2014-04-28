@@ -1,3 +1,9 @@
+v0.8.5
+Fixed URLs and notifications;
+Added proxy settings for Orbot;
+Added TextView to show last update's time;
+Removed refreshButton. 
+
 v0.8.1
 Fixed error on TimePickerPreference;
 Added English and Spanish translations;

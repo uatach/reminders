@@ -24,7 +24,6 @@
         android:id="@+id/scrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/refreshButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/mainActivityTitleView" >
@@ -39,18 +38,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="@string/main_activity_view" />
+                android:text="@string/main_activity_view"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/mainActivityUpdateView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/main_activity_update_view"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/refreshButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:onClick="refreshMealView"
-        android:text="@string/main_activity_button" />
 
 </RelativeLayout>

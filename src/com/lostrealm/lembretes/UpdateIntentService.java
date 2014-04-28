@@ -26,10 +26,14 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
 public class UpdateIntentService extends IntentService {
 
-	public static final String CLASS_TAG = "com.lostrealm.lembretes.UpdateIntentService";
+	private static final String CLASS_TAG = "com.lostrealm.lembretes.UpdateIntentService";
+
+	private final Calendar LUNCH = Calendar.getInstance();
+	private final Calendar DINNER = Calendar.getInstance();
 
 	public UpdateIntentService() {
 		super(CLASS_TAG);
@@ -44,18 +48,29 @@ public class UpdateIntentService extends IntentService {
 
 	private void scheduleUpdate() {
 		final int HOUR = 3600000; // 1 hour // test
-		final int LUNCH_TIME_UPDATE = 9; // 9 hours
-		final int DINNER_TIME_UPDATE = 16; // 16 hours
+//		final int LUNCH.get(Calendar.HOUR_OF_DAY) = 9; // 9 hours
+//		final int DINNER.get(Calendar.HOUR_OF_DAY) = 16; // 16 hours
+		LUNCH.setTimeInMillis(PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_lunch", 54000000));
+		DINNER.setTimeInMillis(PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_dinner", 75600000));
 
 		Calendar update = Calendar.getInstance();
 
-		if (update.get(Calendar.HOUR_OF_DAY) < LUNCH_TIME_UPDATE) {
-			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH), LUNCH_TIME_UPDATE, 0, 0);
-		} else if (update.get(Calendar.HOUR_OF_DAY) < DINNER_TIME_UPDATE) {
-			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH), DINNER_TIME_UPDATE, 0, 0);
-		} else {
+		// before lunch's time
+		if (update.get(Calendar.HOUR_OF_DAY) < LUNCH.get(Calendar.HOUR_OF_DAY)) {
+			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH),
+					LUNCH.get(Calendar.HOUR_OF_DAY) >= 1 ? LUNCH.get(Calendar.HOUR_OF_DAY)-1 : 0,
+							LUNCH.get(Calendar.MINUTE), 0);
+		}
+		// before dinner's time
+		else if (update.get(Calendar.HOUR_OF_DAY) < DINNER.get(Calendar.HOUR_OF_DAY)) {
+			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH),
+					DINNER.get(Calendar.HOUR_OF_DAY) >= 1 ? DINNER.get(Calendar.HOUR_OF_DAY)-1 : 0,
+							DINNER.get(Calendar.MINUTE), 0);
+		}
+		// after dinner's time
+		else {
 			update.set(update.get(Calendar.YEAR), update.get(Calendar.MONTH), update.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-			update.setTimeInMillis(update.getTimeInMillis() + ((24+LUNCH_TIME_UPDATE)*HOUR));
+			update.setTimeInMillis(update.getTimeInMillis() + ((23+LUNCH.get(Calendar.HOUR_OF_DAY))*HOUR));
 		}
 
 		Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_update), true).putExtra(getString(R.string.tag_scheduled), true);
@@ -64,6 +79,10 @@ public class UpdateIntentService extends IntentService {
 		alarmManager.set(AlarmManager.RTC_WAKEUP, update.getTimeInMillis(), pendingIntent);
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Update scheduled to " + SimpleDateFormat.getDateTimeInstance().format(update.getTime()) + "."));
+	}
+	
+	private void errorUpdate() {
+		
 	}
 
 }

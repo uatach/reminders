@@ -40,7 +40,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,13 +48,13 @@ public class MainActivity extends ActionBarActivity {
 	public static final String CLASS_TAG = "com.lostrealm.lembretes.MainActivity";
 
 	private TextView mealView;
-	private boolean loadedContent = false;
+	private TextView updateView;
 
 	private void updateView(Context context) {
 		String content = loadContent();
 		if (content != null) {
 			mealView.setText(Html.fromHtml(content));
-			loadedContent = true;
+			updateView.setText(this.getSharedPreferences("last_update", MODE_PRIVATE).getString("last_update", getString(R.string.main_activity_update_view)));
 		} else
 			mealView.setText(R.string.downloading_error);
 
@@ -79,16 +78,19 @@ public class MainActivity extends ActionBarActivity {
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		mealView = (TextView) findViewById(R.id.mainActivityMealView);
+		updateView = (TextView) findViewById(R.id.mainActivityUpdateView);
 
-		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "=============================="));
-		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Started Application."));
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "=========="));
+		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Started! " + getString(R.string.app_version)));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// As this activity just receives broadcasts when running, we can register its receiver using the LocalBroadcastManager.
 		LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(CLASS_TAG));
 
+		// App is running for the first time.
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true)) {
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Running Application for the first time."));
 			this.startService(new Intent(this, UpdateIntentService.class));
@@ -101,9 +103,15 @@ public class MainActivity extends ActionBarActivity {
 					this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Created location on media."));
 				}
 			}
-		} else if (!loadedContent)
+		}
+		// Just load content from the disk.
+		else if (!this.getSharedPreferences("last_update", MODE_PRIVATE).getString("last_update", "").equals(getString(R.string.main_activity_note)))
 			updateView(this);
+		else {
+			mealView.setText(R.string.main_activity_view);
+		}
 
+		// Cancels any active notification.
 		((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ReminderIntentService.REMINDER_ID);
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Showing MainActivity."));
@@ -134,6 +142,9 @@ public class MainActivity extends ActionBarActivity {
 		File file = null;
 
 		switch (item.getItemId()) {
+		case R.id.action_refresh:
+			refreshMealView();
+			break;
 		case R.id.action_settings:
 			this.startActivity(new Intent(this, SettingsActivity.class));
 			break;
@@ -193,9 +204,10 @@ public class MainActivity extends ActionBarActivity {
 		return content;
 	}
 
-	public void refreshMealView(View view) {
+	public void refreshMealView() {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Refreshing."));
 		this.startService(new Intent(this, NetworkIntentService.class));
 		mealView.setText(R.string.main_activity_view);
+		this.getSharedPreferences("last_update", MODE_PRIVATE).edit().putString("last_update", getString(R.string.main_activity_note)).commit();
 	}
 }

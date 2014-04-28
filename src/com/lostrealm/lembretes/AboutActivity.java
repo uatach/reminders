@@ -21,18 +21,24 @@ package com.lostrealm.lembretes;
 import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 public class AboutActivity extends ActionBarActivity {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.AboutActivity";
+	
+	private TextView view;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
+		
+		view = (TextView) findViewById(R.id.versionTextView);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
@@ -40,6 +46,8 @@ public class AboutActivity extends ActionBarActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		view.setTypeface(null, Typeface.BOLD);
+		view.setText(getString(R.string.app_name) + " " + getString(R.string.app_version));
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Showing AboutActivity."));
 	}
 

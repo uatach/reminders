@@ -6,26 +6,33 @@
     <string name="icon_copyright">Icon\'s Copyright (C) 2014 Filipe Marques</string>
     <string name="app_license">GPLv3+ licensed.</string>
     <string name="app_name">Reminders</string>
-    <string name="app_version">Reminders v0.8.1</string>
+    <string name="app_version">v0.8.2</string>
+    <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
-    <string name="action_feedback">Feedback/Ajuda</string>
+    <string name="action_feedback">Feedback/Help</string>
     <string name="action_about">About</string>
     <string name="confirm_button">Confirm</string>
     <string name="cancel_button">Cancel</string>
-    <string name="downloading_error">No internet connection.</string>
     <string name="file_success">Successfully atached log.</string>
     <string name="file_error">Device does not have memory stick, log can not be atached.</string>
     <string name="tag_scheduled">scheduled</string>
     <string name="tag_update">update</string>
     <string name="tag_remind">remind</string>
-    <string name="server_error">Server offline</string>
-    <string name="not_found">Cardápio não está disponível no momento.</string> <!-- text in portuguese because it is displayed with the restaurant\'s menu. -->
+    <string name="tag_class">com.lostrealm.lembretes.</string>
     <string name="limeira_warning">Lembretes podem não funcionar corretamente para Limeira.</string> <!-- text in portuguese because it is displayed with the restaurant\'s menu. -->
+    
+    <!-- Errors -->
+    <string name="update_warning">Couldn\'t update.</string>
+    <string name="error">Unknown error, please enable logs and if this occurs again, send logs to developer.</string>
+    <string name="downloading_error">No internet connection.</string>
+    <string name="server_error">Server is offline.</string>
+    <string name="not_found_error">Cardápio não está disponível no momento.</string> <!-- text in portuguese because it is displayed with the restaurant\'s menu. -->
 
     <!-- MainActivity -->
-    <string name="main_activity_label">Next Meal:</string>
+    <string name="main_activity_label"><b>Next Meal:</b></string>
     <string name="main_activity_view">Dowloanding Menu!</string>
-    <string name="main_activity_button">Update</string>
+    <string name="main_activity_update_view">Last Update</string>
+    <string name="main_activity_note">Updating...</string>
 
     <!-- SettingsActivity -->
     <string name="settings_activity_label">Settings</string>
@@ -49,16 +56,19 @@
     <string name="pref_restaurant_title">Select Restaurant</string>
     <string name="pref_restaurant_summary">Select from which restaurant the menu should be displayed.</string>
     <string name="pref_restaurant_default">CAM</string>
-    <string name="pref_restaurant_CAM">http://engenheiros.prefeitura.unicamp.br/cardapio.php</string>
-    <string name="pref_restaurant_LIM">http://www.fca.unicamp.br/portal/institucional/restaurante/cardapio.html</string>
+    <string name="pref_restaurant_CAM">https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</string>
+    <string name="pref_restaurant_FCA">https://www1.sistemas.unicamp.br/Mobile/CardapioFCA</string>
+    <string name="pref_restaurant_PFL">https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</string>
 
     <string-array name="pref_restaurant_entries">
         <item>COTUCA, RU, RA, RS</item>
-        <item>COTIL, FCA, FOP, FT, PFL</item>
+        <item>COTIL, FCA, FOP, FT</item>
+        <item>PFL</item>
     </string-array>
     <string-array name="pref_restaurant_values">
         <item>CAM</item>
-        <item>LIM</item>
+        <item>FCA</item>
+        <item>PFL</item>
     </string-array>
 
     <string name="pref_reminder_type_title">Reminder\'s Type</string>
@@ -78,6 +88,9 @@
     <string name="pref_reminder_time_dinner_title">Dinner\'s Reminder\'s Time</string>
     <string name="pref_words_title">List of Words</string>
     <string name="pref_words_summary">Words used on remindes, separated by spaces.</string>
+    <string name="pref_orbot_title">Use Orbot proxy settings</string>
+    <string name="pref_orbot_summary_on">Proxy settings set to work with Orbot.</string>
+    <string name="pref_orbot_summary_off">Not using Orbot settings.</string>
     <string name="pref_host_title">Proxy Address</string>
     <string name="pref_host_summary">HTTP Proxy Server\'s IP or hostname.</string>
     <string name="pref_port_title">Proxy port</string>

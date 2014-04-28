@@ -3,11 +3,17 @@
     xmlns:lembretes="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:orderInCategory="100"
+        android:title="@string/action_refresh"
+        lembretes:showAsAction="always"/>
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        lembretes:showAsAction="always"/>
+        lembretes:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_about"
         android:icon="@drawable/ic_action_about"

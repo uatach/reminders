@@ -14,20 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/versionTextView"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/versionTextView"
         android:contentDescription="@string/about_activity_content_description"
         android:src="@drawable/about_image" />
-
-    <Button
-        android:id="@+id/projectPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:onClick="openProjectPage"
-        android:text="@string/about_activity_button_text" />
 
     <TextView
         android:id="@+id/versionTextView"
@@ -72,5 +62,15 @@
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/app_license"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    <Button
+        android:id="@+id/projectPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:onClick="openProjectPage"
+        android:text="@string/about_activity_button_text" />
 
 </RelativeLayout>

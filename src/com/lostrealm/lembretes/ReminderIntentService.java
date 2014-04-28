@@ -53,24 +53,32 @@ public class ReminderIntentService extends IntentService {
 
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true)) {
 			scheduleReminder();
+			
+			// checking if intent is from a scheduled reminder.
 			if (intent.getBooleanExtra(getString(R.string.tag_scheduled), false)) {
-				Meal meal = new Meal(loadContent());
-				Calendar calendar = Calendar.getInstance();
-				String date;
-				if (calendar.get(Calendar.DAY_OF_MONTH) < 10)
-					date = "0" + calendar.get(Calendar.DAY_OF_MONTH) + "/";
-				else
-					date = calendar.get(Calendar.DAY_OF_MONTH) + "/";
-				if ((calendar.get(Calendar.MONTH)+1) < 10)
-					date += "0" + (calendar.get(Calendar.MONTH)+1) + "/" + calendar.get(Calendar.YEAR);
-				else
-					date += (calendar.get(Calendar.MONTH)+1) + "/" + calendar.get(Calendar.YEAR);
+				String content = loadContent();
 				
-				if (meal.getDay().contains(date)) {
+				if (content.equals(getString(R.string.error))
+						|| content.equals(getString(R.string.not_found_error))
+						|| content.equals(getString(R.string.server_error)))
+					return;
+				
+				Meal meal = new Meal(this, content);
+				Calendar calendar = Calendar.getInstance();
+				
+				String date = (calendar.get(Calendar.DAY_OF_MONTH) < 10
+						? "0"+calendar.get(Calendar.DAY_OF_MONTH) : calendar.get(Calendar.DAY_OF_MONTH))
+						+ "/" + (calendar.get(Calendar.MONTH)+1 < 10
+								? "0"+(calendar.get(Calendar.MONTH)+1) : (calendar.get(Calendar.MONTH)+1))
+								+ "/" + calendar.get(Calendar.YEAR);
+
+				if (meal.getDate().contains(date)) {
 					if (PreferenceManager.getDefaultSharedPreferences(this).getString("pref_reminder_type", getString(R.string.pref_reminder_type_default)).equals(getString(R.string.pref_reminder_type_default))) {// need to check date
 						notifyUser(meal);
 						vibrate();
-					} else // check words
+					}
+					// checking if starred words are present.
+					else
 						for (String word : PreferenceManager.getDefaultSharedPreferences(this).getString("pref_words", "").split(" ")) {
 							if (meal.getMeal().contains(word.toUpperCase(new Locale("pt", "BR")))) { // TODO maybe will be a problem
 								notifyUser(meal);
@@ -92,7 +100,7 @@ public class ReminderIntentService extends IntentService {
 	}
 
 	private void notifyUser(Meal meal) {
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(meal.getMeal()).setContentTitle(meal.getTime()).setSmallIcon(R.drawable.ic_launcher);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setAutoCancel(true).setContentText(meal.getMeal()).setContentTitle(meal.getDate()).setSmallIcon(R.drawable.ic_launcher);
 		Intent resultIntent = new Intent(this, MainActivity.class);
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addNextIntent(resultIntent);
@@ -104,27 +112,28 @@ public class ReminderIntentService extends IntentService {
 	}
 
 	private void scheduleReminder() {
-		long day = 86400000;
+		final long day = 86400000;
 
 		Calendar lunch = Calendar.getInstance();
 		lunch.setTimeInMillis(PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_lunch", 54000000));
 		Calendar dinner = Calendar.getInstance();
 		dinner.setTimeInMillis(PreferenceManager.getDefaultSharedPreferences(this).getLong("pref_reminder_time_dinner", 75600000));
 		Calendar reminder = Calendar.getInstance();
+		// setting time to midnight to calculate the reminder's time.
 		reminder.set(reminder.get(Calendar.YEAR), reminder.get(Calendar.MONTH), reminder.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 
 		Calendar time = Calendar.getInstance();
-		if (reminder.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
+		if (reminder.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) // skips Saturdays
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + 2*day + getLong(lunch));
-		else if (reminder.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+		else if (reminder.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) // skips Sundays
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + day + getLong(lunch));
-		else if (getLong(time) < getLong(lunch))
+		else if (getLong(time) < getLong(lunch)) // scheduling before lunch time.
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + getLong(lunch));
-		else if (getLong(time) < getLong(dinner))
+		else if (getLong(time) < getLong(dinner)) // scheduling before dinner time.
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + getLong(dinner));
-		else if (reminder.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
+		else if (reminder.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) // it's Friday night, next reminder  should be on Monday.
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + 3*day + getLong(lunch));
-		else
+		else // scheduling before lunch time from next day.
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + day + getLong(lunch));
 
 		Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_remind), true).putExtra(getString(R.string.tag_scheduled), true);
@@ -170,27 +179,53 @@ public class ReminderIntentService extends IntentService {
 		return Html.fromHtml(content.toString()).toString();
 	}
 
+	// TODO Maybe this class should be improved to better format the text (?)
 	private class Meal {
-		private String time, day, meal, obs;
+		private String date, meal = new String();
 
-		Meal(String content) {
+		Meal(Context context, String content) {
 			String[] tmp = content.split("\n");
-			time = tmp[0];
-			day = tmp[1];
-			meal = new String();
-			for (int i = 2; i < 8; i++)
-				meal = meal.concat(tmp[i]);
-			obs = new String();
-			for (int i = 8; i < tmp.length; i++)
-				obs = obs.concat(tmp[i]);
+
+			if (tmp.length > 1) {
+				/*
+				 * Meal structure for Campinas' restaurant:
+				 * line 0 contains the date;
+				 * lines 2-8 contain the meal info;
+				 * and line 10+ contains some observations. 
+				 */
+				if (PreferenceManager.getDefaultSharedPreferences(context).getString("pref_restaurant", getString(R.string.pref_restaurant_default)).equals(getResources().getStringArray(R.array.pref_restaurant_values)[0])) {
+					date = tmp[0];
+					for (int i = 2; i < 8; i++)
+						meal = meal.concat(tmp[i]);
+				}
+				/*
+				 * Meal structure for FCA:
+				 * line 1 contains the date;
+				 * lines 2+ contains the meal;
+				 * doesn't seem to have observations.
+				 */
+				else if (PreferenceManager.getDefaultSharedPreferences(context).getString("pref_restaurant", getString(R.string.pref_restaurant_default)).equals(getResources().getStringArray(R.array.pref_restaurant_values)[1])) {
+					date = tmp[1];
+					for (int i = 2; i < tmp.length; i++)
+						meal = meal.concat(tmp[i]);
+				}
+				/*
+				 * Meal structure for PFL:
+				 * 
+				 */
+				else {
+					date = tmp[0];
+					for (int i = 2; i < 8; i++)
+						meal = meal.concat(tmp[i]);
+				}
+			} else if (content.equals(getString(R.string.downloading_error))) {
+				date = "";
+				meal = "";
+			}
 		}
 
-		public String getTime() {
-			return time;
-		}
-
-		public String getDay() {
-			return day;
+		public String getDate() {
+			return date;
 		}
 
 		public String getMeal() {

@@ -34,9 +34,9 @@ import android.widget.Toast;
 import android.support.v7.app.ActionBarActivity;
 
 public class LogActivity extends ActionBarActivity {
-	
+
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.LogActivity";
-	
+
 	private TextView logView;
 
 	@Override
@@ -45,10 +45,10 @@ public class LogActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_log);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		logView = (TextView) findViewById(R.id.logTextView);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -61,16 +61,16 @@ public class LogActivity extends ActionBarActivity {
 		// this activity will not display a menu.
 		return false;
 	}
-	
+
 	private String loadLog() {
 		String fileName = "log";
 		File file = null;
-		
+
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 			file = new File(Environment.getExternalStorageDirectory(), "data/com.lostrealm.lembretes/" + fileName);
 		else
 			file = new File(this.getFilesDir(), fileName);
-		
+
 		StringBuffer buffer = new StringBuffer();
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -86,19 +86,26 @@ public class LogActivity extends ActionBarActivity {
 		}
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Log loaded."));
-		
-		return buffer.toString();
+
+		String[] lines = buffer.toString().split("\n");
+		String content = new String();
+
+		for (int i = lines.length-1; i > -1; i--) {
+			content += lines[i].replace("com.lostrealm.lembretes.", "") + "\n";
+		}
+
+		return content;
 	}
-	
+
 	public void eraseLog(View view) {
 		String fileName = "log";
 		File file = null;
-		
+
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 			file = new File(Environment.getExternalStorageDirectory(), "data/com.lostrealm.lembretes/" + fileName);
 		else
 			file = new File(this.getFilesDir(), fileName);
-		
+
 		if (file.exists())
 			file.delete();
 

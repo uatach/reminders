@@ -32,7 +32,7 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getBooleanExtra(context.getString(R.string.tag_scheduled), false) || (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")))
-			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "=============================="));
+			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "=========="));
 		
 		if (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Device booted."));
