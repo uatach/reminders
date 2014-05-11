@@ -24,13 +24,14 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -41,7 +42,7 @@ public class ReminderIntentService extends IntentService {
 
 	private static final String CLASS_TAG = "com.lostrealm.lembretes.ReminderIntentService";
 
-	public static final int REMINDER_ID = 24702581;
+	public static final int REMINDER_ID = 402410664;
 
 	public ReminderIntentService() {
 		super(CLASS_TAG);
@@ -111,6 +112,7 @@ public class ReminderIntentService extends IntentService {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "User Notified."));
 	}
 
+	@SuppressLint("NewApi")
 	private void scheduleReminder() {
 		final long day = 86400000;
 
@@ -137,9 +139,13 @@ public class ReminderIntentService extends IntentService {
 			reminder.setTimeInMillis(reminder.getTimeInMillis() + day + getLong(lunch));
 
 		Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_remind), true).putExtra(getString(R.string.tag_scheduled), true);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		alarmManager.set(AlarmManager.RTC_WAKEUP, reminder.getTimeInMillis(), pendingIntent);
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+			alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminder.getTimeInMillis(), pendingIntent);
+		else
+			alarmManager.set(AlarmManager.RTC_WAKEUP, reminder.getTimeInMillis(), pendingIntent);
 
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Reminder scheduled to " + SimpleDateFormat.getDateTimeInstance().format(reminder.getTime()) + "."));
 	}

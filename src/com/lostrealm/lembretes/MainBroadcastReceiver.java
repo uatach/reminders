@@ -38,6 +38,9 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
 			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Device booted."));
 			context.startService(new Intent(context, UpdateIntentService.class));
 			context.startService(new Intent(context, ReminderIntentService.class));
+//		} else if (intent.getAction() != null && intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
+//			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Connection changed."));
+//			context.startService(new Intent(context, UpdateIntentService.class).putExtra(context.getString(R.string.tag_scheduled), false));
 		} else if (intent.getBooleanExtra(context.getString(R.string.tag_update), false)) {
 			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Update broadcast."));
 			context.startService(new Intent(context, UpdateIntentService.class));

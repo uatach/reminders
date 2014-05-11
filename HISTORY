@@ -1,4 +1,7 @@
-v0.8.5
+v0.8.3
+Minor fixes and changes.
+
+v0.8.2
 Fixed URLs and notifications;
 Added proxy settings for Orbot;
 Added TextView to show last update's time;

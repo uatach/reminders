@@ -41,8 +41,15 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		addPreferencesFromResource(R.xml.preferences);
+		
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+
+		if (getPreferenceScreen().getSharedPreferences().getBoolean("pref_orbot", false)) {
+			findPreference("pref_host").setEnabled(false);
+			findPreference("pref_port").setEnabled(false);
+		}
 
 		findPreference("pref_logging_view").setIntent(new Intent(this, LogActivity.class));
 	}
@@ -52,8 +59,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		super.onDestroy();
 
 		if (changed != null) {
-			Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_remind), true);
+			Intent intent = new Intent(this, MainBroadcastReceiver.class).putExtra(getString(R.string.tag_update), true).putExtra(getString(R.string.tag_remind), true);
 			sendBroadcast(intent);
+			
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));
 		}
 	}

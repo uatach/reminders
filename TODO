@@ -2,7 +2,6 @@
 * Write "no connection" error to file and use it on reminders;
 * Check date of meal before reminding; (really necessary?)
 * Listen for change in connectivity after error;
-* Need to change how updates are scheduled;
 * Regular expressions support.
 
 

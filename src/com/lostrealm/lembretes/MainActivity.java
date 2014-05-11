@@ -18,13 +18,7 @@
 
 package com.lostrealm.lembretes;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,8 +44,12 @@ public class MainActivity extends ActionBarActivity {
 	private TextView mealView;
 	private TextView updateView;
 
+	/**
+	 * Method updates views with content from disk.
+	 * @param context Context received from the receiver.
+	 */
 	private void updateView(Context context) {
-		String content = loadContent();
+		String content = ContentManager.getContent(context);
 		if (content != null) {
 			mealView.setText(Html.fromHtml(content));
 			updateView.setText(this.getSharedPreferences("last_update", MODE_PRIVATE).getString("last_update", getString(R.string.main_activity_update_view)));
@@ -59,6 +57,11 @@ public class MainActivity extends ActionBarActivity {
 			mealView.setText(R.string.downloading_error);
 
 		context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "View updated."));
+	}
+
+	private void setDefaultValuesToViews() {
+		mealView.setText(R.string.main_activity_view);
+		updateView.setText(R.string.main_activity_note);
 	}
 
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -92,10 +95,15 @@ public class MainActivity extends ActionBarActivity {
 
 		// App is running for the first time.
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_time", true)) {
-			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Running Application for the first time."));
+			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Started! " + getString(R.string.app_version) + "."));
+
+			refreshContent();
+
 			this.startService(new Intent(this, UpdateIntentService.class));
 			this.startService(new Intent(this, ReminderIntentService.class));
 			this.startActivity(new Intent(this, SettingsActivity.class));
+
+			// TODO move this to some "ContentManager"
 			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 				File file = new File(Environment.getExternalStorageDirectory(), "data/com.lostrealm.lembretes");
 				if (!file.exists()) {
@@ -104,12 +112,11 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		}
-		// Just load content from the disk.
+		// Load content from disk.
 		else if (!this.getSharedPreferences("last_update", MODE_PRIVATE).getString("last_update", "").equals(getString(R.string.main_activity_note)))
 			updateView(this);
-		else {
-			mealView.setText(R.string.main_activity_view);
-		}
+		else
+			this.setDefaultValuesToViews();
 
 		// Cancels any active notification.
 		((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(ReminderIntentService.REMINDER_ID);
@@ -138,24 +145,23 @@ public class MainActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		String fileName = "data/com.lostrealm.lembretes/log";
-		File file = null;
-
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			refreshMealView();
+			refreshContent();
 			break;
 		case R.id.action_settings:
 			this.startActivity(new Intent(this, SettingsActivity.class));
 			break;
 		case R.id.action_feedback:
+			String fileName = "data/com.lostrealm.lembretes/log";
+			File file = null;
+
 			String[] recipients = new String[]{"edsonduarte1990@gmail.com"};
 
 			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 			intent.setType("message/rfc822");
 			intent.putExtra(android.content.Intent.EXTRA_EMAIL, recipients);
 			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + " - Feedback]");
-			//			intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
 
 			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_logging", false)) {
 				if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -166,7 +172,7 @@ public class MainActivity extends ActionBarActivity {
 					Toast.makeText(this, R.string.file_error, Toast.LENGTH_SHORT).show();
 			}
 
-			this.startActivity(Intent.createChooser(intent, "Enviar email com:"));
+			this.startActivity(Intent.createChooser(intent, getString(R.string.main_activity_chooser)));
 
 			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Opened feedback."));
 			break;
@@ -179,35 +185,10 @@ public class MainActivity extends ActionBarActivity {
 		return true;
 	}
 
-	private String loadContent() {
-		String content = new String();
-
-		try {
-			FileInputStream inputStream = openFileInput(getString(R.string.app_name));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8192);
-			String line = null;
-			while((line = reader.readLine()) != null) {
-				content = content.concat(line + "\n");
-			}
-			reader.close();
-		} catch (FileNotFoundException e) {
-			this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "File not found!"));
-			return getString(R.string.downloading_error);
-		} catch (UnsupportedEncodingException e) {
-			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
-		} catch (IOException e) {
-			LoggerIntentService.newLogIntent(this, CLASS_TAG, "Exception: " + e.getMessage());
-		}
-
-		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Content loaded."));
-
-		return content;
-	}
-
-	public void refreshMealView() {
+	public void refreshContent() {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Refreshing."));
 		this.startService(new Intent(this, NetworkIntentService.class));
-		mealView.setText(R.string.main_activity_view);
+		this.setDefaultValuesToViews();
 		this.getSharedPreferences("last_update", MODE_PRIVATE).edit().putString("last_update", getString(R.string.main_activity_note)).commit();
 	}
 }

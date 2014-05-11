@@ -37,6 +37,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -55,6 +56,12 @@ public class NetworkIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Intent received."));
+		
+		if (((ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() == null
+				|| !((ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo().isConnected()) {
+			publishResults(false, getString(R.string.downloading_error));
+			return;
+		}
 
 		String url = null;
 
@@ -157,7 +164,7 @@ public class NetworkIntentService extends IntentService {
 		
 		writeContent(text);
 
-		Intent intent = new Intent(MainActivity.CLASS_TAG);
+		Intent intent = new Intent(this, MainActivity.class);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 		this.startService(LoggerIntentService.newLogIntent(this, CLASS_TAG, "Sent broadcast."));
 	}
