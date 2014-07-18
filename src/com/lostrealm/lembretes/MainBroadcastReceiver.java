@@ -43,7 +43,7 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
 //			context.startService(new Intent(context, UpdateIntentService.class).putExtra(context.getString(R.string.tag_scheduled), false));
 		} else if (intent.getBooleanExtra(context.getString(R.string.tag_update), false)) {
 			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Update broadcast."));
-			context.startService(new Intent(context, UpdateIntentService.class));
+			context.startService(new Intent(context, UpdateIntentService.class).putExtra(context.getString(R.string.tag_scheduled), intent.getBooleanExtra(context.getString(R.string.tag_scheduled), false)));
 		} else if (intent.getBooleanExtra(context.getString(R.string.tag_remind), false)) {
 			context.startService(LoggerIntentService.newLogIntent(context, CLASS_TAG, "Reminder broadcast."));
 			context.startService(new Intent(context, ReminderIntentService.class).putExtra(context.getString(R.string.tag_scheduled), intent.getBooleanExtra(context.getString(R.string.tag_scheduled), false)));
