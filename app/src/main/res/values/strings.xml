@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">Reminders</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+
+    <!-- MainActivity -->
+    <string name="main_activity_label"><b>Next Meal:</b></string>
+    <string name="main_activity_view">Downloading Menu!</string>
+    <string name="main_activity_update_view">0</string>
+    <string name="main_activity_note">Updating...</string>
+
 </resources>
