@@ -1,0 +1,97 @@
+v0.8.5
+Some minor changes.
+
+v0.8.4
+Scheduled updates fixed.
+
+v0.8.3
+Minor fixes and changes.
+
+v0.8.2
+Fixed URLs and notifications;
+Added proxy settings for Orbot;
+Added TextView to show last update's time;
+Removed refreshButton. 
+
+v0.8.1
+Fixed error on TimePickerPreference;
+Added English and Spanish translations;
+Temporary fix to broken URLs;
+
+v0.8
+New icon;
+Added support for vegetarian food;
+Now displays Limeira's menu, reminders seem to work.
+
+v0.6.5
+Added LogActivity, to enable who doesn't have external media to see logs;
+When starting application, if there's a notification, it is removed;
+Fixed theme error occurring on Android 4;
+Fixed TimePicker rotation issue;
+Fixed reminders on Saturday morning.
+
+v0.6
+Added Action items;
+Finished reminder by words;
+Added some checking for the log file's location.
+
+v0.5.7
+Merged UpdateBroadcastReceiver and ReminderBroadcastReceiver into MainBroadcastReceiver;
+Simplified app's flow and added a button to MainActivity;
+Some minor improvements.
+
+v0.5.6
+Added proxy options;
+Added ActionBar to older SDK (AppCompat v7);
+And some minor changes and clean up.
+
+v0.5.5
+Logs are now saved to disk file;
+Fixed vibrate, VIBRATE permission was missing;
+Fixed some minor issues.
+
+v0.5.1
+Feedback option is now working;
+When preferences are changed, reminders are updated or disabled;
+Added vibration to notifications.
+
+v0.5
+Updates and Notifications are scheduled successfully.
+
+v0.4.3
+Content is now written to file and retrieved when there's no connection;
+Updates are working with AlarmManager. When there's no connection, MainActivity displays what's on file;
+
+v0.4.2
+Added AboutActivity.
+
+v0.4.1
+Added UpdateIntentService using AlarmManager to schedule updates but is doesn't seem to work.
+
+v0.4
+Managed to add BroadcastReceiver functionalities;
+MainIntentService not used anymore and broken into 3 services;
+NetworkIntentService is already working;
+MainActivity now automatically shows meal after download;
+Updates and notifications stopped working.
+
+v.0.3.3
+Managed to re-add notifications, still needs testing;
+Added default reminder times, 12h and 18h (They're hard-coded into MainIntentService, need to search if the custom TimePickerPreference can handle default values);
+Enabled ProGuard.
+
+v0.3.2
+On first run SettingsActivity is displayed.
+
+v0.3.1
+Removed notifications, will be re-added later;
+Changed URL of Campinas campus' meals to a easier one.
+
+v0.3
+Managed to add simple notifications.
+
+v0.2
+Managed to get the meals from Campinas campus' URL and display it in MainActivity.
+
+v0.1
+MainActivity and SettingsActivity working.
