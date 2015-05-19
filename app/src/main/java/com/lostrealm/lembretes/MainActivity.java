@@ -19,6 +19,7 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,6 +40,20 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (true) {// will change to some test
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle(R.string.app_name);
+
+            builder.setPositiveButton("Ok", null);
+
+            builder.create().show();
+        }
     }
 
     @Override

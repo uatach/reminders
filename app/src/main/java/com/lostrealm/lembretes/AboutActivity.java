@@ -19,9 +19,12 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -46,5 +49,9 @@ public class AboutActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // this activity will not display a menu.
         return false;
+    }
+
+    public void openProjectPage(View view) {
+        this.startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.project_url))), getString(R.string.action_about)));
     }
 }

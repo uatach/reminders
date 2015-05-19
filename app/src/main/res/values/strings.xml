@@ -20,5 +20,10 @@
     <string name="main_activity_note">Updating...</string>
     <string name="main_activity_chooser">Send email with:</string>
 
+    <!-- AboutActivity -->
+    <string name="about_activity_title">About</string>
+    <string name="about_activity_button">Project\'s Page</string>
+    <string name="about_activity_description">Application Icon</string>
+
 
 </resources>
