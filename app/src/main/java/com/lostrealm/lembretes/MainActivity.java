@@ -19,7 +19,6 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,26 +38,14 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (true) {// will change to some test
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setTitle(R.string.app_name);
-
-            builder.setPositiveButton("Ok", null);
-
-            builder.create().show();
-        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_refresh:
+                return true;
             case R.id.action_settings:
                 this.startActivity(new Intent(this, SettingsActivity.class));
                 return true;
@@ -66,11 +53,12 @@ public class MainActivity extends Activity {
                 this.startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.action_feedback:
-                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                intent.setType("message/rfc822");
-                intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"edsonduarte1990@gmail.com"});
-                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + " - Feedback]");
-                this.startActivity(Intent.createChooser(intent, getString(R.string.main_activity_chooser)));
+                this.startActivity(Intent.createChooser(
+                        new Intent(android.content.Intent.ACTION_SEND)
+                                .setType("message/rfc822")
+                                .putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"edsonduarte1990@gmail.com"})
+                                .putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + " - Feedback]"),
+                        getString(R.string.main_activity_chooser)));
                 return true;
         }
 

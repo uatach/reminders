@@ -1,5 +1,7 @@
 v0.8.5
-Some minor changes.
+Project now using Android Studio;
+Updated to Material Design;
+Dropped support for old APIs.
 
 v0.8.4
 Scheduled updates fixed.

@@ -1,22 +1,24 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item android:id="@+id/action_refresh"
-        android:title="@string/action_refresh"
+        android:icon="@android:drawable/ic_popup_sync"
         android:orderInCategory="100"
-        app:showAsAction="always" />
+        android:title="@string/action_refresh"
+        android:showAsAction="always" />
     <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
         android:orderInCategory="101"
-        app:showAsAction="ifRoom" />
+        android:title="@string/action_settings"
+        android:showAsAction="ifRoom" />
     <item android:id="@+id/action_about"
-        android:title="@string/action_about"
+        android:icon="@android:drawable/ic_menu_info_details"
         android:orderInCategory="102"
-        app:showAsAction="always" />
+        android:title="@string/action_about"
+        android:showAsAction="always" />
     <item android:id="@+id/action_feedback"
-        android:title="@string/action_feedback"
+        android:icon="@android:drawable/ic_menu_help"
         android:orderInCategory="103"
-        app:showAsAction="never" />
+        android:title="@string/action_feedback"
+        android:showAsAction="never" />
 </menu>
