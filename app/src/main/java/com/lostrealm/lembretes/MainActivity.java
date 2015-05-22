@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
+                this.startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
                 return true;
             case R.id.action_settings:
                 this.startActivity(new Intent(this, SettingsActivity.class));
