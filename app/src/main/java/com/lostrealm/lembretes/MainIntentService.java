@@ -143,7 +143,7 @@ public class MainIntentService extends IntentService {
             Intent intent = new Intent(ACTION_DOWNLOAD).putExtra(ACTION_DOWNLOAD, meals);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-            Log.i("intentservice", "download success.");
+            Log.i("intentservice", "download success."); // remove this line.
         } catch (IOException e) {
             e.printStackTrace();
         }

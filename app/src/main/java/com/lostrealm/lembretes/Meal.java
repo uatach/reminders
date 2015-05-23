@@ -21,7 +21,9 @@ package com.lostrealm.lembretes;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
-public class Meal {
+import java.io.Serializable;
+
+public class Meal implements Serializable {
     private String date, summary;
     private String meal = new String();
 

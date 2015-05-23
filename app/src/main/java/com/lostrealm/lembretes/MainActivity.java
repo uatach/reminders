@@ -30,16 +30,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
+
 
 public class MainActivity extends Activity {
 
-    private static Meal[] meals;
+    private static Meal[] meals = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // TODO load meals from disk
+        meals = (Meal[]) loadObjectFromDisk();
+        updateViews();
     }
 
 
@@ -77,9 +86,9 @@ public class MainActivity extends Activity {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
-            meals = (Meal[])intent.getSerializableExtra(MainIntentService.ACTION_DOWNLOAD);
-            // TODO save meals to disk.
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
+            meals = (Meal[]) intent.getSerializableExtra(MainIntentService.ACTION_DOWNLOAD);
+            saveObjectToDisk(meals);
             updateViews();
         }
     };
@@ -87,5 +96,31 @@ public class MainActivity extends Activity {
     private void updateViews() {
         TextView mealView = (TextView) findViewById(R.id.mealView);
         mealView.setText(Html.fromHtml(meals[0].getMeal()));
+    }
+
+    private void saveObjectToDisk(Object object) {
+        try {
+            FileOutputStream fileOutputStream = openFileOutput(getString(R.string.app_name), MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(object);
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Object loadObjectFromDisk() {
+        try {
+            FileInputStream fileInputStream = openFileInput(getString(R.string.app_name));
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            Object object = objectInputStream.readObject();
+            objectInputStream.close();
+            fileInputStream.close();
+            return object;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
