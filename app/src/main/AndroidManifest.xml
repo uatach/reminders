@@ -51,10 +51,6 @@
         </receiver>
 
         <service
-            android:name=".NetworkIntentService"
-            android:exported="false" >
-        </service>
-        <service
             android:name=".MainIntentService"
             android:exported="false" >
         </service>

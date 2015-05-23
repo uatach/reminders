@@ -8,7 +8,7 @@ android {
         applicationId "com.lostrealm.lembretes"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 30
+        versionCode 31
         versionName "1"
     }
     buildTypes {
