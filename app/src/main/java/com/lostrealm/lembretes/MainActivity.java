@@ -23,7 +23,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.view.Menu;
@@ -37,6 +39,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.util.Calendar;
 
 
 public class MainActivity extends Activity {
@@ -48,9 +51,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         meals = (Meal[]) loadObjectFromDisk();
-        updateViews();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateViews();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,7 +102,18 @@ public class MainActivity extends Activity {
 
     private void updateViews() {
         TextView mealView = (TextView) findViewById(R.id.mealView);
-        mealView.setText(Html.fromHtml(meals[0].getMeal()));
+
+        Calendar calendar = Calendar.getInstance();
+        // maybe this section is to simple.
+        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+                || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+                || calendar.get(Calendar.HOUR_OF_DAY) < 16) {
+            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_menu", false))
+                mealView.setText(Html.fromHtml(meals[1].getMeal()));
+            else
+                mealView.setText(Html.fromHtml(meals[0].getMeal()));
+        } else
+            mealView.setText(Html.fromHtml(meals[2].getMeal()));
     }
 
     private void saveObjectToDisk(Object object) {

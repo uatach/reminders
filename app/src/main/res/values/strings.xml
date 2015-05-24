@@ -29,6 +29,12 @@
     <!-- SettingsActivity -->
     <string name="settings_activity_label">Settings</string>
 
+    <string name="category_restaurant">Restaurant</string>
+
+    <string name="pref_menu_title">Vegetarian Menu</string>
+    <string name="pref_menu_summary_on">If available, app displays vegetarian food.</string>
+    <string name="pref_menu_summary_off">Not showing vegetarian food.</string>
+
     <string name="pref_restaurant_title">Select Restaurant</string>
     <string name="pref_restaurant_summary">Select from which restaurant the menu should be displayed.</string>
     <string name="pref_restaurant_default">CAM</string>
