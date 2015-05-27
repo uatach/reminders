@@ -16,7 +16,7 @@
     <!-- MainActivity -->
     <string name="main_activity_label"><b>Next Meal:</b></string>
     <string name="main_activity_view">Downloading Menu!</string>
-    <string name="main_activity_update_view">0</string>
+    <string name="main_activity_update_view">Not updated yet.</string>
     <string name="main_activity_chooser">Send email with:</string>
     <string name="main_activity_note">This app is Free Software.</string>
 

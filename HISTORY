@@ -1,8 +1,7 @@
 v1
 Project redone using Android Studio;
 Updated to Material Design;
-Dropped support for old APIs;
-Simplified code.
+Dropped support for old APIs.
 
 v0.8.4
 Scheduled updates fixed.

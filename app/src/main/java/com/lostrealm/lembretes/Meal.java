@@ -25,13 +25,13 @@ import java.io.Serializable;
 
 public class Meal implements Serializable {
     private String date, summary;
-    private String meal = new String();
+    private String text = new String();
 
     Meal(Context context, String content) {
         String[] tmp = content.split("<[b,B][r,R] />");
 
         if (tmp.length <= 1) {
-            date = meal = summary = null; // TODO show some error message
+            date = text = summary = null; // TODO build Meal for errors
             return;
         }
 
@@ -49,15 +49,15 @@ public class Meal implements Serializable {
             summary = tmp[3];
         }
 
-        for (String t : tmp) meal = meal.concat(t.trim() + "<br />");
+        for (String t : tmp) text = text.concat(t.trim() + "<br />");
     }
 
     public String getDate() {
         return this.date;
     }
 
-    public String getMeal() {
-        return this.meal;
+    public String getText() {
+        return this.text;
     }
 
     public String getSummary() {

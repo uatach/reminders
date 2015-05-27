@@ -22,7 +22,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,8 +34,8 @@ public class MainIntentService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_DOWNLOAD = "com.lostrealm.lembretes.action.DOWNLOAD";
-    private static final String ACTION_REMIND = "com.lostrealm.lembretes.action.REMIND";
-    private static final String ACTION_UPDATE = "com.lostrealm.lembretes.action.UPDATE";
+    public static final String ACTION_REMIND = "com.lostrealm.lembretes.action.REMIND";
+    public static final String ACTION_UPDATE = "com.lostrealm.lembretes.action.UPDATE";
 
 //    // TODO: Rename parameters
 //    private static final String EXTRA_PARAM1 = "com.lostrealm.lembretes.extra.PARAM1";
@@ -78,10 +77,14 @@ public class MainIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
+        if (intent != null) { // TODO not sure of this test
             final String action = intent.getAction();
             if (action.equals(ACTION_DOWNLOAD)) {
                 handleActionDownload();
+            } else if (action.equals(ACTION_REMIND)) {
+                handleActionRemind();
+            } else if (action.equals(ACTION_UPDATE)) {
+                handleActionUpdate();
             }
 //            else if (action.equals(ACTION_REMIND)) {
 //                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
@@ -111,6 +114,12 @@ public class MainIntentService extends IntentService {
 //        throw new UnsupportedOperationException("Not yet implemented");
 //    }
 
+    private void handleActionUpdate() {
+        handleActionDownload();
+        Intent intent = new Intent(ACTION_UPDATE).putExtra(ACTION_UPDATE, MealManager.getINSTANCE(this).getMeal());
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
     private void handleActionDownload() {
         try {
             final String preference = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default));
@@ -135,17 +144,13 @@ public class MainIntentService extends IntentService {
 
             String[] tmp = content.toString().split("\",\"");
 
-            Meal[] meals = new Meal[tmp.length];
-
-            for (int i = 0; i < tmp.length; i++)
-                meals[i] = new Meal(this, tmp[i]);
-
-            Intent intent = new Intent(ACTION_DOWNLOAD).putExtra(ACTION_DOWNLOAD, meals);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-            Log.i("intentservice", "download success."); // remove this line.
+            MealManager.getINSTANCE(this).updateMeals(tmp);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void handleActionRemind() {
+
     }
 }

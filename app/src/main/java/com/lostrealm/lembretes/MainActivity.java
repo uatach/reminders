@@ -23,7 +23,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -32,25 +31,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
-import java.util.Calendar;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends Activity {
 
-    private static Meal[] meals = null;
+    private Meal meal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        meals = (Meal[]) loadObjectFromDisk();
+        meal = MealManager.getINSTANCE(this).getMeal();
     }
 
     @Override
@@ -69,8 +61,8 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_DOWNLOAD));
-                this.startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
+                LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_UPDATE));
+                this.startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
                 return true;
             case R.id.action_settings:
                 this.startActivity(new Intent(this, SettingsActivity.class));
@@ -94,51 +86,17 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
-            meals = (Meal[]) intent.getSerializableExtra(MainIntentService.ACTION_DOWNLOAD);
-            saveObjectToDisk(meals);
+            meal = (Meal) intent.getSerializableExtra(MainIntentService.ACTION_UPDATE);
             updateViews();
         }
     };
 
     private void updateViews() {
         TextView mealView = (TextView) findViewById(R.id.mealView);
+        mealView.setText(Html.fromHtml(meal.getText()));
 
-        Calendar calendar = Calendar.getInstance();
-        // maybe this section is to simple.
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
-                || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
-                || calendar.get(Calendar.HOUR_OF_DAY) < 16) {
-            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_menu", false))
-                mealView.setText(Html.fromHtml(meals[1].getMeal()));
-            else
-                mealView.setText(Html.fromHtml(meals[0].getMeal()));
-        } else
-            mealView.setText(Html.fromHtml(meals[2].getMeal()));
+        TextView updateView = (TextView) findViewById(R.id.updateView);
+        updateView.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(PreferenceManager.getDefaultSharedPreferences(this).getLong("last_update", 0))));
     }
 
-    private void saveObjectToDisk(Object object) {
-        try {
-            FileOutputStream fileOutputStream = openFileOutput(getString(R.string.app_name), MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(object);
-            objectOutputStream.close();
-            fileOutputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Object loadObjectFromDisk() {
-        try {
-            FileInputStream fileInputStream = openFileInput(getString(R.string.app_name));
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            Object object = objectInputStream.readObject();
-            objectInputStream.close();
-            fileInputStream.close();
-            return object;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
