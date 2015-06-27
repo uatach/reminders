@@ -30,8 +30,6 @@ import java.util.Calendar;
 public class MealManager {
     private static MealManager INSTANCE = new MealManager();
 
-    private MealManager() {}
-
     public static MealManager getINSTANCE(Context context) {
         INSTANCE.context = context;
         if (INSTANCE.meals == null)
@@ -41,6 +39,8 @@ public class MealManager {
 
     private Context context;
     private Meal[] meals;
+
+    private MealManager() {}
 
     public void updateMeals(String[] values) {
         meals = new Meal[values.length];

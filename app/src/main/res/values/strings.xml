@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Reminders</string>
-    <string name="app_version">v1</string>
+    <string name="app_version">v1-alpha2</string>
     <string name="app_license">GPLv3+ licensed.</string>
     <string name="app_copyright">Copyright (C) 2015 Edson Duarte</string>
     <string name="icon_copyright">Icon\'s Copyright (C) 2015 Filipe Marques</string>
@@ -30,10 +30,7 @@
     <string name="settings_activity_label">Settings</string>
 
     <string name="category_restaurant">Restaurant</string>
-
-    <string name="pref_menu_title">Vegetarian Menu</string>
-    <string name="pref_menu_summary_on">If available, app displays vegetarian food.</string>
-    <string name="pref_menu_summary_off">Not showing vegetarian food.</string>
+    <string name="category_reminders">Reminders</string>
 
     <string name="pref_restaurant_title">Select Restaurant</string>
     <string name="pref_restaurant_summary">Select from which restaurant the menu should be displayed.</string>
@@ -52,5 +49,34 @@
         <item>FCA</item>
         <item>PFL</item>
     </string-array>
+
+    <string name="pref_menu_title">Vegetarian Menu</string>
+    <string name="pref_menu_summary_on">If available, app displays vegetarian food.</string>
+    <string name="pref_menu_summary_off">Not showing vegetarian food.</string>
+
+    <string name="pref_remind_title">Allow Reminders</string>
+    <string name="pref_remind_summary_on">Reminders activated.</string>
+    <string name="pref_remind_summary_off">Reminders not active.</string>
+
+    <string name="pref_vibrate_title">Vibrate on Notifications</string>
+    <string name="pref_vibrate_summary_on">Vibration activated.</string>
+    <string name="pref_vibrate_summary_off">Vibration off.</string>
+
+    <string name="pref_reminder_type_title">Reminder\'s Type</string>
+    <string name="pref_reminder_type_summary">Select your preferred type of reminders.</string>
+    <string name="pref_reminder_type_default">meal</string>
+
+    <string-array name="pref_reminder_type_entries">
+        <item>By Meal</item>
+        <item>By Words</item>
+    </string-array>
+    <string-array name="pref_reminder_type_values">
+        <item>meal</item>
+        <item>words</item>
+    </string-array>
+
+    <string name="pref_reminder_time_lunch_title">Lunch\'s Reminder\'s Time</string>
+    <string name="pref_reminder_time_dinner_title">Dinner\'s Reminder\'s Time</string>
+
 
 </resources>

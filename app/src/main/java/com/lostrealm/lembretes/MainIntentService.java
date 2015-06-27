@@ -19,9 +19,18 @@
 package com.lostrealm.lembretes;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.opengl.Visibility;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,6 +40,9 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class MainIntentService extends IntentService {
+
+    private static final int REMINDER = 402410664;
+
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_DOWNLOAD = "com.lostrealm.lembretes.action.DOWNLOAD";
@@ -114,12 +126,6 @@ public class MainIntentService extends IntentService {
 //        throw new UnsupportedOperationException("Not yet implemented");
 //    }
 
-    private void handleActionUpdate() {
-        handleActionDownload();
-        Intent intent = new Intent(ACTION_UPDATE).putExtra(ACTION_UPDATE, MealManager.getINSTANCE(this).getMeal());
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
     private void handleActionDownload() {
         try {
             final String preference = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default));
@@ -150,7 +156,43 @@ public class MainIntentService extends IntentService {
         }
     }
 
-    private static void handleActionRemind() {
+    private void handleActionRemind() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if (pref.getBoolean("pref_remind", false)) {
+            Meal meal = MealManager.getINSTANCE(this).getMeal();
+            if (meal == null) return;
 
+            String s = getString(R.string.pref_reminder_type_default);
+            if (pref.getString("pref_reminder_type", s).equals(s)) {
+                notifyUser(meal);
+            }
+        }
+    }
+
+    private void handleActionUpdate() {
+        handleActionDownload();
+        Intent intent = new Intent(ACTION_UPDATE).putExtra(ACTION_UPDATE, MealManager.getINSTANCE(this).getMeal());
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void notifyUser(Meal meal) {
+        final long[] pattern = {0,2000};
+
+        Notification.Builder builder = new Notification.Builder(this)
+                .setAutoCancel(true)
+                .setContentText(Html.fromHtml(meal.getSummary()))
+                .setContentTitle(Html.fromHtml(meal.getDate()))
+                .setSmallIcon(android.R.drawable.ic_popup_sync)
+                .setVibrate(pattern);
+                //.setVisibility(Notification.VISIBILITY_PUBLIC);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
+
+        PendingIntent intent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(intent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(REMINDER, builder.build());
     }
 }
