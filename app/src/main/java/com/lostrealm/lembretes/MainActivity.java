@@ -61,17 +61,17 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_UPDATE));
-                this.startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
+                LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
+                startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
                 return true;
             case R.id.action_settings:
-                this.startActivity(new Intent(this, SettingsActivity.class));
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_about:
-                this.startActivity(new Intent(this, AboutActivity.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.action_feedback:
-                this.startActivity(Intent.createChooser(
+                startActivity(Intent.createChooser(
                         new Intent(android.content.Intent.ACTION_SEND)
                                 .setType("message/rfc822")
                                 .putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"edsonduarte1990@gmail.com"})

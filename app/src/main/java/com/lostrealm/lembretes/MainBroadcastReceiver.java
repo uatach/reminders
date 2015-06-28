@@ -32,15 +32,16 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (action.equals("android.intent.action.BOOT_COMPLETED")) {
-            Log.i("receiver", "booted.");
+            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
+            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
         } else if (action.equals("android.net.conn.CONNECTIVITY_CHANGE")) {
-            Log.i("receiver", "connection.");
-        } else if (action.equals(MainIntentService.ACTION_DOWNLOAD)) {
-
+            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
+        } else if (action.equals(MainIntentService.ACTION_NOTIFY)) {
+            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFY));
+        } else if (action.equals(MainIntentService.ACTION_REMIND)) {
+            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
         } else if (action.equals(MainIntentService.ACTION_UPDATE)) {
-
+            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
         }
-
-//        context.startService(new Intent(context, MainIntentService.class));
     }
 }

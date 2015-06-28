@@ -18,6 +18,7 @@
 
 package com.lostrealm.lembretes;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -35,53 +36,22 @@ import android.text.Html;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Calendar;
 
 public class MainIntentService extends IntentService {
 
     private static final int REMINDER = 402410664;
 
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     public static final String ACTION_DOWNLOAD = "com.lostrealm.lembretes.action.DOWNLOAD";
+    public static final String ACTION_NOTIFY = "com.lostrealm.lembretes.action.NOTIFY";
+    public static final String ACTION_REFRESH = "com.lostrealm.lembretes.action.REFRESH";
     public static final String ACTION_REMIND = "com.lostrealm.lembretes.action.REMIND";
     public static final String ACTION_UPDATE = "com.lostrealm.lembretes.action.UPDATE";
-
-//    // TODO: Rename parameters
-//    private static final String EXTRA_PARAM1 = "com.lostrealm.lembretes.extra.PARAM1";
-//    private static final String EXTRA_PARAM2 = "com.lostrealm.lembretes.extra.PARAM2";
-
-//    /**
-//     * Starts this service to perform action Foo with the given parameters. If
-//     * the service is already performing a task this action will be queued.
-//     *
-//     * @see IntentService
-//     */
-//    // TODO: Customize helper method
-//    public static void startActionFoo(Context context, String param1, String param2) {
-//        Intent intent = new Intent(context, MainIntentService.class);
-//        intent.setAction(ACTION_FOO);
-//        intent.putExtra(EXTRA_PARAM1, param1);
-//        intent.putExtra(EXTRA_PARAM2, param2);
-//        context.startService(intent);
-//    }
-
-//    /**
-//     * Starts this service to perform action Baz with the given parameters. If
-//     * the service is already performing a task this action will be queued.
-//     *
-//     * @see IntentService
-//     */
-//    // TODO: Customize helper method
-//    public static void startActionBaz(Context context, String param1, String param2) {
-//        Intent intent = new Intent(context, MainIntentService.class);
-//        intent.setAction(ACTION_BAZ);
-//        intent.putExtra(EXTRA_PARAM1, param1);
-//        intent.putExtra(EXTRA_PARAM2, param2);
-//        context.startService(intent);
-//    }
 
     public MainIntentService() {
         super("MainIntentService");
@@ -93,38 +63,15 @@ public class MainIntentService extends IntentService {
             final String action = intent.getAction();
             if (action.equals(ACTION_DOWNLOAD)) {
                 handleActionDownload();
+            } else if (action.equals(ACTION_REFRESH)) {
+                handleActionRefresh();
             } else if (action.equals(ACTION_REMIND)) {
                 handleActionRemind();
             } else if (action.equals(ACTION_UPDATE)) {
                 handleActionUpdate();
             }
-//            else if (action.equals(ACTION_REMIND)) {
-//                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-//                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-//                handleActionBaz(param1, param2);
-//            } else if (action.equals(ACTION_UPDATE)) {
-//
-//            }
         }
     }
-
-//    /**
-//     * Handle action Foo in the provided background thread with the provided
-//     * parameters.
-//     */
-//    private void handleActionFoo(String param1, String param2) {
-//        // TODO: Handle action Foo
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
-//
-//    /**
-//     * Handle action Baz in the provided background thread with the provided
-//     * parameters.
-//     */
-//    private void handleActionBaz(String param1, String param2) {
-//        // TODO: Handle action Baz
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
 
     private void handleActionDownload() {
         try {
@@ -151,14 +98,19 @@ public class MainIntentService extends IntentService {
             String[] tmp = content.toString().split("\",\"");
 
             MealManager.getINSTANCE(this).updateMeals(tmp);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void handleActionRefresh() {
+        handleActionDownload();
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_UPDATE).putExtra(ACTION_UPDATE, MealManager.getINSTANCE(this).getMeal()));
+    }
+
     private void handleActionRemind() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        if (pref.getBoolean("pref_remind", false)) {
+        if (pref.getBoolean("pref_remind", true)) {
             Meal meal = MealManager.getINSTANCE(this).getMeal();
             if (meal == null) return;
 
@@ -171,8 +123,12 @@ public class MainIntentService extends IntentService {
 
     private void handleActionUpdate() {
         handleActionDownload();
-        Intent intent = new Intent(ACTION_UPDATE).putExtra(ACTION_UPDATE, MealManager.getINSTANCE(this).getMeal());
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, 8);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_UPDATE), PendingIntent.FLAG_CANCEL_CURRENT);
+        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     private void notifyUser(Meal meal) {

@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Reminders</string>
-    <string name="app_version">v1-alpha2</string>
+    <string name="app_version">v1-alpha3</string>
     <string name="app_license">GPLv3+ licensed.</string>
     <string name="app_copyright">Copyright (C) 2015 Edson Duarte</string>
     <string name="icon_copyright">Icon\'s Copyright (C) 2015 Filipe Marques</string>
