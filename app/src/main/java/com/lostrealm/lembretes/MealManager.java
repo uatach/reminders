@@ -28,12 +28,14 @@ import java.io.ObjectOutputStream;
 import java.util.Calendar;
 
 public class MealManager {
+
     private static MealManager INSTANCE = new MealManager();
 
     public static MealManager getINSTANCE(Context context) {
         INSTANCE.context = context;
-        if (INSTANCE.meals == null)
-            INSTANCE.meals = (Meal[]) INSTANCE.loadObjectFromDisk(); // TODO on first time this is an error.
+        Object object = INSTANCE.loadObjectFromDisk();
+        if (INSTANCE.meals == null && object != null)
+            INSTANCE.meals = (Meal[]) object;
         return INSTANCE;
     }
 
@@ -51,17 +53,20 @@ public class MealManager {
     }
 
     public Meal getMeal() {
-        Calendar calendar = Calendar.getInstance();
-        // TODO maybe this section is to simple.
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
-                || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
-                || calendar.get(Calendar.HOUR_OF_DAY) < 15) {
-            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_menu", false))
-                return meals[1];
-            else
-                return meals[0];
-        } else
-            return meals[2];
+        if (meals != null) {
+            Calendar calendar = Calendar.getInstance();
+            // TODO maybe this section is to simple.
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+                    || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+                    || calendar.get(Calendar.HOUR_OF_DAY) < 15) {
+                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_menu", false))
+                    return meals[1];
+                else
+                    return meals[0];
+            } else
+                return meals[2];
+        }
+        return null;
     }
 
     private void saveObjectToDisk(Object object) {
@@ -85,8 +90,7 @@ public class MealManager {
             fileInputStream.close();
             return object;
         } catch (Exception e) {
-            e.printStackTrace(); // TODO should return some fake Meal object?
+            return null;
         }
-        return null;
     }
 }

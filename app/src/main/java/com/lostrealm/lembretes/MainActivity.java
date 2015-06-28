@@ -19,6 +19,7 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -42,13 +43,19 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        meal = MealManager.getINSTANCE(this).getMeal();
+
+        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
+        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateViews();
+        meal = MealManager.getINSTANCE(this).getMeal();
+        if (meal == null) refresh();
+        else updateViews();
+
+        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(MainIntentService.REMINDER);
     }
 
     @Override
@@ -61,8 +68,7 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
-                startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
+                refresh();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -82,11 +88,16 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void refresh() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
+        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
+    }
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
-            meal = (Meal) intent.getSerializableExtra(MainIntentService.ACTION_UPDATE);
+            meal = MealManager.getINSTANCE(context).getMeal();
             updateViews();
         }
     };

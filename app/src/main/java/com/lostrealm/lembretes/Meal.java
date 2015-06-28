@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import java.io.Serializable;
 
 public class Meal implements Serializable {
+
     private String date, summary;
     private String text = new String();
 
@@ -31,7 +32,7 @@ public class Meal implements Serializable {
         String[] tmp = content.split("<[b,B][r,R] />");
 
         if (tmp.length <= 1) {
-            date = text = summary = null; // TODO build Meal for errors
+            date = text = summary = null;
             return;
         }
 
