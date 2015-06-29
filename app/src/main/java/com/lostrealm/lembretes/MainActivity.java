@@ -43,9 +43,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
-        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
     }
 
     @Override
@@ -91,6 +88,7 @@ public class MainActivity extends Activity {
     private void refresh() {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
         startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
+        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {

@@ -61,10 +61,13 @@ public class MainIntentService extends IntentService {
         } else if (action.equals(ACTION_NOTIFY)) {
             handleActionNotify(MealManager.getINSTANCE(this).getMeal());
         } else if (action.equals(ACTION_REFRESH)) {
+            handleActionDownload();
+            handleActionUpdate();
             handleActionRefresh();
         } else if (action.equals(ACTION_REMIND)) {
             handleActionRemind();
         } else if (action.equals(ACTION_UPDATE)) {
+            handleActionDownload();
             handleActionUpdate();
         }
     }
@@ -124,7 +127,6 @@ public class MainIntentService extends IntentService {
     }
 
     private void handleActionRefresh() {
-        handleActionDownload();
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_REFRESH));
     }
 
@@ -148,8 +150,6 @@ public class MainIntentService extends IntentService {
     }
 
     private void handleActionUpdate() {
-        handleActionDownload();
-
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, 6);
         Log.i("UPDATE", calendar.getTime().toString());
