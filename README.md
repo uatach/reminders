@@ -5,6 +5,7 @@ In portuguese "Lembretes"
 
 It connects to the webpage of the university's restaurant to retrieve the meal and according to user preferences, it reminds him.
 
+Outdated...
 There are two kinds of reminders:
 
 1. per meal -> twice a day, before each meal, the application will remind the user.
@@ -12,19 +13,20 @@ There are two kinds of reminders:
 
 Requirements
 ------------
-Minimum Android 2.1 API 7 (tested).
+Not sure, I've developed the app for API 19 and I won't be testing on old APIs anymore.
 
 Usage
 -----
+Outdated...
 On first run the settings screen is displayed for further configuration.
 That's it, no additional steps are required, the application will (or not, if disabled by user) reminder the user based on the configurations.
 
 License
 -------
 
-Copyright (C) 2013-2014 Edson Duarte (edsonduarte1990@gmail.com).
+Copyright (C) 2013-2015 Edson Duarte (edsonduarte1990@gmail.com).
 
-Icon's Copyright (C) 2014 Filipe Marques (fi.marques33@gmail.com) with licenses CC-BY-SA and GPLv3+.
+Icon's Copyright (C) 2014-2015 Filipe Marques (fi.marques33@gmail.com) with licenses CC-BY-SA and GPLv3+.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -18,6 +18,7 @@
 
 package com.lostrealm.lembretes;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
@@ -25,7 +26,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
@@ -34,7 +35,6 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Proxy;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
@@ -103,6 +103,7 @@ public class MainIntentService extends IntentService {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void handleActionNotify(Meal meal) {
         final long[] pattern = {0,2000};
 
@@ -110,8 +111,14 @@ public class MainIntentService extends IntentService {
                 .setAutoCancel(true)
                 .setContentText(Html.fromHtml(meal.getSummary()))
                 .setContentTitle(Html.fromHtml(meal.getDate()))
-                .setSmallIcon(android.R.drawable.ic_popup_sync);
-        //.setVisibility(Notification.VISIBILITY_PUBLIC);
+                .setSmallIcon(android.R.drawable.ic_popup_sync)
+                .setPriority(Notification.PRIORITY_HIGH);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setCategory(Notification.CATEGORY_ALARM)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC)
+                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()));
+        }
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate", true))
             builder.setVibrate(pattern);
