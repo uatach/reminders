@@ -161,7 +161,7 @@ public class MainIntentService extends IntentService {
         calendar.add(Calendar.HOUR_OF_DAY, 6);
         Log.i("UPDATE", calendar.getTime().toString());
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER+14, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_UPDATE), PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 14, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_UPDATE), PendingIntent.FLAG_CANCEL_CURRENT);
         ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
     }
 }

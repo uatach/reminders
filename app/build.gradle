@@ -6,9 +6,9 @@ android {
 
     defaultConfig {
         applicationId "com.lostrealm.lembretes"
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 22
-        versionCode 38
+        versionCode 39
         versionName "1-alpha"
     }
     buildTypes {

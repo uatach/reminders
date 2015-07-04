@@ -18,13 +18,13 @@
 
 package com.lostrealm.lembretes;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 
-public class SettingsActivity extends Activity {
+public class SettingsFragment extends PreferenceFragment {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+        addPreferencesFromResource(R.xml.preferences);
     }
 }
