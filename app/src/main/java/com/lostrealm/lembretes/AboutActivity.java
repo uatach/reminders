@@ -23,32 +23,19 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
 
 public class AboutActivity extends Activity {
-    private TextView view;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        view = (TextView) findViewById(R.id.versionTextView);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        TextView view = (TextView) findViewById(R.id.versionTextView);
         view.setTypeface(null, Typeface.BOLD);
         view.setText(getString(R.string.app_name) + " " + getString(R.string.app_version));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // this activity will not display a menu.
-        return false;
     }
 
     public void openProjectPage(View view) {
