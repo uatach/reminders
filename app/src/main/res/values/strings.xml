@@ -57,10 +57,12 @@
     <string name="pref_menu_summary_off">Not showing vegetarian food.</string>
 
     <string name="pref_reminder_enable_lunch_title">Enable Lunch Reminders</string>
+    <string name="pref_reminder_timepicker_lunch_default">50400000</string>
     <string name="pref_reminder_enable_dinner_title">Enable Dinner Reminders</string>
 
-    <string name="pref_reminder_vibrate_title">Vibrate on Notifications</string>
     <string name="pref_reminder_timepicker_title">Select Reminder\'s Time</string>
+    <string name="pref_reminder_vibrate_title">Vibrate on Notifications</string>
+    <string name="pref_reminder_ringtone_title">Play Ringtone on Notifications</string>
 
 
 

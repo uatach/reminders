@@ -22,17 +22,20 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class Meal implements Serializable {
 
-    private String date, summary;
+    private String title, summary;
     private String text = new String();
+    private Calendar date;
 
     Meal(Context context, String content) {
         String[] tmp = content.split("<[b,B][r,R] />");
 
         if (tmp.length <= 1) {
-            date = text = summary = null;
+            title = text = summary = null;
             return;
         }
 
@@ -40,21 +43,27 @@ public class Meal implements Serializable {
         final String preferenceArray[] = context.getResources().getStringArray(R.array.pref_restaurant_values);
 
         if (preference.equals(preferenceArray[0])) {
-            date = tmp[0];
+            title = tmp[0];
             summary = tmp[3];
+            String[] tmp2 = title.replaceAll("[A-ZÇa-zç <>]", "").split("/");
+            date = new GregorianCalendar(Integer.parseInt(tmp2[2]), Integer.parseInt(tmp2[1]) - 1, Integer.parseInt(tmp2[0]));
         } else if (preference.equals(preferenceArray[1])) {
-            date = tmp[1];
+            title = tmp[1];
             summary = tmp[3];
         } else {
-            date = tmp[0];
+            title = tmp[0];
             summary = tmp[3];
         }
 
         for (String t : tmp) text = text.concat(t.trim() + "<br />");
     }
 
-    public String getDate() {
+    public Calendar getDate() {
         return this.date;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
     public String getText() {

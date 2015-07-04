@@ -26,11 +26,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,6 +38,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class MainIntentService extends IntentService {
 
@@ -60,6 +61,7 @@ public class MainIntentService extends IntentService {
             handleActionDownload();
         } else if (action.equals(ACTION_NOTIFY)) {
             handleActionNotify(MealManager.getINSTANCE(this).getMeal());
+            handleActionRemind();
         } else if (action.equals(ACTION_REFRESH)) {
             handleActionDownload();
             handleActionUpdate();
@@ -110,14 +112,14 @@ public class MainIntentService extends IntentService {
         Notification.Builder builder = new Notification.Builder(this)
                 .setAutoCancel(true)
                 .setContentText(Html.fromHtml(meal.getSummary()))
-                .setContentTitle(Html.fromHtml(meal.getDate()))
-                .setSmallIcon(android.R.drawable.ic_popup_sync)
+                .setContentTitle(Html.fromHtml(meal.getTitle()))
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setPriority(Notification.PRIORITY_HIGH);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setCategory(Notification.CATEGORY_ALARM)
                     .setVisibility(Notification.VISIBILITY_PUBLIC)
-                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()));
+                    .setStyle(new Notification.BigTextStyle().bigText(Html.fromHtml(meal.getSummary())));
         }
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate", true))
@@ -126,11 +128,9 @@ public class MainIntentService extends IntentService {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
 
-        PendingIntent intent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(intent);
+        builder.setContentIntent(stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT));
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(REMINDER, builder.build());
+        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(REMINDER, builder.build());
     }
 
     private void handleActionRefresh() {
@@ -138,30 +138,46 @@ public class MainIntentService extends IntentService {
     }
 
     private void handleActionRemind() {
-        Calendar remindCalendar = Calendar.getInstance();
-        remindCalendar.add(Calendar.HOUR_OF_DAY, 2);
-        Log.i("REMIND", remindCalendar.getTime().toString());
+//        Calendar remindCalendar = Calendar.getInstance();
+//        remindCalendar.add(Calendar.HOUR_OF_DAY, 2);
+//        Log.i("REMIND", remindCalendar.getTime().toString());
+//
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 3, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_REMIND), PendingIntent.FLAG_CANCEL_CURRENT);
+//        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, remindCalendar.getTimeInMillis(), pendingIntent);
+//
+//        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true)) {
+//            Calendar notifyCalendar = Calendar.getInstance();
+//            notifyCalendar.add(Calendar.HOUR_OF_DAY, 12); // TODO improve this.
+//
+//            Log.i("NOTIFY", notifyCalendar.getTime().toString());
+//
+//            pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 11, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY), PendingIntent.FLAG_ONE_SHOT);
+//            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, notifyCalendar.getTimeInMillis(), pendingIntent);
+//        }
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 3, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_REMIND), PendingIntent.FLAG_CANCEL_CURRENT);
-        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, remindCalendar.getTimeInMillis(), pendingIntent);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPreferences.getBoolean("pref_reminder_enable_lunch", false)) {
+            Calendar reminder = new GregorianCalendar();
+            reminder.setTimeInMillis(sharedPreferences.getLong("pref_reminder_time_lunch", Long.parseLong(getString(R.string.pref_reminder_timepicker_lunch_default))));
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true)) {
-            Calendar notifyCalendar = Calendar.getInstance();
-            notifyCalendar.add(Calendar.HOUR_OF_DAY, 12); // TODO improve this.
+            Calendar meal = MealManager.getINSTANCE(this).getMeal().getDate();
 
-            Log.i("NOTIFY", notifyCalendar.getTime().toString());
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, meal.get(Calendar.YEAR));
+            calendar.set(Calendar.MONTH, meal.get(Calendar.MONTH));
+            calendar.set(Calendar.DATE, meal.get(Calendar.DATE));
+            calendar.set(Calendar.HOUR_OF_DAY, reminder.get(Calendar.HOUR_OF_DAY));
+            calendar.set(Calendar.MINUTE, reminder.get(Calendar.MINUTE));
+            calendar.set(Calendar.SECOND, 0);
 
-            pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 11, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY), PendingIntent.FLAG_ONE_SHOT);
-            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, notifyCalendar.getTimeInMillis(), pendingIntent);
+            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 3, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY), PendingIntent.FLAG_CANCEL_CURRENT));
         }
     }
 
     private void handleActionUpdate() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, 6);
-        Log.i("UPDATE", calendar.getTime().toString());
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 14, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_UPDATE), PendingIntent.FLAG_CANCEL_CURRENT);
-        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 14, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_UPDATE), PendingIntent.FLAG_CANCEL_CURRENT));
     }
 }
