@@ -19,7 +19,12 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
+import android.app.TaskStackBuilder;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.MenuItem;
 
 public class SettingsActivity extends Activity {
     @Override

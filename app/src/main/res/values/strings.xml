@@ -56,6 +56,14 @@
     <string name="pref_menu_summary_on">If available, app displays vegetarian food.</string>
     <string name="pref_menu_summary_off">Not showing vegetarian food.</string>
 
+    <string name="pref_reminder_enable_lunch_title">Enable Lunch Reminders</string>
+    <string name="pref_reminder_enable_dinner_title">Enable Dinner Reminders</string>
+
+    <string name="pref_reminder_vibrate_title">Vibrate on Notifications</string>
+    <string name="pref_reminder_timepicker_title">Select Reminder\'s Time</string>
+
+
+
     <string name="pref_remind_title">Allow Reminders</string>
     <string name="pref_remind_summary_on">Reminders activated.</string>
     <string name="pref_remind_summary_off">Reminders not active.</string>
@@ -76,12 +84,5 @@
         <item>meal</item>
         <item>words</item>
     </string-array>
-
-    <string name="pref_reminder_time_lunch_title">Lunch\'s Reminder\'s Time</string>
-    <string name="pref_reminder_time_dinner_title">Dinner\'s Reminder\'s Time</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
 </resources>

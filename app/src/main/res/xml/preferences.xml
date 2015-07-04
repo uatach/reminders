@@ -24,53 +24,24 @@
     <PreferenceCategory android:title="@string/category_lunch">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="pref_remind_lunch"
-            android:title="Enable Lunch Reminders"/>
-        <SwitchPreference
-            android:defaultValue="true"
-            android:dependency="pref_remind_lunch"
-            android:key="pref_vibrate_lunch"
-            android:title="@string/pref_vibrate_title"/>
+            android:key="pref_reminder_enable_lunch"
+            android:title="@string/pref_reminder_enable_lunch_title" />
         <com.lostrealm.lembretes.TimePickerPreference
             android:defaultValue="50400000"
-            android:dependency="pref_remind_lunch"
+            android:dependency="pref_reminder_enable_lunch"
             android:key="pref_remind_lunch_time"
-            android:title="something" />
+            android:title="@string/pref_reminder_timepicker_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="pref_reminder_enable_lunch"
+            android:key="pref_vibrate_lunch"
+            android:title="@string/pref_reminder_vibrate_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/category_dinner">
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/category_reminders" >
-        <!-- Activate reminders -->
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
-            android:enabled="true"
-            android:key="pref_remind"
-            android:summaryOff="@string/pref_remind_summary_off"
-            android:summaryOn="@string/pref_remind_summary_on"
-            android:title="@string/pref_remind_title" />
-
-        <!-- Enable vibrating reminders -->
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:dependency="pref_remind"
-            android:enabled="true"
-            android:key="pref_vibrate"
-            android:summaryOff="@string/pref_vibrate_summary_off"
-            android:summaryOn="@string/pref_vibrate_summary_on"
-            android:title="@string/pref_vibrate_title" />
-
-        <!-- Option to select desired type of reminders -->
-        <ListPreference
-            android:defaultValue="@string/pref_reminder_type_default"
-            android:dependency="pref_remind"
-            android:entries="@array/pref_reminder_type_entries"
-            android:entryValues="@array/pref_reminder_type_values"
-            android:key="pref_reminder_type"
-            android:negativeButtonText="@android:string/cancel"
-            android:summary="@string/pref_reminder_type_summary"
-            android:title="@string/pref_reminder_type_title" />
+            android:key="pref_reminder_enable_dinner"
+            android:title="@string/pref_reminder_enable_dinner_title" />
     </PreferenceCategory>
 </PreferenceScreen>
