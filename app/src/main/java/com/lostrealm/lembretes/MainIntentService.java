@@ -27,6 +27,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -57,20 +58,26 @@ public class MainIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         final String action = intent.getAction();
-        if (action.equals(ACTION_DOWNLOAD)) {
-            handleActionDownload();
-        } else if (action.equals(ACTION_NOTIFY)) {
-            handleActionNotify(MealManager.getINSTANCE(this).getMeal());
-            handleActionRemind();
-        } else if (action.equals(ACTION_REFRESH)) {
-            handleActionDownload();
-            handleActionUpdate();
-            handleActionRefresh();
-        } else if (action.equals(ACTION_REMIND)) {
-            handleActionRemind();
-        } else if (action.equals(ACTION_UPDATE)) {
-            handleActionDownload();
-            handleActionUpdate();
+        switch (action) {
+            case ACTION_DOWNLOAD:
+                handleActionDownload();
+                break;
+            case ACTION_NOTIFY:
+                handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
+                handleActionRemind();
+                break;
+            case ACTION_REFRESH:
+                handleActionDownload();
+                handleActionUpdate();
+                handleActionRefresh();
+                break;
+            case ACTION_REMIND:
+                handleActionRemind();
+                break;
+            case ACTION_UPDATE:
+                handleActionDownload();
+                handleActionUpdate();
+                break;
         }
     }
 
@@ -106,7 +113,7 @@ public class MainIntentService extends IntentService {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void handleActionNotify(Meal meal) {
+    private void handleActionNotify(Meal meal, String type) {
         final long[] pattern = {0,2000};
 
         Notification.Builder builder = new Notification.Builder(this)
@@ -122,13 +129,19 @@ public class MainIntentService extends IntentService {
                     .setStyle(new Notification.BigTextStyle().bigText(Html.fromHtml(meal.getSummary())));
         }
 
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate", true))
-            builder.setVibrate(pattern);
+        if (type != null)
+            if (type.equals("lunch")) {
+                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate_lunch", false))
+                    builder.setVibrate(pattern);
+                String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_ringtone_lunch", null);
+                if (ringtone != null)
+                    builder.setSound(Uri.parse(ringtone));
+        }
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
 
-        builder.setContentIntent(stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT));
+        builder.setContentIntent(stackBuilder.getPendingIntent(REMINDER, PendingIntent.FLAG_ONE_SHOT));
 
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(REMINDER, builder.build());
     }
@@ -138,23 +151,6 @@ public class MainIntentService extends IntentService {
     }
 
     private void handleActionRemind() {
-//        Calendar remindCalendar = Calendar.getInstance();
-//        remindCalendar.add(Calendar.HOUR_OF_DAY, 2);
-//        Log.i("REMIND", remindCalendar.getTime().toString());
-//
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 3, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_REMIND), PendingIntent.FLAG_CANCEL_CURRENT);
-//        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, remindCalendar.getTimeInMillis(), pendingIntent);
-//
-//        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_remind", true)) {
-//            Calendar notifyCalendar = Calendar.getInstance();
-//            notifyCalendar.add(Calendar.HOUR_OF_DAY, 12); // TODO improve this.
-//
-//            Log.i("NOTIFY", notifyCalendar.getTime().toString());
-//
-//            pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 11, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY), PendingIntent.FLAG_ONE_SHOT);
-//            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, notifyCalendar.getTimeInMillis(), pendingIntent);
-//        }
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPreferences.getBoolean("pref_reminder_enable_lunch", false)) {
             Calendar reminder = new GregorianCalendar();
@@ -170,7 +166,9 @@ public class MainIntentService extends IntentService {
             calendar.set(Calendar.MINUTE, reminder.get(Calendar.MINUTE));
             calendar.set(Calendar.SECOND, 0);
 
-            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 3, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY), PendingIntent.FLAG_CANCEL_CURRENT));
+            Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY).setType("lunch"); // TODO can't retrieve type later.
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, intent, PendingIntent.FLAG_ONE_SHOT);
+            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         }
     }
 
@@ -178,6 +176,6 @@ public class MainIntentService extends IntentService {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, 6);
 
-        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER + 14, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_UPDATE), PendingIntent.FLAG_CANCEL_CURRENT));
+        ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 6*AlarmManager.INTERVAL_HOUR, PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_DOWNLOAD), PendingIntent.FLAG_ONE_SHOT));
     }
 }

@@ -28,7 +28,7 @@ import java.util.GregorianCalendar;
 public class Meal implements Serializable {
 
     private String title, summary;
-    private String text = new String();
+    private String text = "";
     private Calendar date;
 
     Meal(Context context, String content) {
