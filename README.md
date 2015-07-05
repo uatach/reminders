@@ -5,21 +5,13 @@ In portuguese "Lembretes"
 
 It connects to the webpage of the university's restaurant to retrieve the meal and according to user preferences, it reminds him.
 
-Outdated...
-There are two kinds of reminders:
-
-1. per meal -> twice a day, before each meal, the application will remind the user.
-2. per word -> before each meal, the application will look up if any of the words given by the user is present, if so the application will remind the user.
-
 Requirements
 ------------
-Not sure, I've developed the app for API 19 and I won't be testing on old APIs anymore.
+Not sure, I've developed the app with minimum API 16, but I use a device with API 22 and I won't be testing on older APIs anymore.
 
 Usage
 -----
-Outdated...
-On first run the settings screen is displayed for further configuration.
-That's it, no additional steps are required, the application will (or not, if disabled by user) reminder the user based on the configurations.
+The user should run the app at least once to initialize stuff, then the app reminds the user according to preferences.
 
 License
 -------

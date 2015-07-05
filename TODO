@@ -7,4 +7,3 @@
 * Regular expressions support.
 
 * Looks like a bug: sometimes says that meal has been updated but display lunch's meal instead of dinner's.
-* Update reminder to show "Prato Principal" on notifications.
