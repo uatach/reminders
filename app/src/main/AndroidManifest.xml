@@ -24,6 +24,7 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
+            android:exported="false"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" >
             <meta-data
@@ -32,6 +33,7 @@
         </activity>
         <activity
             android:name=".AboutActivity"
+            android:exported="false"
             android:label="@string/about_activity_title"
             android:parentActivityName=".MainActivity"
             android:theme="@style/DialogActivityTheme" >

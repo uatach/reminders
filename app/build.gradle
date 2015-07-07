@@ -8,7 +8,7 @@ android {
         applicationId "com.lostrealm.lembretes"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 46
+        versionCode 47
         versionName "1-alpha"
     }
     buildTypes {
@@ -21,5 +21,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:support-v4:22.2.0'
 }

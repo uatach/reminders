@@ -19,6 +19,12 @@
             android:summaryOff="@string/pref_menu_summary_off"
             android:summaryOn="@string/pref_menu_summary_on"
             android:title="@string/pref_menu_title"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:key="pref_always_on_notification"
+            android:title="Always-On Notification"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/category_lunch">

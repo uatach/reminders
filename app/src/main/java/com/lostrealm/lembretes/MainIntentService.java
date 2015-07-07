@@ -180,7 +180,7 @@ public class MainIntentService extends IntentService {
         calendar.add(Calendar.HOUR_OF_DAY, 1);
 
         Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_DOWNLOAD);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, intent, PendingIntent.FLAG_NO_CREATE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
