@@ -32,6 +32,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -63,16 +64,16 @@ public class MainIntentService extends IntentService {
                 handleActionDownload();
                 break;
             case ACTION_NOTIFY:
-                handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
-                handleActionRemind();
+                //handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
+                //handleActionRemind();
                 break;
             case ACTION_REFRESH:
                 handleActionDownload();
-                handleActionUpdate();
                 handleActionRefresh();
+                handleActionUpdate();
                 break;
             case ACTION_REMIND:
-                handleActionRemind();
+                //handleActionRemind();
                 break;
             case ACTION_UPDATE:
                 handleActionDownload();
@@ -87,6 +88,8 @@ public class MainIntentService extends IntentService {
             String preferenceArray[] = getResources().getStringArray(R.array.pref_restaurant_values);
 
             URL url;
+
+            assert preference != null;
             if (preference.equals(preferenceArray[0]))
                 url = new URL(getString(R.string.pref_restaurant_CAM));
             else if (preference.equals(preferenceArray[1]))
@@ -106,7 +109,7 @@ public class MainIntentService extends IntentService {
 
             String[] tmp = content.toString().split("\",\"");
 
-            MealManager.getINSTANCE(this).updateMeals(tmp);
+            MealManager.getINSTANCE(this).setMeals(tmp);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,8 +177,11 @@ public class MainIntentService extends IntentService {
 
     private void handleActionUpdate() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, 6);
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
 
-        ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 6*AlarmManager.INTERVAL_HOUR, PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_DOWNLOAD), PendingIntent.FLAG_ONE_SHOT));
+        Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_DOWNLOAD);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 }

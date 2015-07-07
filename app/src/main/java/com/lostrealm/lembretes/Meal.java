@@ -27,35 +27,36 @@ import java.util.GregorianCalendar;
 
 public class Meal implements Serializable {
 
-    private String title, summary;
-    private String text = "";
-    private Calendar date;
+    private String text, title, summary;
+    private Calendar date = new GregorianCalendar();
 
     Meal(Context context, String content) {
-        String[] tmp = content.split("<[b,B][r,R] />");
+        String[] lines = content.split("<[b,B][r,R] />");
 
-        if (tmp.length <= 1) {
-            title = text = summary = null;
-            return;
-        }
+        if (lines.length <= 1)
+            throw new RuntimeException("Could not create meal.");
 
         final String preference = PreferenceManager.getDefaultSharedPreferences(context).getString("pref_restaurant", context.getString(R.string.pref_restaurant_default));
         final String preferenceArray[] = context.getResources().getStringArray(R.array.pref_restaurant_values);
 
+        assert preference != null;
         if (preference.equals(preferenceArray[0])) {
-            title = tmp[0];
-            summary = tmp[3];
-            String[] tmp2 = title.replaceAll("[A-ZÇa-zç <>]", "").split("/");
-            date = new GregorianCalendar(Integer.parseInt(tmp2[2]), Integer.parseInt(tmp2[1]) - 1, Integer.parseInt(tmp2[0]));
+            title = lines[0];
+            summary = lines[3];
+            String[] tmp = title.replaceAll("[A-ZÇa-zç <>]", "").split("/");
+            date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
         } else if (preference.equals(preferenceArray[1])) {
-            title = tmp[1];
-            summary = tmp[3];
+            title = lines[1];
+            summary = lines[3];
+            // TODO finish this.
         } else {
-            title = tmp[0];
-            summary = tmp[3];
+            title = lines[0];
+            summary = lines[3];
+            // TODO finish this.
         }
 
-        for (String t : tmp) text = text.concat(t.trim() + "<br />");
+        text = "";
+        for (String line : lines) text = text.concat(line.trim() + "<br />");
     }
 
     public Calendar getDate() {

@@ -20,53 +20,58 @@ package com.lostrealm.lembretes;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MealManager {
 
     private static MealManager INSTANCE = new MealManager();
 
+    @SuppressWarnings("unchecked")
     public static MealManager getINSTANCE(Context context) {
         INSTANCE.context = context;
         Object object = INSTANCE.loadObjectFromDisk();
         if (INSTANCE.meals == null && object != null)
-            INSTANCE.meals = (Meal[]) object;
+            INSTANCE.meals = (List<Meal>) object;
         return INSTANCE;
     }
 
     private Context context;
-    private Meal[] meals;
+    private List<Meal> meals;
 
     private MealManager() {}
 
-    public void updateMeals(String[] values) {
-        meals = new Meal[values.length];
-        for (int i = 0; i < values.length; i++)
-            meals[i] = new Meal(context, values[i]);
+    public void setMeals(String[] values) {
+        meals = new ArrayList<>();
+        for (String value : values)
+            meals.add(new Meal(context, value));
         saveObjectToDisk(meals);
         PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("last_update", System.currentTimeMillis()).commit();
     }
 
     public Meal getMeal() {
-        if (meals != null) {
-            Calendar calendar = Calendar.getInstance();
-            // TODO maybe this section is to simple.
-            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
-                    || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
-                    || calendar.get(Calendar.HOUR_OF_DAY) < 15) {
-                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_menu", false))
-                    return meals[1];
-                else
-                    return meals[0];
-            } else
-                return meals[2];
-        }
-        return null;
+        if (meals == null)
+            return null;
+
+        boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_menu", false);
+        Calendar calendar = Calendar.getInstance();
+
+        if (meals.get(0).getDate().getTime().after(calendar.getTime()))
+            return !vegetarian ? meals.get(0) : meals.get(1);
+
+        // TODO improve this.
+        if (calendar.get(Calendar.HOUR_OF_DAY) < 15) {
+            return !vegetarian ? meals.get(0) : meals.get(1);
+        } else
+            return meals.get(2);
     }
 
     private void saveObjectToDisk(Object object) {
@@ -81,6 +86,7 @@ public class MealManager {
         }
     }
 
+    @Nullable
     private Object loadObjectFromDisk() {
         try {
             FileInputStream fileInputStream = context.openFileInput(context.getString(R.string.app_name));

@@ -23,8 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 
 public class MainBroadcastReceiver extends BroadcastReceiver {
-    public MainBroadcastReceiver() {
-    }
+
+    public MainBroadcastReceiver() {}
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,12 +35,12 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
             context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
         } else if (action.equals("android.net.conn.CONNECTIVITY_CHANGE")) {
             //context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
+        } else if (action.equals(MainIntentService.ACTION_DOWNLOAD)) {
+            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
         } else if (action.equals(MainIntentService.ACTION_NOTIFY)) {
             context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFY));
         } else if (action.equals(MainIntentService.ACTION_REMIND)) {
             context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
-        } else if (action.equals(MainIntentService.ACTION_UPDATE)) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
         }
     }
 }
