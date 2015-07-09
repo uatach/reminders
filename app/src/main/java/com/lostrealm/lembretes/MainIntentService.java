@@ -86,18 +86,7 @@ public class MainIntentService extends IntentService {
 
     private void handleActionDownload() {
         try {
-            String preference = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default));
-            String preferenceArray[] = getResources().getStringArray(R.array.pref_restaurant_values);
-
-            URL url;
-
-            assert preference != null;
-            if (preference.equals(preferenceArray[0]))
-                url = new URL(getString(R.string.pref_restaurant_CAM));
-            else if (preference.equals(preferenceArray[1]))
-                url = new URL(getString(R.string.pref_restaurant_FCA));
-            else
-                url = new URL(getString(R.string.pref_restaurant_PFL));
+            URL url = new URL(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default)));
 
             URLConnection connection = url.openConnection(Proxy.NO_PROXY);
             connection.setReadTimeout(2000);

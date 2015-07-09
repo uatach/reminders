@@ -36,10 +36,7 @@
 
     <string name="pref_restaurant_title">Select Restaurant</string>
     <string name="pref_restaurant_summary">Select from which restaurant the menu should be displayed.</string>
-    <string name="pref_restaurant_default">CAM</string>
-    <string name="pref_restaurant_CAM">https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</string>
-    <string name="pref_restaurant_FCA">https://www1.sistemas.unicamp.br/Mobile/CardapioFCA</string>
-    <string name="pref_restaurant_PFL">https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</string>
+    <string name="pref_restaurant_default">https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</string>
 
     <string-array name="pref_restaurant_entries">
         <item>COTUCA, RU, RA, RS</item>
@@ -47,9 +44,9 @@
         <item>PFL</item>
     </string-array>
     <string-array name="pref_restaurant_values">
-        <item>CAM</item>
-        <item>FCA</item>
-        <item>PFL</item>
+        <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</item>
+        <item>https://www1.sistemas.unicamp.br/Mobile/CardapioFCA</item>
+        <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</item>
     </string-array>
 
     <string name="pref_menu_title">Vegetarian Menu</string>
