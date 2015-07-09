@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
         mealView.setText(Html.fromHtml(meal.getText()));
 
         TextView updateView = (TextView) findViewById(R.id.updateView);
-        updateView.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(PreferenceManager.getDefaultSharedPreferences(this).getLong("last_update", 0))));
+        updateView.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(PreferenceManager.getDefaultSharedPreferences(this).getLong(getString(R.string.pref_last_update_key), 0))));
     }
 
 }

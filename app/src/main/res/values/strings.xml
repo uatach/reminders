@@ -34,6 +34,9 @@
     <string name="category_dinner">Dinner Reminders</string>
     <string name="category_reminders">Reminders</string>
 
+    <string name="pref_last_update_key">pref_last_update</string>
+
+    <string name="pref_restaurant_key">pref_restaurant</string>
     <string name="pref_restaurant_title">Select Restaurant</string>
     <string name="pref_restaurant_summary">Select from which restaurant the menu should be displayed.</string>
     <string name="pref_restaurant_default">https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</string>
@@ -49,17 +52,24 @@
         <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</item>
     </string-array>
 
+    <string name="pref_menu_key">pref_menu</string>
     <string name="pref_menu_title">Vegetarian Menu</string>
     <string name="pref_menu_summary_on">If available, app displays vegetarian food.</string>
     <string name="pref_menu_summary_off">Not showing vegetarian food.</string>
 
-    <string name="pref_reminder_enable_lunch_title">Enable Lunch Reminders</string>
-    <string name="pref_reminder_timepicker_lunch_default">50400000</string>
-    <string name="pref_reminder_enable_dinner_title">Enable Dinner Reminders</string>
+    <string name="pref_always_on_key">pref_always_on_notification</string>
+    <string name="pref_always_on_title">Always-On Notification</string>
 
+    <string name="pref_reminder_switch_title">Enable Reminders</string>
     <string name="pref_reminder_timepicker_title">Select Reminder\'s Time</string>
     <string name="pref_reminder_vibrate_title">Vibrate on Notifications</string>
     <string name="pref_reminder_ringtone_title">Play Ringtone on Notifications</string>
+
+    <string name="pref_reminder_lunch_switch_key">pref_reminder_lunch</string>
+    <string name="pref_reminder_lunch_timepicker_key">pref_reminder_lunch_timepicker</string>
+    <string name="pref_reminder_lunch_timepicker_default">50400000</string>
+    <string name="pref_reminder_lunch_vibrate_key">pref_reminder_lunch_vibrate</string>
+    <string name="pref_reminder_lunch_ringtone_key">pref_reminder_lunch_ringtone</string>
 
 
 

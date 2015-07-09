@@ -19,8 +19,6 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -47,11 +45,8 @@ public class SettingsActivity extends Activity implements SharedPreferences.OnSh
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("pref_always_on_notification")) {
-            Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(MainIntentService.ACTION_NOTIFICATION);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), MainIntentService.NOTIFICATION_ID, intent, PendingIntent.FLAG_NO_CREATE);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.setInexactRepeating(AlarmManager.RTC, 0, AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+        if (key.equals(getString(R.string.pref_always_on_key))) {
+            startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
         }
     }
 }

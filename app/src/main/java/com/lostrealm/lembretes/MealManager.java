@@ -54,14 +54,14 @@ public class MealManager {
         for (String value : values)
             meals.add(new Meal(context, value));
         saveObjectToDisk(meals);
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("last_update", System.currentTimeMillis()).commit();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
     }
 
     public Meal getMeal() {
         if (meals == null)
             return null;
 
-        boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_menu", false);
+        boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_menu_key), false);
         Calendar calendar = Calendar.getInstance();
 
         if (meals.get(0).getDate().getTime().after(calendar.getTime()))

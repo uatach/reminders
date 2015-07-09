@@ -36,19 +36,14 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class MainIntentService extends IntentService {
 
     public static final int NOTIFICATION_ID = 402410663;
-    public static final int REMINDER_ID = 402410664;
+    public static final int UPDATE_ID = 402410664;
 
     public static final String ACTION_DOWNLOAD = "com.lostrealm.lembretes.action.DOWNLOAD";
     public static final String ACTION_NOTIFICATION = "com.lostrealm.lembretes.action.NOTIFICATION";
@@ -69,14 +64,14 @@ public class MainIntentService extends IntentService {
                 handleActionDownload();
                 break;
             case ACTION_NOTIFICATION:
-                manageAlwaysOnNotification(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_always_on_notification", false));
+                manageAlwaysOnNotification(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_always_on_key), false));
             case ACTION_NOTIFY:
                 //handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
                 //handleActionRemind();
                 break;
             case ACTION_REFRESH:
                 handleActionDownload();
-                handleActionRefresh();
+                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_REFRESH));
                 handleActionUpdate();
                 break;
             case ACTION_REMIND:
@@ -90,7 +85,7 @@ public class MainIntentService extends IntentService {
     }
 
     private void handleActionDownload() {
-        String url = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default));
+        String url = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_restaurant_key), getString(R.string.pref_restaurant_default));
 
         String content;
         try {
@@ -108,9 +103,14 @@ public class MainIntentService extends IntentService {
 
     private void manageAlwaysOnNotification(boolean enabled) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFICATION);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (!enabled) {
             notificationManager.cancel(MainIntentService.NOTIFICATION_ID);
+            alarmManager.cancel(pendingIntent);
             return;
         }
 
@@ -134,6 +134,8 @@ public class MainIntentService extends IntentService {
 
         builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
         notificationManager.notify(NOTIFICATION_ID, builder.build());
+
+        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
     }
 
     private void handleActionNotify(Meal meal, String type) {
@@ -164,20 +166,16 @@ public class MainIntentService extends IntentService {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
 
-        builder.setContentIntent(stackBuilder.getPendingIntent(REMINDER_ID, PendingIntent.FLAG_ONE_SHOT));
+        builder.setContentIntent(stackBuilder.getPendingIntent(UPDATE_ID, PendingIntent.FLAG_ONE_SHOT));
 
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(REMINDER_ID, builder.build());
-    }
-
-    private void handleActionRefresh() {
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_REFRESH));
+        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(UPDATE_ID, builder.build());
     }
 
     private void handleActionRemind() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPreferences.getBoolean("pref_reminder_enable_lunch", false)) {
             Calendar reminder = new GregorianCalendar();
-            reminder.setTimeInMillis(sharedPreferences.getLong("pref_reminder_time_lunch", Long.parseLong(getString(R.string.pref_reminder_timepicker_lunch_default))));
+            reminder.setTimeInMillis(sharedPreferences.getLong("pref_reminder_time_lunch", Long.parseLong(getString(R.string.pref_reminder_lunch_timepicker_default))));
 
             Calendar meal = MealManager.getINSTANCE(this).getMeal().getDate();
 
@@ -190,7 +188,7 @@ public class MainIntentService extends IntentService {
             calendar.set(Calendar.SECOND, 0);
 
             Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY).setType("lunch"); // TODO can't retrieve type later.
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER_ID, intent, PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), UPDATE_ID, intent, PendingIntent.FLAG_ONE_SHOT);
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         }
     }
@@ -200,7 +198,7 @@ public class MainIntentService extends IntentService {
         calendar.add(Calendar.HOUR_OF_DAY, 1);
 
         Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_DOWNLOAD);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER_ID, intent, PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), UPDATE_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
