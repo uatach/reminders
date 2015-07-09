@@ -32,7 +32,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Proxy;
 import java.net.URL;
@@ -85,25 +90,20 @@ public class MainIntentService extends IntentService {
     }
 
     private void handleActionDownload() {
+        String url = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default));
+
+        String content;
         try {
-            URL url = new URL(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_restaurant", getString(R.string.pref_restaurant_default)));
-
-            URLConnection connection = url.openConnection(Proxy.NO_PROXY);
-            connection.setReadTimeout(2000);
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"), 8192);
-
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null)
-                content.append(line.trim().replace("\\r\\n", "<br />").replace("\\", "").replaceAll("^.*\\[\"", "").replaceAll("\"\\].*$", ""));
-
-            String[] tmp = content.toString().split("\",\"");
-
-            MealManager.getINSTANCE(this).setMeals(tmp);
-        } catch (Exception e) {
+            Request request = new Request.Builder().url(url).build();
+            OkHttpClient client = new OkHttpClient();
+            Response response = client.newCall(request).execute();
+            content = response.body().string().trim().replace("\\r\\n", "<br />").replace("\\", "").replaceAll("^.*\\[\"", "").replaceAll("\"\\].*$", "");
+        } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
+
+        MealManager.getINSTANCE(this).setMeals(content.split("\",\""));
     }
 
     private void manageAlwaysOnNotification(boolean enabled) {
