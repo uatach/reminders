@@ -19,7 +19,6 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,7 +51,7 @@ public class MainActivity extends Activity {
         if (meal == null) refresh();
         else updateViews();
 
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(MainIntentService.REMINDER);
+        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
     }
 
     @Override

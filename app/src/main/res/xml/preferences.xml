@@ -22,7 +22,6 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:enabled="false"
             android:key="pref_always_on_notification"
             android:title="Always-On Notification"/>
     </PreferenceCategory>

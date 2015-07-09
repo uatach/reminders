@@ -18,7 +18,6 @@
 
 package com.lostrealm.lembretes;
 
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
@@ -32,7 +31,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -44,9 +42,11 @@ import java.util.GregorianCalendar;
 
 public class MainIntentService extends IntentService {
 
-    public static final int REMINDER = 402410664;
+    public static final int NOTIFICATION_ID = 402410663;
+    public static final int REMINDER_ID = 402410664;
 
     public static final String ACTION_DOWNLOAD = "com.lostrealm.lembretes.action.DOWNLOAD";
+    public static final String ACTION_NOTIFICATION = "com.lostrealm.lembretes.action.NOTIFICATION";
     public static final String ACTION_NOTIFY = "com.lostrealm.lembretes.action.NOTIFY";
     public static final String ACTION_REFRESH = "com.lostrealm.lembretes.action.REFRESH";
     public static final String ACTION_REMIND = "com.lostrealm.lembretes.action.REMIND";
@@ -63,6 +63,8 @@ public class MainIntentService extends IntentService {
             case ACTION_DOWNLOAD:
                 handleActionDownload();
                 break;
+            case ACTION_NOTIFICATION:
+                manageAlwaysOnNotification(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_always_on_notification", false));
             case ACTION_NOTIFY:
                 //handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
                 //handleActionRemind();
@@ -115,7 +117,36 @@ public class MainIntentService extends IntentService {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void manageAlwaysOnNotification(boolean enabled) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if (!enabled) {
+            notificationManager.cancel(MainIntentService.NOTIFICATION_ID);
+            return;
+        }
+
+        Meal meal = MealManager.getINSTANCE(this).getMeal();
+
+        Notification.Builder builder = new Notification.Builder(this)
+                .setAutoCancel(false)
+                .setContentText(Html.fromHtml(meal.getSummary()))
+                .setContentTitle(Html.fromHtml(meal.getTitle()))
+                .setOngoing(true)
+                .setPriority(Notification.PRIORITY_LOW)
+                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setCategory(Notification.CATEGORY_STATUS)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
+
+        builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
     private void handleActionNotify(Meal meal, String type) {
         final long[] pattern = {0,2000};
 
@@ -123,7 +154,7 @@ public class MainIntentService extends IntentService {
                 .setAutoCancel(true)
                 .setContentText(Html.fromHtml(meal.getSummary()))
                 .setContentTitle(Html.fromHtml(meal.getTitle()))
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim)
                 .setPriority(Notification.PRIORITY_HIGH);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -144,9 +175,9 @@ public class MainIntentService extends IntentService {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
 
-        builder.setContentIntent(stackBuilder.getPendingIntent(REMINDER, PendingIntent.FLAG_ONE_SHOT));
+        builder.setContentIntent(stackBuilder.getPendingIntent(REMINDER_ID, PendingIntent.FLAG_ONE_SHOT));
 
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(REMINDER, builder.build());
+        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(REMINDER_ID, builder.build());
     }
 
     private void handleActionRefresh() {
@@ -170,7 +201,7 @@ public class MainIntentService extends IntentService {
             calendar.set(Calendar.SECOND, 0);
 
             Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY).setType("lunch"); // TODO can't retrieve type later.
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, intent, PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER_ID, intent, PendingIntent.FLAG_ONE_SHOT);
             ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
         }
     }
@@ -180,8 +211,12 @@ public class MainIntentService extends IntentService {
         calendar.add(Calendar.HOUR_OF_DAY, 1);
 
         Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_DOWNLOAD);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER, intent, PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER_ID, intent, PendingIntent.FLAG_NO_CREATE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 5 * AlarmManager.INTERVAL_HOUR, pendingIntent);
+        else
+            alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 }
