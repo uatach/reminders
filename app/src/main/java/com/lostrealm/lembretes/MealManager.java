@@ -21,7 +21,6 @@ package com.lostrealm.lembretes;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -64,7 +63,7 @@ public class MealManager {
         boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_menu_key), false);
         Calendar calendar = Calendar.getInstance();
 
-        if (meals.get(0).getDate().getTime().after(calendar.getTime()))
+        if (meals.get(0).getDate().after(calendar))
             return !vegetarian ? meals.get(0) : meals.get(1);
 
         // TODO improve this.

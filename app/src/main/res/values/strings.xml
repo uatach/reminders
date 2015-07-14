@@ -44,12 +44,12 @@
     <string-array name="pref_restaurant_entries">
         <item>COTUCA, RU, RA, RS</item>
         <item>COTIL, FCA, FOP, FT</item>
-        <item>PFL</item>
+        <!-- <item>PFL</item> -->
     </string-array>
     <string-array name="pref_restaurant_values">
         <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</item>
         <item>https://www1.sistemas.unicamp.br/Mobile/CardapioFCA</item>
-        <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</item>
+        <!-- <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</item> -->
     </string-array>
 
     <string name="pref_menu_key">pref_menu</string>

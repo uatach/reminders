@@ -20,6 +20,8 @@ package com.lostrealm.lembretes;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.text.Html;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -41,19 +43,30 @@ public class Meal implements Serializable {
 
         assert preference != null;
         if (preference.equals(preferenceArray[0])) {
-            title = lines[0];
-            summary = lines[3];
-            String[] tmp = title.replaceAll("[A-ZÇa-zç <>]", "").split("/");
+            title = removeHtml(lines[0]);
+            summary = removeHtml(lines[3]);
+            String[] tmp = title.replaceAll("[^0-9/]", "").split("/");
             date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
         } else if (preference.equals(preferenceArray[1])) {
-            title = lines[1];
-            summary = lines[3];
-            // TODO finish this.
-        } else {
-            title = lines[0];
-            summary = lines[3];
-            // TODO finish this.
+            title = removeHtml(lines[1]);
+            summary = removeHtml(lines[10]); // TODO not sure about this
+            String[] tmp = title.replaceAll("[^0-9/]", "").split("/");
+            date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
         }
+//        else {
+//            title = lines[1] + lines[3];
+//            summary = lines[5];
+//            String[] tmp = Html.fromHtml(title).toString() // TODO this looks awful, should be improved.
+//                    .replaceAll(" DE ", "/")
+//                    .replace("JANEIRO", "01")
+//                    .replace("FEVEREIRO", "02")
+//                    .replace("MARÇO", "03")
+//                    .replace("JULHO", "07")
+//                    .replace("AGOSTO", "08")
+//                    .replaceAll("[^0-9/]", "")
+//                    .split("/");
+//            date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
+//        }
 
         text = "";
         for (String line : lines) text = text.concat(line.trim() + "<br />");
@@ -73,5 +86,9 @@ public class Meal implements Serializable {
 
     public String getSummary() {
         return this.summary;
+    }
+
+    @NonNull private String removeHtml(String withHtml) {
+        return Html.fromHtml(withHtml).toString();
     }
 }

@@ -64,7 +64,7 @@ public class MainIntentService extends IntentService {
                 handleActionDownload();
                 break;
             case ACTION_NOTIFICATION:
-                manageAlwaysOnNotification(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_always_on_key), false));
+                manageAlwaysOnNotification();
             case ACTION_NOTIFY:
                 //handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
                 //handleActionRemind();
@@ -72,6 +72,7 @@ public class MainIntentService extends IntentService {
             case ACTION_REFRESH:
                 handleActionDownload();
                 LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_REFRESH));
+                manageAlwaysOnNotification();
                 handleActionUpdate();
                 break;
             case ACTION_REMIND:
@@ -101,7 +102,9 @@ public class MainIntentService extends IntentService {
         MealManager.getINSTANCE(this).setMeals(content.split("\",\""));
     }
 
-    private void manageAlwaysOnNotification(boolean enabled) {
+    private void manageAlwaysOnNotification() {
+        boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_always_on_key), false);
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -118,8 +121,8 @@ public class MainIntentService extends IntentService {
 
         Notification.Builder builder = new Notification.Builder(this)
                 .setAutoCancel(false)
-                .setContentText(Html.fromHtml(meal.getSummary()))
-                .setContentTitle(Html.fromHtml(meal.getTitle()))
+                .setContentText(meal.getSummary())
+                .setContentTitle(meal.getTitle())
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_LOW)
                 .setSmallIcon(android.R.drawable.stat_notify_sync_noanim);
@@ -135,7 +138,7 @@ public class MainIntentService extends IntentService {
         builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
         notificationManager.notify(NOTIFICATION_ID, builder.build());
 
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 
     private void handleActionNotify(Meal meal, String type) {

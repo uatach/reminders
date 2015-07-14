@@ -45,7 +45,9 @@ public class SettingsActivity extends Activity implements SharedPreferences.OnSh
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_always_on_key))) {
+        if (key.equals(getString(R.string.pref_restaurant_key))) {
+            startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
+        } else if (key.equals(getString(R.string.pref_always_on_key))) {
             startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
         }
     }
