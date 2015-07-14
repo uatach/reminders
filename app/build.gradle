@@ -11,6 +11,11 @@ android {
         versionCode 51
         versionName "1-alpha"
     }
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+    }
     buildTypes {
         debug {
             debuggable true
