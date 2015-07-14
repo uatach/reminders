@@ -2,13 +2,21 @@ language: android
 
 sudo: false
 
-jdk:
-        - openjdk7
+jdk: openjdk7
+
+env:
+        matrix:
+                - ANDROID_TARGET=android-22  ANDROID_ABI=armeabi-v7a
 
 android:
         components:
-                - build-tools-22.0.0
+                - build-tools-22.0.1
                 - android-22
                 - extra
 script:
         - echo "Travis branch is $TRAVIS_BRANCH"
+        - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
+        - gradle clean build
+
+notifications:
+        email: false
