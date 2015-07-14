@@ -13,10 +13,9 @@ android:
                 - build-tools-22.0.1
                 - android-22
                 - extra
-script:
+after-success:
         - echo "Travis branch is $TRAVIS_BRANCH"
         - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
-        - gradle clean build
 
 notifications:
         email: false
