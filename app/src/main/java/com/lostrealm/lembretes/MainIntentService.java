@@ -87,6 +87,7 @@ public class MainIntentService extends IntentService {
 
     private void handleActionDownload() {
         String url = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_restaurant_key), getString(R.string.pref_restaurant_default));
+        assert url != null;
 
         String content;
         try {

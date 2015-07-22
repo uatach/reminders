@@ -1,5 +1,7 @@
-Reminders [![Build Status](https://travis-ci.org/edsonduarte1990/reminders.svg?branch=lollipop)](https://travis-ci.org/edsonduarte1990/reminders)
+Reminders
 =========
+[![GPLv3+ Licensed](https://img.shields.io/badge/license-GPLv3%2B-red.svg)](./LICENSE)
+[![Build Status](https://travis-ci.org/edsonduarte1990/reminders.svg?branch=lollipop)](https://travis-ci.org/edsonduarte1990/reminders)
 This software is intended for students from UNICAMP as a simple reminder of the daily meal.
 In portuguese "Lembretes"
 

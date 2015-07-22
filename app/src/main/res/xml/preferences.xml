@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/category_restaurant">
+    <PreferenceCategory android:title="@string/category_general">
         <!-- Option to select desired restaurant -->
         <ListPreference
             android:defaultValue="@string/pref_restaurant_default"

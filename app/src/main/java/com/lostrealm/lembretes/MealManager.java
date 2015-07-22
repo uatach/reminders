@@ -63,14 +63,16 @@ public class MealManager {
         boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_menu_key), false);
         Calendar calendar = Calendar.getInstance();
 
-        if (meals.get(0).getDate().after(calendar))
-            return !vegetarian ? meals.get(0) : meals.get(1);
+        for (int i = 0; i < meals.size(); i++) {
+            if (meals.get(i).getDate().after(calendar)) {
+                if (meals.get(i).getDate().get(Calendar.HOUR_OF_DAY) < 16)
+                    return !vegetarian ? meals.get(i) : meals.get(i+1); // TODO improve this, some restaurants don't have vegetarian option.
+                else
+                    return meals.get(i);
+            }
+        }
 
-        // TODO improve this.
-        if (calendar.get(Calendar.HOUR_OF_DAY) < 15) {
-            return !vegetarian ? meals.get(0) : meals.get(1);
-        } else
-            return meals.get(2);
+        return null;
     }
 
     private void saveObjectToDisk(Object object) {

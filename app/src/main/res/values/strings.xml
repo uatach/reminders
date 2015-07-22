@@ -29,10 +29,9 @@
     <!-- SettingsActivity -->
     <string name="settings_activity_label">Settings</string>
 
-    <string name="category_restaurant">Restaurant</string>
+    <string name="category_general">General</string>
     <string name="category_lunch">Lunch Reminders</string>
     <string name="category_dinner">Dinner Reminders</string>
-    <string name="category_reminders">Reminders</string>
 
     <string name="pref_last_update_key">pref_last_update</string>
 

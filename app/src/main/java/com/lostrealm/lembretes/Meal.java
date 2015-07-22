@@ -44,14 +44,10 @@ public class Meal implements Serializable {
         assert preference != null;
         if (preference.equals(preferenceArray[0])) {
             title = removeHtml(lines[0]);
-            summary = removeHtml(lines[3]);
-            String[] tmp = title.replaceAll("[^0-9/]", "").split("/");
-            date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
+            summary = removeHtml(lines[3]).replace("PRATO PRINCIPAL: ", "");
         } else if (preference.equals(preferenceArray[1])) {
             title = removeHtml(lines[1]);
             summary = removeHtml(lines[10]); // TODO not sure about this
-            String[] tmp = title.replaceAll("[^0-9/]", "").split("/");
-            date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
         }
 //        else {
 //            title = lines[1] + lines[3];
@@ -67,6 +63,12 @@ public class Meal implements Serializable {
 //                    .split("/");
 //            date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
 //        }
+
+        int[] tmp = parseDate(title);
+        if (title.contains("JANTAR"))
+            date.set(tmp[2], tmp[1] - 1, tmp[0], 22, 0);
+        else
+            date.set(tmp[2], tmp[1] - 1, tmp[0], 15, 0);
 
         text = "";
         for (String line : lines) text = text.concat(line.trim() + "<br />");
@@ -90,5 +92,14 @@ public class Meal implements Serializable {
 
     @NonNull private String removeHtml(String withHtml) {
         return Html.fromHtml(withHtml).toString();
+    }
+
+    private int[] parseDate(String s) {
+        String[] tmp = s.replaceAll("[^0-9]", " ").trim().split(" ");
+        int[] aux = new int[tmp.length];
+        for (int i = 0; i < tmp.length; i++) {
+            aux[i] = Integer.parseInt(tmp[i]);
+        }
+        return aux;
     }
 }
