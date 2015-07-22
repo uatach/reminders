@@ -1,18 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="@android:style/Theme.Material.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:actionBarTheme">@style/ActionBarTheme</item>
-    </style>
-
-    <style name="DialogActivityTheme" parent="@android:style/Theme.Material.Dialog">
-        <!-- Customize your theme here. -->
-    </style>
-
-    <style name="ActionBarTheme" parent="@android:style/ThemeOverlay.Material.Dark.ActionBar">
-        <item name="android:colorPrimaryDark">#a5090a</item>
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:colorAccent">#a5090a</item>
         <item name="android:colorPrimary">#c72225</item>
+        <item name="android:colorPrimaryDark">#a5090a</item>
+        <item name="android:statusBarColor">#a5090a</item>
+    </style>
+
+    <style name="DialogActivityTheme" parent="android:Theme.Material.Light.Dialog">
+        <!-- Customize your theme here. -->
     </style>
 
 </resources>
