@@ -13,10 +13,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/main_activity_label"
+        android:textColor="@android:color/black"
         android:id="@+id/titleView"
         android:layout_alignParentTop="true"
         android:gravity="center_vertical|center_horizontal"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true" />
 
     <ScrollView
@@ -27,8 +30,10 @@
         android:layout_centerHorizontal="true"
         android:fillViewport="false"
         android:layout_below="@+id/titleView"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_above="@+id/updateView">
 
         <LinearLayout
@@ -41,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/main_activity_view"
+                android:textColor="@android:color/black"
                 android:gravity="center_horizontal|center_vertical"
                 android:id="@+id/mealView"
                 android:layout_gravity="center_horizontal" />
@@ -53,10 +59,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/main_activity_update_view"
+        android:textColor="@android:color/black"
         android:gravity="center_vertical|center_horizontal"
         android:id="@+id/updateView"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/noteTextView" />
 
@@ -65,10 +74,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/main_activity_note"
+        android:textColor="@android:color/black"
         android:id="@+id/noteTextView"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:gravity="center_vertical|center_horizontal"
         android:layout_alignParentBottom="true" />
 
