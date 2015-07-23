@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
     private void refresh() {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
         startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
-        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMIND));
+        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {

@@ -25,7 +25,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -38,18 +37,18 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class MainIntentService extends IntentService {
 
     public static final int NOTIFICATION_ID = 402410663;
     public static final int UPDATE_ID = 402410664;
+    public static final int REMINDER_ID = 402410665;
 
     public static final String ACTION_DOWNLOAD = "com.lostrealm.lembretes.action.DOWNLOAD";
     public static final String ACTION_NOTIFICATION = "com.lostrealm.lembretes.action.NOTIFICATION";
     public static final String ACTION_NOTIFY = "com.lostrealm.lembretes.action.NOTIFY";
     public static final String ACTION_REFRESH = "com.lostrealm.lembretes.action.REFRESH";
-    public static final String ACTION_REMIND = "com.lostrealm.lembretes.action.REMIND";
+    public static final String ACTION_REMINDER = "com.lostrealm.lembretes.action.REMIND";
     public static final String ACTION_UPDATE = "com.lostrealm.lembretes.action.UPDATE";
 
     public MainIntentService() {
@@ -67,7 +66,7 @@ public class MainIntentService extends IntentService {
                 manageAlwaysOnNotification();
             case ACTION_NOTIFY:
                 //handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
-                //handleActionRemind();
+                //handleActionReminder();
                 break;
             case ACTION_REFRESH:
                 handleActionDownload();
@@ -75,8 +74,8 @@ public class MainIntentService extends IntentService {
                 manageAlwaysOnNotification();
                 handleActionUpdate();
                 break;
-            case ACTION_REMIND:
-                //handleActionRemind();
+            case ACTION_REMINDER:
+                handleActionReminder();
                 break;
             case ACTION_UPDATE:
                 handleActionDownload();
@@ -175,25 +174,33 @@ public class MainIntentService extends IntentService {
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(UPDATE_ID, builder.build());
     }
 
-    private void handleActionRemind() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sharedPreferences.getBoolean("pref_reminder_enable_lunch", false)) {
-            Calendar reminder = new GregorianCalendar();
-            reminder.setTimeInMillis(sharedPreferences.getLong("pref_reminder_time_lunch", Long.parseLong(getString(R.string.pref_reminder_lunch_timepicker_default))));
+    private void handleActionReminder() {
+        boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_reminder_lunch_switch_key), false);
 
-            Calendar meal = MealManager.getINSTANCE(this).getMeal().getDate();
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, meal.get(Calendar.YEAR));
-            calendar.set(Calendar.MONTH, meal.get(Calendar.MONTH));
-            calendar.set(Calendar.DATE, meal.get(Calendar.DATE));
-            calendar.set(Calendar.HOUR_OF_DAY, reminder.get(Calendar.HOUR_OF_DAY));
-            calendar.set(Calendar.MINUTE, reminder.get(Calendar.MINUTE));
-            calendar.set(Calendar.SECOND, 0);
+        Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), REMINDER_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFY).setType("lunch"); // TODO can't retrieve type later.
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), UPDATE_ID, intent, PendingIntent.FLAG_ONE_SHOT);
-            ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        if (!enabled) {
+            alarmManager.cancel(pendingIntent);
+            return;
+        }
+
+        Long reminderTime = PreferenceManager.getDefaultSharedPreferences(this).getLong(getString(R.string.pref_reminder_lunch_timepicker_key), Long.parseLong(getString(R.string.pref_reminder_lunch_timepicker_default)));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(reminderTime);
+
+        Calendar reminderCalendar = Calendar.getInstance();
+        if (reminderCalendar.get(Calendar.HOUR_OF_DAY) > 14)
+            reminderCalendar.add(Calendar.DATE, 1);
+        reminderCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+        reminderCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
         }
     }
 

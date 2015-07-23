@@ -29,7 +29,6 @@
     <PreferenceCategory android:title="@string/category_lunch">
         <SwitchPreference
             android:defaultValue="false"
-            android:enabled="false"
             android:key="@string/pref_reminder_lunch_switch_key"
             android:title="@string/pref_reminder_switch_title"/>
         <com.lostrealm.lembretes.TimePickerPreference

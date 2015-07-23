@@ -49,6 +49,9 @@ public class SettingsActivity extends Activity implements SharedPreferences.OnSh
             startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
         } else if (key.equals(getString(R.string.pref_always_on_key))) {
             startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
+        } else if (key.equals(getString(R.string.pref_reminder_lunch_switch_key))
+                || key.equals(getString(R.string.pref_reminder_lunch_timepicker_key))) {
+            startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
         }
     }
 }
