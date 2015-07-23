@@ -34,7 +34,7 @@
         <com.lostrealm.lembretes.TimePickerPreference
             android:defaultValue="@string/pref_reminder_lunch_timepicker_default"
             android:dependency="@string/pref_reminder_lunch_switch_key"
-            android:key="pref_reminder_time_lunch"
+            android:key="@string/pref_reminder_lunch_timepicker_key"
             android:title="@string/pref_reminder_timepicker_title"/>
         <SwitchPreference
             android:defaultValue="true"
@@ -49,6 +49,7 @@
             android:title="@string/pref_reminder_ringtone_title"/>
     </PreferenceCategory>
 
+    <!--
     <PreferenceCategory android:title="@string/category_dinner">
         <SwitchPreference
             android:defaultValue="false"
@@ -56,4 +57,5 @@
             android:key="pref_reminder_enable_dinner"
             android:title="@string/pref_reminder_switch_title"/>
     </PreferenceCategory>
+    -->
 </PreferenceScreen>

@@ -25,11 +25,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -64,9 +64,10 @@ public class MainIntentService extends IntentService {
                 break;
             case ACTION_NOTIFICATION:
                 manageAlwaysOnNotification();
+                break;
             case ACTION_NOTIFY:
-                //handleActionNotify(MealManager.getINSTANCE(this).getMeal(), intent.getType());
-                //handleActionReminder();
+                handleActionNotify();
+                handleActionReminder();
                 break;
             case ACTION_REFRESH:
                 handleActionDownload();
@@ -125,11 +126,15 @@ public class MainIntentService extends IntentService {
                 .setContentTitle(meal.getTitle())
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_LOW)
-                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim);
+                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim)
+                .setSound(null)
+                .setVibrate(null);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setCategory(Notification.CATEGORY_STATUS)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+                    .setVisibility(Notification.VISIBILITY_PUBLIC)
+                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()))
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.about_image));
         }
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -141,37 +146,39 @@ public class MainIntentService extends IntentService {
         alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 
-    private void handleActionNotify(Meal meal, String type) {
-        final long[] pattern = {0,2000};
+    private void handleActionNotify() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Meal meal = MealManager.getINSTANCE(this).getMeal();
 
         Notification.Builder builder = new Notification.Builder(this)
                 .setAutoCancel(true)
-                .setContentText(Html.fromHtml(meal.getSummary()))
-                .setContentTitle(Html.fromHtml(meal.getTitle()))
-                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim)
-                .setPriority(Notification.PRIORITY_HIGH);
+                .setContentText(meal.getSummary())
+                .setContentTitle(meal.getTitle())
+                .setOngoing(false)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_ALARM)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC)
-                    .setStyle(new Notification.BigTextStyle().bigText(Html.fromHtml(meal.getSummary())));
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_reminder_lunch_vibrate_key), true)) {
+            final long[] pattern = {0,2000};
+            builder.setVibrate(pattern);
         }
 
-        if (type != null)
-            if (type.equals("lunch")) {
-                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_vibrate_lunch", false))
-                    builder.setVibrate(pattern);
-                String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_ringtone_lunch", null);
-                if (ringtone != null)
-                    builder.setSound(Uri.parse(ringtone));
+        String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_reminder_lunch_ringtone_key), null);
+        if (ringtone != null)
+            builder.setSound(Uri.parse(ringtone));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setCategory(Notification.CATEGORY_STATUS)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC)
+                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()))
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.about_image));
         }
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
 
-        builder.setContentIntent(stackBuilder.getPendingIntent(UPDATE_ID, PendingIntent.FLAG_ONE_SHOT));
-
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(UPDATE_ID, builder.build());
+        builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     private void handleActionReminder() {
@@ -187,15 +194,20 @@ public class MainIntentService extends IntentService {
             return;
         }
 
-        Long reminderTime = PreferenceManager.getDefaultSharedPreferences(this).getLong(getString(R.string.pref_reminder_lunch_timepicker_key), Long.parseLong(getString(R.string.pref_reminder_lunch_timepicker_default)));
+        long reminderTime = PreferenceManager.getDefaultSharedPreferences(this).getLong(getString(R.string.pref_reminder_lunch_timepicker_key), Long.parseLong(getString(R.string.pref_reminder_lunch_timepicker_default)));
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(reminderTime);
 
         Calendar reminderCalendar = Calendar.getInstance();
-        if (reminderCalendar.get(Calendar.HOUR_OF_DAY) > 14)
+        if ((reminderCalendar.get(Calendar.HOUR_OF_DAY) > calendar.get(Calendar.HOUR_OF_DAY))
+            || (reminderCalendar.get(Calendar.HOUR_OF_DAY) == calendar.get(Calendar.HOUR_OF_DAY)
+                && reminderCalendar.get(Calendar.MINUTE) >= calendar.get(Calendar.MINUTE)))
             reminderCalendar.add(Calendar.DATE, 1);
+
         reminderCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
         reminderCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+        reminderCalendar.set(Calendar.SECOND, 0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);

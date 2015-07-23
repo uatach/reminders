@@ -8,8 +8,8 @@ android {
         applicationId "com.lostrealm.lembretes"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 63
-        versionName "1-alpha"
+        versionCode 64
+        versionName "1-beta"
     }
     lintOptions {
         quiet true
