@@ -149,6 +149,11 @@ public class MainIntentService extends IntentService {
     private void handleActionNotify() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Meal meal = MealManager.getINSTANCE(this).getMeal();
+        Calendar now = Calendar.getInstance();
+
+        if (meal.getDate().get(Calendar.DATE) != now.get(Calendar.DATE)
+                || meal.getDate().get(Calendar.MONTH) != now.get(Calendar.MONTH))
+            return;
 
         Notification.Builder builder = new Notification.Builder(this)
                 .setAutoCancel(true)
@@ -156,7 +161,7 @@ public class MainIntentService extends IntentService {
                 .setContentTitle(meal.getTitle())
                 .setOngoing(false)
                 .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim);
+                .setSmallIcon(android.R.drawable.ic_dialog_info);
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_reminder_lunch_vibrate_key), true)) {
             final long[] pattern = {0,2000};
