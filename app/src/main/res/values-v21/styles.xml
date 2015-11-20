@@ -8,8 +8,16 @@
         <item name="android:statusBarColor">#a5090a</item>
     </style>
 
+    <style name="AppSettingsTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/AppSettingsActionBar</item>
+    </style>
+
     <style name="DialogActivityTheme" parent="android:Theme.Material.Light.Dialog">
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppSettingsActionBar" parent="android:Widget.Material.ActionBar.Solid">
+        <item name="android:displayOptions">homeAsUp|showTitle</item>
     </style>
 
 </resources>

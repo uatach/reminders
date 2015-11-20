@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/category_general">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/category_general">
         <!-- Option to select desired restaurant -->
         <ListPreference
             android:defaultValue="@string/pref_restaurant_default"
@@ -26,36 +28,54 @@
             android:title="@string/pref_always_on_title"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/category_lunch">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/pref_reminder_lunch_switch_key"
-            android:title="@string/pref_reminder_switch_title"/>
-        <com.lostrealm.lembretes.TimePickerPreference
-            android:defaultValue="@string/pref_reminder_lunch_timepicker_default"
-            android:dependency="@string/pref_reminder_lunch_switch_key"
-            android:key="@string/pref_reminder_lunch_timepicker_key"
-            android:title="@string/pref_reminder_timepicker_title"/>
-        <SwitchPreference
-            android:defaultValue="true"
-            android:dependency="@string/pref_reminder_lunch_switch_key"
-            android:key="@string/pref_reminder_lunch_vibrate_key"
-            android:title="@string/pref_reminder_vibrate_title"/>
-        <RingtonePreference
-            android:dependency="@string/pref_reminder_lunch_switch_key"
-            android:key="@string/pref_reminder_lunch_ringtone_key"
-            android:ringtoneType="notification"
-            android:defaultValue="content://settings/system/notification_sound"
-            android:title="@string/pref_reminder_ringtone_title"/>
-    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/category_reminders">
+        <PreferenceScreen
+            android:key="@string/pref_reminder_lunch_screen_key"
+            android:persistent="false"
+            android:title="@string/pref_reminder_lunch_screen_title">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/pref_reminder_lunch_switch_key"
+                android:title="@string/pref_reminder_switch_title"/>
+            <com.lostrealm.lembretes.TimePickerPreference
+                android:defaultValue="@string/pref_reminder_lunch_timepicker_default"
+                android:dependency="@string/pref_reminder_lunch_switch_key"
+                android:key="@string/pref_reminder_lunch_timepicker_key"
+                android:title="@string/pref_reminder_timepicker_title"
+                android:negativeButtonText="@null"/>
+            <SwitchPreference
+                android:defaultValue="true"
+                android:dependency="@string/pref_reminder_lunch_switch_key"
+                android:key="@string/pref_reminder_lunch_vibrate_key"
+                android:title="@string/pref_reminder_vibrate_title"/>
+            <RingtonePreference
+                android:dependency="@string/pref_reminder_lunch_switch_key"
+                android:key="@string/pref_reminder_lunch_ringtone_key"
+                android:ringtoneType="notification"
+                android:defaultValue="content://settings/system/notification_sound"
+                android:title="@string/pref_reminder_ringtone_title"/>
+        </PreferenceScreen>
 
-    <!--
-    <PreferenceCategory android:title="@string/category_dinner">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:enabled="false"
-            android:key="pref_reminder_enable_dinner"
-            android:title="@string/pref_reminder_switch_title"/>
+        <PreferenceScreen
+            android:key="@string/pref_reminder_dinner_screen_key"
+            android:persistent="false"
+            android:title="@string/pref_reminder_dinner_screen_title">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/pref_reminder_dinner_switch_key"
+                android:title="@string/pref_reminder_switch_title"/>
+            <com.lostrealm.lembretes.TimePickerPreference
+                android:defaultValue="@string/pref_reminder_dinner_timepicker_default"
+                android:dependency="@string/pref_reminder_dinner_switch_key"
+                android:key="@string/pref_reminder_dinner_timepicker_key"
+                android:title="@string/pref_reminder_timepicker_title"
+                android:negativeButtonText="@null"/>
+            <SwitchPreference
+                android:defaultValue="true"
+                android:dependency="@string/pref_reminder_dinner_switch_key"
+                android:key="@string/pref_reminder_dinner_vibrate_key"
+                android:title="@string/pref_reminder_vibrate_title"/>
+        </PreferenceScreen>
     </PreferenceCategory>
-    -->
 </PreferenceScreen>

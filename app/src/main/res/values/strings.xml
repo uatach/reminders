@@ -30,8 +30,7 @@
     <string name="settings_activity_label">Settings</string>
 
     <string name="category_general">General</string>
-    <string name="category_lunch">Lunch Reminders</string>
-    <string name="category_dinner">Dinner Reminders</string>
+    <string name="category_reminders">Reminders</string>
 
     <string name="pref_last_update_key">pref_last_update</string>
 
@@ -64,12 +63,20 @@
     <string name="pref_reminder_vibrate_title">Vibrate on Notifications</string>
     <string name="pref_reminder_ringtone_title">Play Ringtone on Notifications</string>
 
+    <string name="pref_reminder_lunch_screen_key">pref_reminder_lunch_screen_key</string>
+    <string name="pref_reminder_lunch_screen_title">Lunch Reminders</string>
     <string name="pref_reminder_lunch_switch_key">pref_reminder_lunch</string>
     <string name="pref_reminder_lunch_timepicker_key">pref_reminder_lunch_timepicker</string>
     <string name="pref_reminder_lunch_timepicker_default">50400000</string>
     <string name="pref_reminder_lunch_vibrate_key">pref_reminder_lunch_vibrate</string>
     <string name="pref_reminder_lunch_ringtone_key">pref_reminder_lunch_ringtone</string>
 
+    <string name="pref_reminder_dinner_screen_key">pref_reminder_dinner_screen_key</string>
+    <string name="pref_reminder_dinner_screen_title">Dinner Reminders</string>
+    <string name="pref_reminder_dinner_switch_key">pref_reminder_dinner</string>
+    <string name="pref_reminder_dinner_timepicker_key">pref_reminder_dinner_timepicker</string>
+    <string name="pref_reminder_dinner_timepicker_default">50400000</string>
+    <string name="pref_reminder_dinner_vibrate_key">pref_reminder_dinner_vibrate</string>
 
 
     <string name="pref_remind_title">Allow Reminders</string>
