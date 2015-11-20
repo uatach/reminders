@@ -30,20 +30,27 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
 
-        if (action.equals("android.intent.action.BOOT_COMPLETED")) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
-        } else if (action.equals("android.net.conn.CONNECTIVITY_CHANGE")) {
-            //context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
-        } else if (action.equals(MainIntentService.ACTION_DOWNLOAD)) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
-        } else if (action.equals(MainIntentService.ACTION_NOTIFICATION)) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
-        } else if (action.equals(MainIntentService.ACTION_NOTIFY)) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFY));
-        } else if (action.equals(MainIntentService.ACTION_REMINDER)) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
+        switch (action) {
+            case "android.intent.action.BOOT_COMPLETED":
+                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
+                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
+                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
+                break;
+            case "android.net.conn.CONNECTIVITY_CHANGE":
+                //context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
+                break;
+            case MainIntentService.ACTION_DOWNLOAD:
+                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
+                break;
+            case MainIntentService.ACTION_NOTIFICATION:
+                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
+                break;
+            case MainIntentService.ACTION_NOTIFY:
+                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFY));
+                break;
+            case MainIntentService.ACTION_REMINDER:
+                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
+                break;
         }
     }
 }

@@ -20,7 +20,6 @@ package com.lostrealm.lembretes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -33,7 +32,6 @@ public class AboutActivity extends Activity {
         setContentView(R.layout.activity_about);
 
         TextView view = (TextView) findViewById(R.id.versionTextView);
-        view.setTypeface(null, Typeface.BOLD);
         view.setText(getString(R.string.app_name) + " " + getString(R.string.app_version));
     }
 

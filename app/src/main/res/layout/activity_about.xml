@@ -27,7 +27,8 @@
         android:layout_below="@+id/imageView"
         android:gravity="center_vertical|center_horizontal"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"

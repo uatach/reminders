@@ -41,7 +41,6 @@ public class Meal implements Serializable {
         final String preference = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_restaurant_key), context.getString(R.string.pref_restaurant_default));
         final String preferenceArray[] = context.getResources().getStringArray(R.array.pref_restaurant_values);
 
-        assert preference != null;
         if (preference.equals(preferenceArray[0])) {
             title = removeHtml(lines[0]);
             summary = removeHtml(lines[3]).replace("PRATO PRINCIPAL: ", "");
