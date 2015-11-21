@@ -1,9 +1,4 @@
-* When user changes reminder's times, scheduled updates should be rescheduled;
-* Add sound to notifications;
-* Add language selection;
 * Display generic reminder when there's no connection or when meal is unavailable.
 * Check date of meal before reminding; (really necessary? looks so, there are weekends and holidays)
 * Listen for change in connectivity after error;
 * Regular expressions support.
-
-* Looks like a bug: sometimes says that meal has been updated but display lunch's meal instead of dinner's.

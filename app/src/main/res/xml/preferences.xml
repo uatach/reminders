@@ -9,7 +9,6 @@
             android:entries="@array/pref_restaurant_entries"
             android:entryValues="@array/pref_restaurant_values"
             android:key="@string/pref_restaurant_key"
-            android:summary="@string/pref_restaurant_summary"
             android:title="@string/pref_restaurant_title"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"/>
@@ -58,6 +57,7 @@
         </PreferenceScreen>
 
         <PreferenceScreen
+            android:enabled="false"
             android:key="@string/pref_reminder_dinner_screen_key"
             android:persistent="false"
             android:title="@string/pref_reminder_dinner_screen_title">
@@ -76,6 +76,22 @@
                 android:dependency="@string/pref_reminder_dinner_switch_key"
                 android:key="@string/pref_reminder_dinner_vibrate_key"
                 android:title="@string/pref_reminder_vibrate_title"/>
+            <RingtonePreference
+                android:dependency="@string/pref_reminder_dinner_switch_key"
+                android:key="@string/pref_reminder_dinner_ringtone_key"
+                android:ringtoneType="notification"
+                android:defaultValue="content://settings/system/notification_sound"
+                android:title="@string/pref_reminder_ringtone_title"/>
         </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/category_misc">
+        <Preference android:title="@string/pref_feedback_title">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="mailto:edsonduarte1990@gmail.com?subject=[Reminders - Feedback]">
+            </intent>
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

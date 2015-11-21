@@ -19,39 +19,12 @@
 package com.lostrealm.lembretes;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
-public class SettingsActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_restaurant_key))) {
-            startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
-        } else if (key.equals(getString(R.string.pref_always_on_key))) {
-            startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
-        } else if (key.equals(getString(R.string.pref_reminder_lunch_switch_key))
-                || key.equals(getString(R.string.pref_reminder_lunch_timepicker_key))) {
-            startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
-        }
     }
 }

@@ -74,14 +74,6 @@ public class MainActivity extends Activity {
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
-            case R.id.action_feedback:
-                startActivity(Intent.createChooser(
-                        new Intent(android.content.Intent.ACTION_SEND)
-                                .setType("message/rfc822")
-                                .putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"edsonduarte1990@gmail.com"})
-                                .putExtra(android.content.Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + " - Feedback]"),
-                        getString(R.string.main_activity_chooser)));
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
