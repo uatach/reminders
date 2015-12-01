@@ -39,19 +39,18 @@
 
     <string-array name="pref_restaurant_entries">
         <item>COTUCA, RU, RA, RS</item>
-        <item>COTIL, FCA, FOP, FT</item>
-        <!-- <item>PFL</item> -->
+        <!--<item>COTIL, FCA, FOP, FT</item>-->
+        <!--<item>PFL</item>-->
     </string-array>
     <string-array name="pref_restaurant_values">
         <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</item>
-        <item>https://www1.sistemas.unicamp.br/Mobile/CardapioFCA</item>
-        <!-- <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</item> -->
+        <!--<item>https://www1.sistemas.unicamp.br/Mobile/CardapioFCA</item>-->
+        <!--<item>https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</item>-->
     </string-array>
 
     <string name="pref_menu_key">pref_menu</string>
     <string name="pref_menu_title">Vegetarian Menu</string>
     <string name="pref_menu_summary_on">If available, app displays vegetarian food.</string>
-    <string name="pref_menu_summary_off">Not showing vegetarian food.</string>
 
     <string name="pref_always_on_key">pref_always_on_notification</string>
     <string name="pref_always_on_title">Always-On Notification</string>

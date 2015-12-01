@@ -17,7 +17,6 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_menu_key"
-            android:summaryOff="@string/pref_menu_summary_off"
             android:summaryOn="@string/pref_menu_summary_on"
             android:title="@string/pref_menu_title"/>
 
