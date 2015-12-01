@@ -48,7 +48,7 @@ public class MealManager {
 
     private MealManager() {}
 
-    public void setMeals(String[] values) {
+    public void setMeals(ArrayList<String> values) {
         meals = new ArrayList<>();
         for (String value : values)
             meals.add(new Meal(context, value));

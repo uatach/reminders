@@ -31,12 +31,15 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 
 public class MainIntentService extends IntentService {
 
@@ -88,18 +91,16 @@ public class MainIntentService extends IntentService {
     private void handleActionDownload() {
         String url = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_restaurant_key), getString(R.string.pref_restaurant_default));
 
-        String content;
         try {
             Request request = new Request.Builder().url(url).build();
             OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
-            content = response.body().string().trim().replace("\\r\\n", "<br />").replace("\\", "").replaceAll("^.*\\[\"", "").replaceAll("\"\\].*$", "");
-        } catch (IOException e) {
+            String body = response.body().string();
+            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, Map.class);
+            MealManager.getINSTANCE(this).setMeals(content.get("cardapio"));
+        } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
-
-        MealManager.getINSTANCE(this).setMeals(content.split("\",\""));
     }
 
     private void manageAlwaysOnNotification() {

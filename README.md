@@ -1,7 +1,7 @@
 Reminders
 =========
 [![GPLv3+ Licensed](https://img.shields.io/badge/license-GPLv3%2B-red.svg)](./LICENSE)
-[![Build Status](https://travis-ci.org/edsonduarte1990/reminders.svg?branch=lollipop)](https://travis-ci.org/edsonduarte1990/reminders)
+[![Build Status](https://travis-ci.org/edsonduarte1990/reminders.svg)](https://travis-ci.org/edsonduarte1990/reminders)
 
 This software is intended for students from UNICAMP as a simple reminder of the daily meal.
 In portuguese "Lembretes"
@@ -10,11 +10,7 @@ It connects to the webpage of the university's restaurant to retrieve the meal a
 
 Requirements
 ------------
-Not sure, I've developed the app with minimum API 16, but I use a device with API 22 and I won't be testing on older APIs anymore.
-
-Usage
------
-The user should run the app at least once to initialize stuff, then the app reminds the user according to preferences.
+API 16.
 
 License
 -------

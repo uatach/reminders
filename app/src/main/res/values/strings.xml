@@ -3,8 +3,8 @@
     <string name="app_name">Reminders</string>
     <string name="app_version">v1-beta</string>
     <string name="app_license">GPLv3+ licensed.</string>
-    <string name="app_copyright">Copyright (C) 2015 Edson Duarte</string>
-    <string name="icon_copyright">Icon\'s Copyright (C) 2015 Filipe Marques</string>
+    <string name="app_copyright">Copyright &#169; 2015 Edson Duarte</string>
+    <string name="icon_copyright">Icon\'s Copyright &#169; 2015 Filipe Marques</string>
     <string name="project_url">https://github.com/edsonduarte1990/reminders</string>
 
     <string name="action_refresh">Refresh</string>
@@ -38,7 +38,7 @@
     <string name="pref_restaurant_default">https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</string>
 
     <string-array name="pref_restaurant_entries">
-        <item>COTUCA, RU, RA, RS</item>
+        <item>Campinas (COTUCA, RU, RA, RS)</item>
         <!--<item>COTIL, FCA, FOP, FT</item>-->
         <!--<item>PFL</item>-->
     </string-array>
@@ -57,8 +57,8 @@
 
     <string name="pref_reminder_switch_title">Enable Reminders</string>
     <string name="pref_reminder_timepicker_title">Select Reminder\'s Time</string>
-    <string name="pref_reminder_vibrate_title">Vibrate on Notifications</string>
-    <string name="pref_reminder_ringtone_title">Play Ringtone on Notifications</string>
+    <string name="pref_reminder_vibrate_title">Vibrate</string>
+    <string name="pref_reminder_ringtone_title">Play Ringtone</string>
 
     <string name="pref_reminder_lunch_screen_key">pref_reminder_lunch_screen_key</string>
     <string name="pref_reminder_lunch_screen_title">Lunch Reminders</string>
