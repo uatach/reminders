@@ -2,12 +2,17 @@ language: android
 
 sudo: false
 
-jdk: openjdk7
+jdk:
+        matrix:
+                - openjdk6
+                - openjdk7
 
 env:
         matrix:
-                - ANDROID_TARGET=android-22  ANDROID_ABI=armeabi-v7a
-                - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a
+                - ANDROID_TARGET=android-16  ANDROID_ABI=armeabi-v7a
+                - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+                - ANDROID_TARGET=android-21  ANDROID_ABI=armeabi-v7a
+                - ANDROID_TARGET=android-23
 
 android:
         components:
@@ -16,15 +21,19 @@ android:
                 - android-23
                 - extra
 
+env:
+        global:
+                # install timeout in minutes (2 minutes by default)
+                - ADB_INSTALL_TIMEOUT=8
+
 # Emulator Management: Create, Start and Wait
 before_script:
-        - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+        - echo no | android create avd --force -n test #-t android-21 --abi armeabi-v7a
         - emulator -avd test -no-skin -no-audio -no-window &
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
 
 script:
-        - android list target
         - ./gradlew build connectedCheck
 
 after-success:
