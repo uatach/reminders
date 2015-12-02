@@ -3,9 +3,8 @@ language: android
 sudo: false
 
 jdk:
-        matrix:
-                - openjdk6
-                - openjdk7
+        - openjdk6
+        - openjdk7
 
 env:
         matrix:
