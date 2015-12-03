@@ -26,6 +26,10 @@ android:
                   #- sys-img-armeabi-v7a-android-22
                   #- sys-img-armeabi-v7a-android-20
 
+env:
+        global:
+                - ADB_INSTALL_TIMEOUT=8
+
 before_script:
         - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
         - emulator -avd test -no-skin -no-audio -no-window &
@@ -33,7 +37,7 @@ before_script:
         - adb shell input keyevent 82 &
 
 script:
-        - ./gradlew build #connectedCheck
+        - ./gradlew build connectedCheck
 
 after-success:
         - echo "Travis branch is $TRAVIS_BRANCH"
@@ -41,3 +45,4 @@ after-success:
 
 notifications:
         email: false
+
