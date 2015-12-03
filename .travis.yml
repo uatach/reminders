@@ -7,7 +7,7 @@ jdk: openjdk7
 env:
   global:
     - ANDROID_ABI=armeabi-v7a
-    - ADB_INSTALL_TIMEOUT=8
+    - ADB_INSTALL_TIMEOUT=12
   matrix:
     - ANDROID_SDKS=android-23 ANDROID_TARGET=android-23 #ANDROID_ABI=armeabi-v7a
 #    - ANDROID_SDKS=android-22 ANDROID_TARGET=android-22 ANDROID_ABI=armeabi-v7a
@@ -17,7 +17,7 @@ env:
     - ANDROID_SDKS=android-18 ANDROID_TARGET=android-18 #ANDROID_ABI=armeabi-v7a
     - ANDROID_SDKS=android-17 ANDROID_TARGET=android-17 #ANDROID_ABI=armeabi-v7a
     - ANDROID_SDKS=android-16 ANDROID_TARGET=android-16 #ANDROID_ABI=armeabi-v7a
-    - ANDROID_SDKS=android-15 ANDROID_TARGET=android-15 #ANDROID_ABI=armeabi-v7a
+#    - ANDROID_SDKS=android-15 ANDROID_TARGET=android-15 #ANDROID_ABI=armeabi-v7a
 
 android:
   components:
@@ -37,7 +37,6 @@ before_script:
 
 script:
   - ./gradlew build connectedCheck
-  - adb shell am instrument -w com.lostrealm.lembretes.test/android.test.InstrumentationTestRunner
 
 after_success:
   - echo "Travis branch is $TRAVIS_BRANCH"
@@ -45,3 +44,6 @@ after_success:
 notifications:
   email: false
 
+cache:
+  directories:
+    - $HOME/.gradle
