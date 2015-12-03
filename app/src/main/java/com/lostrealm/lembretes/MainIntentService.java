@@ -31,6 +31,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -96,7 +97,7 @@ public class MainIntentService extends IntentService {
             OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
             String body = response.body().string();
-            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, Map.class);
+            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, new TypeReference<Map<String, ArrayList<String>>>() {});
             MealManager.getINSTANCE(this).setMeals(content.get("cardapio"));
         } catch (Exception e) {
             e.printStackTrace();
