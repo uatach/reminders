@@ -31,8 +31,12 @@ public class AboutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        TextView view = (TextView) findViewById(R.id.versionTextView);
-        view.setText(getString(R.string.app_name) + " " + getString(R.string.app_version));
+        try {
+            TextView view = (TextView) findViewById(R.id.appVersionTextView);
+            view.setText(getString(R.string.app_version, getPackageManager().getPackageInfo(getPackageName(), 0).versionName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void openProjectPage(View view) {

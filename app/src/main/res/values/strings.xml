@@ -1,8 +1,8 @@
 <resources>
 
     <string name="app_name">Reminders</string>
-    <string name="app_version">v1-beta</string>
-    <string name="app_license">GPLv3+ licensed.</string>
+    <string name="app_version">%1$s</string>
+    <string name="app_license">License GPLv3+</string>
     <string name="app_copyright">Copyright &#169; 2015 Edson Duarte</string>
     <string name="icon_copyright">Icon\'s Copyright &#169; 2015 Filipe Marques</string>
     <string name="project_url">https://github.com/edsonduarte1990/reminders</string>
@@ -99,5 +99,6 @@
     </string-array>
 
     <string name="pref_feedback_title">Feedback/Help</string>
+    <string name="pref_feedback_mailto">mailto:edsonduarte1990@gmail.com?subject=[Reminders] Feedback/Help</string>
 
 </resources>
