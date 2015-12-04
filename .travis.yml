@@ -30,7 +30,7 @@ android:
   components:
     - tools
     - build-tools-23.0.2
-    - android-21
+    - android-23
     - extra
 #    - sys-img-armeabi-v7a-android-23
 #    - sys-img-armeabi-v7a-android-22
@@ -45,5 +45,5 @@ before_script:
 script:
   - ./gradlew build connectedCheck
 
-after_success:
-  - echo "Travis branch is $TRAVIS_BRANCH"
+#after_success:
+#  - echo "Travis branch is $TRAVIS_BRANCH"

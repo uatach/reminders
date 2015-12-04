@@ -1,6 +1,7 @@
 package com.lostrealm.lembretes;
 
 import android.test.SingleLaunchActivityTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.TextView;
 
 public class MainActivityTest extends SingleLaunchActivityTestCase<MainActivity> {
@@ -25,11 +26,13 @@ public class MainActivityTest extends SingleLaunchActivityTestCase<MainActivity>
         super.tearDown();
     }
 
+    @SmallTest
     public void testPreconditions() {
         assertNotNull("mainActivity is null", mainActivity);
         assertNotNull("titleTextView is null", titleTextView);
     }
 
+    @SmallTest
     public void testInitialValues() {
         final String expectedTitleText = mainActivity.getString(R.string.main_activity_note);
         final String actualTitleText = titleTextView.getText().toString();
