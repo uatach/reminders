@@ -16,7 +16,7 @@ env:
     - ANDROID_ABI=armeabi-v7a
     - ADB_INSTALL_TIMEOUT=12
   matrix:
-    - ANDROID_SDKS=android-23 ANDROID_TARGET=android-23
+#    - ANDROID_SDKS=android-23 ANDROID_TARGET=android-23
 #    - ANDROID_SDKS=android-22 ANDROID_TARGET=android-22
     - ANDROID_SDKS=android-21 ANDROID_TARGET=android-21
 #    - ANDROID_SDKS=android-20 ANDROID_TARGET=android-20

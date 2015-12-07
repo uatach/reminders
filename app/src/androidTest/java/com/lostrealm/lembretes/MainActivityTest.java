@@ -34,7 +34,7 @@ public class MainActivityTest extends SingleLaunchActivityTestCase<MainActivity>
 
     @SmallTest
     public void testInitialValues() {
-        final String expectedTitleText = mainActivity.getString(R.string.main_activity_note);
+        final String expectedTitleText = mainActivity.getString(R.string.main_activity_label);
         final String actualTitleText = titleTextView.getText().toString();
         assertEquals(expectedTitleText, actualTitleText);
     }
