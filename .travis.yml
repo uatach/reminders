@@ -18,7 +18,7 @@ env:
   matrix:
 #    - ANDROID_SDKS=android-23 ANDROID_TARGET=android-23
 #    - ANDROID_SDKS=android-22 ANDROID_TARGET=android-22
-    - ANDROID_SDKS=android-21 ANDROID_TARGET=android-21
+#    - ANDROID_SDKS=android-21 ANDROID_TARGET=android-21
 #    - ANDROID_SDKS=android-20 ANDROID_TARGET=android-20
     - ANDROID_SDKS=android-19 ANDROID_TARGET=android-19
     - ANDROID_SDKS=android-18 ANDROID_TARGET=android-18
