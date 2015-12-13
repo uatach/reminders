@@ -1,34 +1,6 @@
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
-
-// possible alternative: https://gist.github.com/zsiegel/7813239
-
-def getVersionCode = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', '--first-parent', '--count', 'HEAD'
-            standardOutput = stdout
-        }
-        return Integer.parseInt(stdout.toString().trim())
-    }
-    catch (ignored) {
-        return -1;
-    }
-}
-
-def getVersionName = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'describe', '--tags'
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    }
-    catch (ignored) {
-        return null;
-    }
-}
 
 android {
     compileSdkVersion 23
@@ -38,8 +10,8 @@ android {
         applicationId "com.lostrealm.lembretes"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode getVersionCode()
-        versionName getVersionName()
+        versionCode 92
+        versionName "v1-beta3-9-gaf36cef-dirty"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -77,3 +49,64 @@ dependencies {
 //    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
 //    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }
+
+
+// added tasks to auto generate versionCode and versionName
+// https://gist.github.com/zsiegel/7813239
+
+task genVersionCode {
+    def git = 'git rev-list --first-parent --count HEAD'
+
+    def process = git.execute()
+    process.waitFor()
+    def version = "${process.in.text}".trim()
+
+    if (version.isEmpty()) {
+        println "ERROR generating versionCode"
+        return
+    }
+
+    def gradleFile = file("build.gradle")
+    def pattern = Pattern.compile("versionCode (.*)")
+    def gradleText = gradleFile.getText()
+    def matcher = pattern.matcher(gradleText)
+    matcher.find()
+
+    println "versionCode is ${version}"
+
+    def manifestContent = matcher.replaceFirst("versionCode " + version)
+    gradleFile.write(manifestContent)
+}
+
+task genVersionName {
+    def git = 'git describe --tags --dirty'
+
+    def process = git.execute()
+    process.waitFor()
+    def version = "${process.in.text}".trim()
+
+    if (version.isEmpty()) {
+        println "ERROR generating versionName"
+        return
+    }
+
+    def gradleFile = file("build.gradle")
+    def pattern = Pattern.compile("versionName (.*)")
+    def gradleText = gradleFile.getText()
+    def matcher = pattern.matcher(gradleText)
+    matcher.find()
+
+    println "versionName is ${version}"
+
+    def manifestContent = matcher.replaceFirst("versionName \"" + version + "\"")
+    gradleFile.write(manifestContent)
+}
+
+//tasks.whenTaskAdded { task ->
+//    println task.name
+//// depending on which task, should regenerate versionCode and versionName
+//    if (task.name == "assembleAndroidTest") {
+//        task.dependsOn 'genVersionCode'
+//        task.dependsOn 'genVersionName'
+//    }
+//}
