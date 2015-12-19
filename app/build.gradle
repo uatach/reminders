@@ -10,8 +10,8 @@ android {
         applicationId "com.lostrealm.lembretes"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 93
-        versionName "v1-beta3-10-gc048e80-dirty"
+        versionCode 94
+        versionName "v1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -82,7 +82,7 @@ task genVersionCode {
 
 task genVersionName {
     doLast {
-        def git = 'git describe --tags --dirty'
+        def git = 'git describe --tags'
 
         def process = git.execute()
         process.waitFor()

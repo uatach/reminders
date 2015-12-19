@@ -126,7 +126,7 @@ public class MainIntentService extends IntentService {
                 .setContentTitle(meal.getTitle())
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_LOW)
-                .setSmallIcon(android.R.drawable.stat_notify_sync_noanim)
+                .setSmallIcon(R.drawable.ic_autorenew_white_24dp)
                 .setSound(null)
                 .setVibrate(null);
 
@@ -161,7 +161,7 @@ public class MainIntentService extends IntentService {
                 .setContentTitle(meal.getTitle())
                 .setOngoing(false)
                 .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(android.R.drawable.ic_dialog_info);
+                .setSmallIcon(R.drawable.ic_alarm_white_24dp);
 
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_reminder_lunch_vibrate_key), true)) {
             final long[] pattern = {0,2000};

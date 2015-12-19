@@ -8,6 +8,7 @@
             android:defaultValue="@string/pref_restaurant_default"
             android:entries="@array/pref_restaurant_entries"
             android:entryValues="@array/pref_restaurant_values"
+            android:icon="@drawable/ic_restaurant_menu_black_24dp"
             android:key="@string/pref_restaurant_key"
             android:title="@string/pref_restaurant_title"
             android:negativeButtonText="@null"
@@ -17,11 +18,13 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/pref_menu_key"
+            android:icon="@drawable/ic_restaurant_menu_black_24dp"
             android:summaryOn="@string/pref_menu_summary_on"
             android:title="@string/pref_menu_title"/>
 
         <SwitchPreference
             android:defaultValue="false"
+            android:icon="@drawable/ic_notifications_black_24dp"
             android:key="@string/pref_always_on_key"
             android:title="@string/pref_always_on_title"/>
     </PreferenceCategory>
@@ -29,6 +32,7 @@
     <PreferenceCategory
         android:title="@string/category_reminders">
         <PreferenceScreen
+            android:icon="@drawable/ic_alarm_black_24dp"
             android:key="@string/pref_reminder_lunch_screen_key"
             android:persistent="false"
             android:title="@string/pref_reminder_lunch_screen_title">
@@ -57,6 +61,7 @@
 
         <PreferenceScreen
             android:enabled="false"
+            android:icon="@drawable/ic_alarm_black_24dp"
             android:key="@string/pref_reminder_dinner_screen_key"
             android:persistent="false"
             android:title="@string/pref_reminder_dinner_screen_title">
@@ -86,7 +91,9 @@
 
     <PreferenceCategory
         android:title="@string/category_misc">
-        <Preference android:title="@string/pref_feedback_title">
+        <Preference
+            android:icon="@drawable/ic_feedback_black_24dp"
+            android:title="@string/pref_feedback_title">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/pref_feedback_mailto">
