@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class MainBroadcastReceiver extends BroadcastReceiver {
+public final class MainBroadcastReceiver extends BroadcastReceiver {
 
     public MainBroadcastReceiver() {}
 
@@ -35,9 +35,6 @@ public class MainBroadcastReceiver extends BroadcastReceiver {
                 context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
                 context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
                 context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
-                break;
-            case "android.net.conn.CONNECTIVITY_CHANGE":
-                //context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
                 break;
             case MainIntentService.ACTION_DOWNLOAD:
                 context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));

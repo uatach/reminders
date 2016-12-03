@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,14 +34,14 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends Activity {
+public final class MealActivity extends Activity {
 
     private Meal meal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_meal);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
@@ -50,10 +50,10 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         meal = MealManager.getINSTANCE(this).getMeal();
-        if (meal == null) refresh();
-        else updateViews();
-
-        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
+//        if (meal == null) refresh();
+//        else updateViews();
+//
+//        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
     }
 
     @Override

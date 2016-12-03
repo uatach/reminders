@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class TimePickerPreference extends DialogPreference {
+public final class TimePickerPreference extends DialogPreference {
     private Calendar calendar = new GregorianCalendar();
     private TimePicker timePicker;
 

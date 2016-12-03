@@ -15,8 +15,9 @@
         android:label="@string/app_name"
         android:logo="@mipmap/ic_launcher"
         android:theme="@style/AppTheme" >
+
         <activity
-            android:name=".MainActivity"
+            android:name=".MealActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop" >
             <intent-filter>
@@ -32,29 +33,31 @@
                     android:pathPrefix="/servicos/divisao-de-alimentacao/cardapio-dos-restaurantes" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".MealActivity"
             android:theme="@style/AppSettingsTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lostrealm.lembretes.MainActivity" />
+                android:value="com.lostrealm.lembretes.MealActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".AboutActivity"
             android:exported="false"
             android:label="@string/about_activity_title"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".MealActivity"
             android:theme="@style/DialogActivityTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lostrealm.lembretes.MainActivity" />
+                android:value="com.lostrealm.lembretes.MealActivity" />
         </activity>
 
         <receiver
@@ -63,7 +66,6 @@
             android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
@@ -71,6 +73,7 @@
             android:name=".MainIntentService"
             android:exported="false" >
         </service>
+
     </application>
 
 </manifest>

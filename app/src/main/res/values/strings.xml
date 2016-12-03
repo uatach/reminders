@@ -3,8 +3,8 @@
     <string name="app_name">Reminders</string>
     <string name="app_version">%1$s</string>
     <string name="app_license">License GPLv3+</string>
-    <string name="app_copyright">Copyright &#169; 2015 Edson Duarte</string>
-    <string name="icon_copyright">Icon\'s Copyright &#169; 2015 Filipe Marques</string>
+    <string name="app_copyright">Copyright &#169; 2017 Edson Duarte</string>
+    <string name="icon_copyright">Icon\'s Copyright &#169; 2017 Filipe Marques</string>
     <string name="project_url">https://github.com/edsonduarte1990/reminders</string>
 
     <string name="action_refresh">Refresh</string>
@@ -12,7 +12,7 @@
     <string name="action_about">About</string>
 
 
-    <!-- MainActivity -->
+    <!-- MealActivity -->
     <string name="main_activity_label"><b>Next Meal:</b></string>
     <string name="main_activity_view">Downloading Menu!</string>
     <string name="main_activity_update_view">Not updated yet.</string>

@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,12 +33,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MealManager {
+final class MealManager {
 
     private static MealManager INSTANCE = new MealManager();
 
     @SuppressWarnings("unchecked")
-    public static MealManager getINSTANCE(Context context) {
+    static MealManager getINSTANCE(Context context) {
         INSTANCE.context = context;
         Object object = INSTANCE.loadObjectFromDisk();
         if (INSTANCE.meals == null && object != null)
@@ -59,7 +59,7 @@ public class MealManager {
 //        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
 //    }
 
-    public void setMeals(Elements elements) {
+    void setMeals(Elements elements) {
         meals = new ArrayList<>();
         for (Element element : elements)
             meals.add(new Meal(context, element.html()));
@@ -111,4 +111,5 @@ public class MealManager {
             return null;
         }
     }
+
 }

@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,9 @@ import android.widget.BaseAdapter;
 
 import java.util.Arrays;
 
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public final class SettingsFragment extends PreferenceFragment
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,4 +75,5 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         findPreference(getString(R.string.pref_reminder_lunch_screen_key)).setSummary(sharedPreferences.getBoolean(getString(R.string.pref_reminder_lunch_switch_key), false) ? "Enabled" : "Disabled");
         findPreference(getString(R.string.pref_reminder_dinner_screen_key)).setSummary(sharedPreferences.getBoolean(getString(R.string.pref_reminder_dinner_switch_key), false) ? "Enabled" : "Disabled");
     }
+
 }

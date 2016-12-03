@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,22 +31,16 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Map;
 
-public class MainIntentService extends IntentService {
+public final class MainIntentService extends IntentService {
 
     public static final int NOTIFICATION_ID = 402410663;
     public static final int UPDATE_ID = 402410664;
@@ -145,7 +139,7 @@ public class MainIntentService extends IntentService {
         }
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
+        stackBuilder.addNextIntent(new Intent(this, MealActivity.class));
 
         builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
         notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -187,7 +181,7 @@ public class MainIntentService extends IntentService {
         }
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
+        stackBuilder.addNextIntent(new Intent(this, MealActivity.class));
 
         builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
         notificationManager.notify(NOTIFICATION_ID, builder.build());

@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Meal implements Serializable {
+final class Meal implements Serializable {
 
     private String text, title, summary;
     private Calendar date = new GregorianCalendar();
@@ -74,19 +74,19 @@ public class Meal implements Serializable {
         for (String line : lines) text = text.concat(line.trim() + "<br />");
     }
 
-    public Calendar getDate() {
+    Calendar getDate() {
         return this.date;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return this.title;
     }
 
-    public String getText() {
+    String getText() {
         return this.text;
     }
 
-    public String getSummary() {
+    String getSummary() {
         return this.summary;
     }
 

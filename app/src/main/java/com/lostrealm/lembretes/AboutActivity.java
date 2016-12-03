@@ -1,6 +1,6 @@
 /*
  * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
- * Copyright (C) 2013-2015  Edson Duarte (edsonduarte1990@gmail.com)
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-public class AboutActivity extends Activity {
+public final class AboutActivity extends Activity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,4 +43,5 @@ public class AboutActivity extends Activity {
     public void openProjectPage(View view) {
         this.startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.project_url))), getString(R.string.about_activity_button_action)));
     }
+
 }
