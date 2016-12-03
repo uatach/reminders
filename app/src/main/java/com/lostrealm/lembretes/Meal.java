@@ -33,7 +33,7 @@ public class Meal implements Serializable {
     private Calendar date = new GregorianCalendar();
 
     Meal(Context context, String content) {
-        String[] lines = content.split("<[b,B][r,R] />");
+        String[] lines = content.split("</[t,T][r,R]>");
 
         if (lines.length <= 1)
             throw new RuntimeException("Could not create meal.");
@@ -44,10 +44,11 @@ public class Meal implements Serializable {
         if (preference.equals(preferenceArray[0])) {
             title = removeHtml(lines[0]);
             summary = removeHtml(lines[3]).replace("PRATO PRINCIPAL: ", "");
-        } else if (preference.equals(preferenceArray[1])) {
-            title = removeHtml(lines[1]);
-            summary = removeHtml(lines[10]); // TODO not sure about this
         }
+//        else if (preference.equals(preferenceArray[1])) {
+//            title = removeHtml(lines[1]);
+//            summary = removeHtml(lines[10]); // TODO not sure about this
+//        }
 //        else {
 //            title = lines[1] + lines[3];
 //            summary = lines[5];

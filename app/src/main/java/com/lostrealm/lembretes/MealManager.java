@@ -22,6 +22,9 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -48,10 +51,18 @@ public class MealManager {
 
     private MealManager() {}
 
-    public void setMeals(ArrayList<String> values) {
+//    public void setMeals(ArrayList<String> values) {
+//        meals = new ArrayList<>();
+//        for (String value : values)
+//            meals.add(new Meal(context, value));
+//        saveObjectToDisk(meals);
+//        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
+//    }
+
+    public void setMeals(Elements elements) {
         meals = new ArrayList<>();
-        for (String value : values)
-            meals.add(new Meal(context, value));
+        for (Element element : elements)
+            meals.add(new Meal(context, element.html()));
         saveObjectToDisk(meals);
         PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
     }

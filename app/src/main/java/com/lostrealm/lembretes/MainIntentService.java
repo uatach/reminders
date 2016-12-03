@@ -37,6 +37,11 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
@@ -96,8 +101,10 @@ public class MainIntentService extends IntentService {
             OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
             String body = response.body().string();
-            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, new TypeReference<Map<String, ArrayList<String>>>() {});
-            MealManager.getINSTANCE(this).setMeals(content.get("cardapio"));
+            Document document = Jsoup.parse(body);
+            MealManager.getINSTANCE(this).setMeals(document.select("table.fundo_cardapio"));
+//            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, new TypeReference<Map<String, ArrayList<String>>>() {});
+//            MealManager.getINSTANCE(this).setMeals(content.get("cardapio"));
         } catch (Exception e) {
             e.printStackTrace();
         }

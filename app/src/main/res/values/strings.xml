@@ -35,7 +35,7 @@
 
     <string name="pref_restaurant_key">pref_restaurant</string>
     <string name="pref_restaurant_title">Restaurant</string>
-    <string name="pref_restaurant_default">https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</string>
+    <string name="pref_restaurant_default">http://catedral.prefeitura.unicamp.br/cardapio.php</string>
 
     <string-array name="pref_restaurant_entries">
         <item>Campinas (COTUCA, RU, RA, RS)</item>
@@ -43,7 +43,7 @@
         <!--<item>PFL</item>-->
     </string-array>
     <string-array name="pref_restaurant_values">
-        <item>https://www1.sistemas.unicamp.br/Mobile/CardapioPrefeituraCampinas</item>
+        <item>http://catedral.prefeitura.unicamp.br/cardapio.php</item>
         <!--<item>https://www1.sistemas.unicamp.br/Mobile/CardapioFCA</item>-->
         <!--<item>https://www1.sistemas.unicamp.br/Mobile/CardapioPFL</item>-->
     </string-array>

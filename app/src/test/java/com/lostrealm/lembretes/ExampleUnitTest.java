@@ -1,5 +1,5 @@
 package com.lostrealm.lembretes;
 
-public class MainActivityTest {
+public class ExampleUnitTest {
 
 }

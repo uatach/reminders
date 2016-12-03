@@ -1,16 +1,14 @@
-import java.util.regex.Pattern
-
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "com.lostrealm.lembretes"
         minSdkVersion 16
-        targetSdkVersion 23
-        versionCode 94
+        targetSdkVersion 25
+        versionCode 96
         versionName "v1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -36,72 +34,23 @@ android {
 }
 
 dependencies {
+    // local libs
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:23.1.1'
+
+    // support libs
+    compile 'com.android.support:support-v4:25.0.1'
+
+
     compile 'com.squareup.okhttp:okhttp:2.6.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+    compile 'org.jsoup:jsoup:1.9.1'
 
-    androidTestCompile 'com.android.support:support-annotations:23.1.1'
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
-//    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
-//    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    // unit tests
+    testCompile 'junit:junit:4.12'
+
+    // instrumentation tests
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 }
 
-
-// added tasks to auto generate versionCode and versionName
-// https://gist.github.com/zsiegel/7813239
-
-task genVersionCode {
-    doLast {
-        def git = 'git rev-list --first-parent --count HEAD'
-
-        def process = git.execute()
-        process.waitFor()
-        def version = "${process.in.text}".trim()
-
-        if (version.isEmpty()) {
-            println "ERROR generating versionCode"
-            return
-        }
-
-        def gradleFile = file("build.gradle")
-        def pattern = Pattern.compile("versionCode (.*)")
-        def gradleText = gradleFile.getText()
-        def matcher = pattern.matcher(gradleText)
-        matcher.find()
-
-        println "versionCode is ${version}"
-
-        def manifestContent = matcher.replaceFirst("versionCode " + version)
-        gradleFile.write(manifestContent)
-    }
-}
-
-task genVersionName {
-    doLast {
-        def git = 'git describe --tags'
-
-        def process = git.execute()
-        process.waitFor()
-        def version = "${process.in.text}".trim()
-
-        if (version.isEmpty()) {
-            println "ERROR generating versionName"
-            return
-        }
-
-        def gradleFile = file("build.gradle")
-        def pattern = Pattern.compile("versionName (.*)")
-        def gradleText = gradleFile.getText()
-        def matcher = pattern.matcher(gradleText)
-        matcher.find()
-
-        println "versionName is ${version}"
-
-        def manifestContent = matcher.replaceFirst("versionName \"" + version + "\"")
-        gradleFile.write(manifestContent)
-    }
-}
