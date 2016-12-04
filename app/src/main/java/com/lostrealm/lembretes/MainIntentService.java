@@ -96,7 +96,7 @@ public final class MainIntentService extends IntentService {
             Response response = client.newCall(request).execute();
             String body = response.body().string();
             Document document = Jsoup.parse(body);
-            MealManager.getINSTANCE(this).setMeals(document.select("table.fundo_cardapio"));
+            MealManager.getINSTANCE().setMeals(this, document.select("table.fundo_cardapio"));
 //            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, new TypeReference<Map<String, ArrayList<String>>>() {});
 //            MealManager.getINSTANCE(this).setMeals(content.get("cardapio"));
         } catch (Exception e) {
@@ -119,7 +119,7 @@ public final class MainIntentService extends IntentService {
             return;
         }
 
-        Meal meal = MealManager.getINSTANCE(this).getMeal();
+        Meal meal = MealManager.getINSTANCE().getMeal(this);
 
         Notification.Builder builder = new Notification.Builder(this)
                 .setAutoCancel(false)
@@ -149,7 +149,7 @@ public final class MainIntentService extends IntentService {
 
     private void handleActionNotify() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Meal meal = MealManager.getINSTANCE(this).getMeal();
+        Meal meal = MealManager.getINSTANCE().getMeal(this);
         Calendar now = Calendar.getInstance();
 
         if (meal.getDate().get(Calendar.DATE) != now.get(Calendar.DATE)

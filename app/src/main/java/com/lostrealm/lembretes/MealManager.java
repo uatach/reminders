@@ -37,16 +37,10 @@ final class MealManager {
 
     private static MealManager INSTANCE = new MealManager();
 
-    @SuppressWarnings("unchecked")
-    static MealManager getINSTANCE(Context context) {
-        INSTANCE.context = context;
-        Object object = INSTANCE.loadObjectFromDisk();
-        if (INSTANCE.meals == null && object != null)
-            INSTANCE.meals = (List<Meal>) object;
+    static MealManager getINSTANCE() {
         return INSTANCE;
     }
 
-    private Context context;
     private List<Meal> meals;
 
     private MealManager() {}
@@ -59,15 +53,15 @@ final class MealManager {
 //        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
 //    }
 
-    void setMeals(Elements elements) {
+    void setMeals(Context context, Elements elements) {
         meals = new ArrayList<>();
         for (Element element : elements)
             meals.add(new Meal(context, element.html()));
-        saveObjectToDisk(meals);
+        saveObjectToDisk(context, meals);
         PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
     }
 
-    public Meal getMeal() {
+    Meal getMeal(Context context) {
         if (meals == null)
             return null;
 
@@ -86,7 +80,7 @@ final class MealManager {
         return null;
     }
 
-    private void saveObjectToDisk(Object object) {
+    private void saveObjectToDisk(Context context, Object object) {
         try {
             FileOutputStream fileOutputStream = context.openFileOutput(context.getString(R.string.app_name), Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -99,7 +93,7 @@ final class MealManager {
     }
 
     @Nullable
-    private Object loadObjectFromDisk() {
+    private Object loadObjectFromDisk(Context context) {
         try {
             FileInputStream fileInputStream = context.openFileInput(context.getString(R.string.app_name));
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

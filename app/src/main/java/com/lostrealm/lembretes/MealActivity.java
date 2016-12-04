@@ -34,14 +34,29 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public final class MealActivity extends Activity {
 
+    @BindView(R.id.mealView) TextView mealTV;
+    @BindView(R.id.updateView) TextView updateTV;
+
     private Meal meal;
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            meal = MealManager.getINSTANCE().getMeal(context);
+            updateViews();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal);
+        ButterKnife.bind(this);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
@@ -49,11 +64,18 @@ public final class MealActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        meal = MealManager.getINSTANCE(this).getMeal();
-//        if (meal == null) refresh();
-//        else updateViews();
-//
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
+
+        DownloadJob.scheduleExactJob("2016-12-06");
+//        refresh();
+
 //        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
@@ -79,26 +101,13 @@ public final class MealActivity extends Activity {
     }
 
     private void refresh() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
         startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
         startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
     }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
-            meal = MealManager.getINSTANCE(context).getMeal();
-            updateViews();
-        }
-    };
-
     private void updateViews() {
-        TextView mealView = (TextView) findViewById(R.id.mealView);
-        mealView.setText(Html.fromHtml(meal.getText()));
-
-        TextView updateView = (TextView) findViewById(R.id.updateView);
-        updateView.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(PreferenceManager.getDefaultSharedPreferences(this).getLong(getString(R.string.pref_last_update_key), 0))));
+        mealTV.setText(Html.fromHtml(meal.getText()));
+        updateTV.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(PreferenceManager.getDefaultSharedPreferences(this).getLong(getString(R.string.pref_last_update_key), 0))));
     }
 
 }
