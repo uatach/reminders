@@ -19,6 +19,7 @@
 package com.lostrealm.lembretes;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import org.jsoup.nodes.Document;
@@ -30,19 +31,19 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 final class MealManager {
 
     private static MealManager INSTANCE = new MealManager();
 
+    private List<Meal> meals;
+
+
     static MealManager instance() {
         return INSTANCE;
     }
-
-    private List<Meal> meals;
-
-    private MealManager() {}
 
     void setMeals(Document document) {
         Element title = document.getElementsByClass("titulo").first();
@@ -54,27 +55,23 @@ final class MealManager {
             meals.add(new Meal(title, titles.get(i), bodies.get(i)));
         }
 //        saveObjectToDisk(context, meals);
-//        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).apply();
     }
 
     Meal getMeal(Context context) {
-//        if (meals == null)
-//            return null;
-//
-//        boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_menu_key), false);
-//        Calendar calendar = Calendar.getInstance();
-//
-//        for (int i = 0; i < meals.size(); i++) {
-//            if (meals.get(i).getDate().after(calendar)) {
-//                if (meals.get(i).getDate().get(Calendar.HOUR_OF_DAY) < 16)
-//                    return !vegetarian ? meals.get(i) : meals.get(i+1); // TODO: improve this, some restaurants don't have vegetarian option.
-//                else
-//                    return meals.get(i);
-//            }
-//        }
+        Calendar calendar = Calendar.getInstance();
+        boolean vegetarian = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getBoolean(context.getString(R.string.pref_menu_key), false);
 
-        return meals.get(0);
+        // TODO: account for holidays
+        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+                || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+                || calendar.get(Calendar.HOUR_OF_DAY) < 16)
+            return meals.get(!vegetarian ? 0 : 1);
+        return meals.get(!vegetarian ? 2 : 3);
     }
+
+    private MealManager() {}
 
     private void saveObjectToDisk(Context context, Object object) {
         try {

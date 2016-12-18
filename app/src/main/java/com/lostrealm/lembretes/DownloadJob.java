@@ -62,12 +62,24 @@ final class DownloadJob extends Job {
             return Result.FAILURE;
         }
 
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(
+                context.getString(R.string.pref_last_update_key),
+                System.currentTimeMillis()).apply();
+        LocalBroadcastManager.getInstance(context)
+                .sendBroadcast(new Intent(MainIntentService.ACTION_REFRESH));
+
         schedulePeriodic();
-        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MainIntentService.ACTION_REFRESH));
         return Result.SUCCESS;
     }
 
-    static void scheduleExact(String date) {
+    static void scheduleExact() {
+        new JobRequest.Builder(EXACT)
+            .setExact(1)
+            .build()
+            .schedule();
+    }
+
+    static void scheduleExact(@NonNull String date) {
         PersistableBundleCompat extras = new PersistableBundleCompat();
         extras.putString("date", date);
 

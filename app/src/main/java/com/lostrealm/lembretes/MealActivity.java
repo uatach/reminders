@@ -47,7 +47,7 @@ public final class MealActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             meal = MealManager.instance().getMeal(context);
-            mealTV.setText(meal.getText());
+            mealTV.setText(meal.getDescriptionFull());
             updateTV.setText(SimpleDateFormat.getDateTimeInstance().format(
                     new Date(PreferenceManager.getDefaultSharedPreferences(context)
                             .getLong(getString(R.string.pref_last_update_key), 0))));
@@ -68,7 +68,7 @@ public final class MealActivity extends Activity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
 
-        DownloadJob.scheduleExact("2016-12-16");
+        DownloadJob.scheduleExact();
 //        refresh();
 
 //        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));

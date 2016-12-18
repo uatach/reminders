@@ -22,26 +22,38 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import hugo.weaving.DebugLog;
 
 final class Meal implements Serializable {
 
-    private String text = "";
-    private Calendar date = new GregorianCalendar();
+    private String title;
+    private String type;
+    private String descriptionShort;
+    private String descriptionFull;
 
     @DebugLog
     Meal(Element title, Element meal, Element body) {
+        this.title = title.text()
+                .replaceAll(" - ", "\n")
+                .concat("\n" + meal.text())
+                .toUpperCase();
+
+        this.type = meal.text();
+
         Elements lines = body.getElementsByTag("td");
+
+        this.descriptionShort = this.title.replaceFirst(".*\\n", "").replaceAll("\\n", " - ");
+        this.descriptionShort += " - " + lines.get(1).text().toUpperCase();
+
+        this.descriptionFull = this.title;
         for (Element e : lines) {
-            text += e.text().toUpperCase() + "\n";
+            this.descriptionFull += "\n" + e.text().toUpperCase();
         }
     }
 
-    public String getText() {
-        return text;
+    public String getDescriptionFull() {
+        return descriptionFull;
     }
 
 }
