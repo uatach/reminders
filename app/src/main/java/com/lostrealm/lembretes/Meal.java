@@ -52,6 +52,14 @@ final class Meal implements Serializable {
         }
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescriptionShort() {
+        return descriptionShort;
+    }
+
     public String getDescriptionFull() {
         return descriptionFull;
     }

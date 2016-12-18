@@ -61,17 +61,15 @@ public final class MealActivity extends Activity {
         ButterKnife.bind(this);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        DownloadJob.scheduleExact();
+        NotificationJob.scheduleExact();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
-
-        DownloadJob.scheduleExact();
-//        refresh();
-
-//        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
     }
 
     @Override
@@ -90,7 +88,7 @@ public final class MealActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                refresh();
+                DownloadJob.scheduleExact();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -100,11 +98,6 @@ public final class MealActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void refresh() {
-        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
-        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
     }
 
 }

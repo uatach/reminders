@@ -29,6 +29,9 @@ final class Creator implements JobCreator {
             case DownloadJob.EXACT:
             case DownloadJob.PERIODIC:
                 return new DownloadJob();
+            case NotificationJob.EXACT:
+            case NotificationJob.PERIODIC:
+                return new NotificationJob();
             default:
                 return null;
         }

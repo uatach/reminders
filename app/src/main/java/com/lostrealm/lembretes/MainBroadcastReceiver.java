@@ -32,15 +32,9 @@ public final class MainBroadcastReceiver extends BroadcastReceiver {
 
         switch (action) {
             case "android.intent.action.BOOT_COMPLETED":
-                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
+                DownloadJob.scheduleExact();
+                NotificationJob.scheduleExact();
                 context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
-                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
-                break;
-            case MainIntentService.ACTION_DOWNLOAD:
-                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_DOWNLOAD));
-                break;
-            case MainIntentService.ACTION_NOTIFICATION:
-                context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
                 break;
             case MainIntentService.ACTION_NOTIFY:
                 context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFY));

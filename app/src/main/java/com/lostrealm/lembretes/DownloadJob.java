@@ -38,8 +38,8 @@ final class DownloadJob extends Job {
     static final String EXACT = "job_exact_download";
     static final String PERIODIC = "job_periodic_download";
 
-    @Override
     @NonNull
+    @Override
     protected Result onRunJob(Params params) {
         Context context = getContext();
 

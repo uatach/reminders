@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 import android.widget.BaseAdapter;
 
 import java.util.Arrays;
@@ -54,9 +53,9 @@ public final class SettingsFragment extends PreferenceFragment
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Context context = getPreferenceScreen().getContext();
         if (key.equals(getString(R.string.pref_restaurant_key))) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_UPDATE));
+            DownloadJob.scheduleExact();
         } else if (key.equals(getString(R.string.pref_always_on_key))) {
-            context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
+            NotificationJob.scheduleExact();
         } else if (key.equals(getString(R.string.pref_reminder_lunch_switch_key))
                 || key.equals(getString(R.string.pref_reminder_lunch_timepicker_key))) {
             context.startService(new Intent(context, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
