@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -65,16 +66,16 @@ public final class MainIntentService extends IntentService {
                 handleActionDownload();
                 break;
             case ACTION_NOTIFICATION:
-                manageAlwaysOnNotification();
+//                manageAlwaysOnNotification();
                 break;
             case ACTION_NOTIFY:
-                handleActionNotify();
+//                handleActionNotify();
                 handleActionReminder();
                 break;
             case ACTION_REFRESH:
                 handleActionDownload();
                 LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(ACTION_REFRESH));
-                manageAlwaysOnNotification();
+//                manageAlwaysOnNotification();
                 handleActionUpdate();
                 break;
             case ACTION_REMINDER:
@@ -96,96 +97,97 @@ public final class MainIntentService extends IntentService {
             Response response = client.newCall(request).execute();
             String body = response.body().string();
             Document document = Jsoup.parse(body);
-            MealManager.getINSTANCE().setMeals(this, document.select("table.fundo_cardapio"));
+            Log.d("", document.toString());
+//            MealManager.instance().setMeals(this, document.select("table.fundo_cardapio"));
 //            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, new TypeReference<Map<String, ArrayList<String>>>() {});
-//            MealManager.getINSTANCE(this).setMeals(content.get("cardapio"));
+//            MealManager.instance(this).setMeals(content.get("cardapio"));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void manageAlwaysOnNotification() {
-        boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_always_on_key), false);
+//    private void manageAlwaysOnNotification() {
+//        boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_always_on_key), false);
+//
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//
+//        Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFICATION);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        if (!enabled) {
+//            notificationManager.cancel(MainIntentService.NOTIFICATION_ID);
+//            alarmManager.cancel(pendingIntent);
+//            return;
+//        }
+//
+//        Meal meal = MealManager.instance().getMeal(this);
+//
+//        Notification.Builder builder = new Notification.Builder(this)
+//                .setAutoCancel(false)
+//                .setContentText(meal.getSummary())
+//                .setContentTitle(meal.getTitle())
+//                .setOngoing(true)
+//                .setPriority(Notification.PRIORITY_LOW)
+//                .setSmallIcon(R.drawable.ic_autorenew_white_24dp)
+//                .setSound(null)
+//                .setVibrate(null);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            builder.setCategory(Notification.CATEGORY_STATUS)
+//                    .setVisibility(Notification.VISIBILITY_PUBLIC)
+//                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()))
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.about_image));
+//        }
+//
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+//        stackBuilder.addNextIntent(new Intent(this, MealActivity.class));
+//
+//        builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
+//        notificationManager.notify(NOTIFICATION_ID, builder.build());
+//
+//        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR, pendingIntent);
+//    }
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        Intent intent = new Intent(this, MainBroadcastReceiver.class).setAction(ACTION_NOTIFICATION);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        if (!enabled) {
-            notificationManager.cancel(MainIntentService.NOTIFICATION_ID);
-            alarmManager.cancel(pendingIntent);
-            return;
-        }
-
-        Meal meal = MealManager.getINSTANCE().getMeal(this);
-
-        Notification.Builder builder = new Notification.Builder(this)
-                .setAutoCancel(false)
-                .setContentText(meal.getSummary())
-                .setContentTitle(meal.getTitle())
-                .setOngoing(true)
-                .setPriority(Notification.PRIORITY_LOW)
-                .setSmallIcon(R.drawable.ic_autorenew_white_24dp)
-                .setSound(null)
-                .setVibrate(null);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_STATUS)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC)
-                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()))
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.about_image));
-        }
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntent(new Intent(this, MealActivity.class));
-
-        builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR, pendingIntent);
-    }
-
-    private void handleActionNotify() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Meal meal = MealManager.getINSTANCE().getMeal(this);
-        Calendar now = Calendar.getInstance();
-
-        if (meal.getDate().get(Calendar.DATE) != now.get(Calendar.DATE)
-                || meal.getDate().get(Calendar.MONTH) != now.get(Calendar.MONTH))
-            return;
-
-        Notification.Builder builder = new Notification.Builder(this)
-                .setAutoCancel(true)
-                .setContentText(meal.getSummary())
-                .setContentTitle(meal.getTitle())
-                .setOngoing(false)
-                .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(R.drawable.ic_alarm_white_24dp);
-
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_reminder_lunch_vibrate_key), true)) {
-            final long[] pattern = {0,2000};
-            builder.setVibrate(pattern);
-        }
-
-        String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_reminder_lunch_ringtone_key), null);
-        if (ringtone != null)
-            builder.setSound(Uri.parse(ringtone));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_STATUS)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC)
-                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()))
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.about_image));
-        }
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntent(new Intent(this, MealActivity.class));
-
-        builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
+//    private void handleActionNotify() {
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        Meal meal = MealManager.instance().getMeal(this);
+//        Calendar now = Calendar.getInstance();
+//
+//        if (meal.getDate().get(Calendar.DATE) != now.get(Calendar.DATE)
+//                || meal.getDate().get(Calendar.MONTH) != now.get(Calendar.MONTH))
+//            return;
+//
+//        Notification.Builder builder = new Notification.Builder(this)
+//                .setAutoCancel(true)
+//                .setContentText(meal.getSummary())
+//                .setContentTitle(meal.getTitle())
+//                .setOngoing(false)
+//                .setPriority(Notification.PRIORITY_MAX)
+//                .setSmallIcon(R.drawable.ic_alarm_white_24dp);
+//
+//        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_reminder_lunch_vibrate_key), true)) {
+//            final long[] pattern = {0,2000};
+//            builder.setVibrate(pattern);
+//        }
+//
+//        String ringtone = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_reminder_lunch_ringtone_key), null);
+//        if (ringtone != null)
+//            builder.setSound(Uri.parse(ringtone));
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            builder.setCategory(Notification.CATEGORY_STATUS)
+//                    .setVisibility(Notification.VISIBILITY_PUBLIC)
+//                    .setStyle(new Notification.BigTextStyle().bigText(meal.getSummary()))
+//                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.about_image));
+//        }
+//
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+//        stackBuilder.addNextIntent(new Intent(this, MealActivity.class));
+//
+//        builder.setContentIntent(stackBuilder.getPendingIntent(NOTIFICATION_ID, PendingIntent.FLAG_ONE_SHOT));
+//        notificationManager.notify(NOTIFICATION_ID, builder.build());
+//    }
 
     private void handleActionReminder() {
         boolean enabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_reminder_lunch_switch_key), false);

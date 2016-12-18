@@ -26,7 +26,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -47,8 +46,11 @@ public final class MealActivity extends Activity {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            meal = MealManager.getINSTANCE().getMeal(context);
-            updateViews();
+            meal = MealManager.instance().getMeal(context);
+            mealTV.setText(meal.getText());
+            updateTV.setText(SimpleDateFormat.getDateTimeInstance().format(
+                    new Date(PreferenceManager.getDefaultSharedPreferences(context)
+                            .getLong(getString(R.string.pref_last_update_key), 0))));
         }
     };
 
@@ -66,7 +68,7 @@ public final class MealActivity extends Activity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainIntentService.ACTION_REFRESH));
 
-        DownloadJob.scheduleExactJob("2016-12-06");
+        DownloadJob.scheduleExact("2016-12-16");
 //        refresh();
 
 //        startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_NOTIFICATION));
@@ -103,11 +105,6 @@ public final class MealActivity extends Activity {
     private void refresh() {
         startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REFRESH));
         startService(new Intent(this, MainIntentService.class).setAction(MainIntentService.ACTION_REMINDER));
-    }
-
-    private void updateViews() {
-        mealTV.setText(Html.fromHtml(meal.getText()));
-        updateTV.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(PreferenceManager.getDefaultSharedPreferences(this).getLong(getString(R.string.pref_last_update_key), 0))));
     }
 
 }

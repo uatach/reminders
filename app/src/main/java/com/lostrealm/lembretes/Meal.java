@@ -18,88 +18,30 @@
 
 package com.lostrealm.lembretes;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.text.Html;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import hugo.weaving.DebugLog;
+
 final class Meal implements Serializable {
 
-    private String text, title, summary;
+    private String text = "";
     private Calendar date = new GregorianCalendar();
 
-    Meal(Context context, String content) {
-        String[] lines = content.split("</[t,T][r,R]>");
-
-        if (lines.length <= 1)
-            throw new RuntimeException("Could not create meal.");
-
-        final String preference = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_restaurant_key), context.getString(R.string.pref_restaurant_default));
-        final String preferenceArray[] = context.getResources().getStringArray(R.array.pref_restaurant_values);
-
-        if (preference.equals(preferenceArray[0])) {
-            title = removeHtml(lines[0]);
-            summary = removeHtml(lines[3]).replace("PRATO PRINCIPAL: ", "");
+    @DebugLog
+    Meal(Element title, Element meal, Element body) {
+        Elements lines = body.getElementsByTag("td");
+        for (Element e : lines) {
+            text += e.text().toUpperCase() + "\n";
         }
-//        else if (preference.equals(preferenceArray[1])) {
-//            title = removeHtml(lines[1]);
-//            summary = removeHtml(lines[10]); // TODO not sure about this
-//        }
-//        else {
-//            title = lines[1] + lines[3];
-//            summary = lines[5];
-//            String[] tmp = Html.fromHtml(title).toString() // TODO this looks awful, should be improved.
-//                    .replaceAll(" DE ", "/")
-//                    .replace("JANEIRO", "01")
-//                    .replace("FEVEREIRO", "02")
-//                    .replace("MARÇO", "03")
-//                    .replace("JULHO", "07")
-//                    .replace("AGOSTO", "08")
-//                    .replaceAll("[^0-9/]", "")
-//                    .split("/");
-//            date.set(Integer.parseInt(tmp[2]), Integer.parseInt(tmp[1]) - 1, Integer.parseInt(tmp[0]));
-//        }
-
-        int[] tmp = parseDate(title);
-        if (title.contains("JANTAR"))
-            date.set(tmp[2], tmp[1] - 1, tmp[0], 22, 0);
-        else
-            date.set(tmp[2], tmp[1] - 1, tmp[0], 15, 0);
-
-        text = "";
-        for (String line : lines) text = text.concat(line.trim() + "<br />");
     }
 
-    Calendar getDate() {
-        return this.date;
+    public String getText() {
+        return text;
     }
 
-    String getTitle() {
-        return this.title;
-    }
-
-    String getText() {
-        return this.text;
-    }
-
-    String getSummary() {
-        return this.summary;
-    }
-
-    @NonNull private String removeHtml(String withHtml) {
-        return Html.fromHtml(withHtml).toString();
-    }
-
-    private int[] parseDate(String s) {
-        String[] tmp = s.replaceAll("[^0-9]", " ").trim().split(" ");
-        int[] aux = new int[tmp.length];
-        for (int i = 0; i < tmp.length; i++) {
-            aux[i] = Integer.parseInt(tmp[i]);
-        }
-        return aux;
-    }
 }

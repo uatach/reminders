@@ -1,18 +1,35 @@
+/*
+ * Lembretes. This software is intended for students from UNICAMP as a simple reminder of the daily meal.
+ * Copyright (C) 2013-2017  Edson Duarte (edsonduarte1990@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.lostrealm.lembretes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,44 +42,43 @@ final class DownloadJob extends Job {
     @NonNull
     protected Result onRunJob(Params params) {
         Context context = getContext();
+
         String url = PreferenceManager.getDefaultSharedPreferences(context).getString(
                 context.getString(R.string.pref_restaurant_key),
                 context.getString(R.string.pref_restaurant_default));
 
-        String day = params.getExtras().getString("day", "");
-        url += day.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}") ? "?d="+day : "";
+        String date = params.getExtras().getString("date", "");
+
+        Connection connection = Jsoup.connect(url);
+
+        if (date.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+            connection.data("d", date);
+        }
 
         try {
-            Request request = new Request.Builder().url(url).build();
-            OkHttpClient client = new OkHttpClient();
-            Response response = client.newCall(request).execute();
-            String body = response.body().string();
-            Document document = Jsoup.parse(body);
-            System.out.println(document.select("table.fundo_cardapio"));
-//            MealManager.getINSTANCE().setMeals(context, document.select("table.fundo_cardapio"));
-//            Map<String, ArrayList<String>> content = new ObjectMapper().readValue(body, new TypeReference<Map<String, ArrayList<String>>>() {});
-//            MealManager.getINSTANCE(this).setMeals(content.get("cardapio"));
+            MealManager.instance().setMeals(connection.get());
         } catch (Exception e) {
             e.printStackTrace();
             return Result.FAILURE;
         }
 
-        schedulePeriodicJob();
+        schedulePeriodic();
+        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(MainIntentService.ACTION_REFRESH));
         return Result.SUCCESS;
     }
 
-    static void scheduleExactJob(String day) {
+    static void scheduleExact(String date) {
         PersistableBundleCompat extras = new PersistableBundleCompat();
-        extras.putString("day", day);
+        extras.putString("date", date);
 
         new JobRequest.Builder(EXACT)
-                .setExact(TimeUnit.SECONDS.toMillis(10))
+                .setExact(1)
                 .setExtras(extras)
                 .build()
                 .schedule();
     }
 
-    static void schedulePeriodicJob() {
+    static void schedulePeriodic() {
         new JobRequest.Builder(PERIODIC)
                 .setPeriodic(TimeUnit.HOURS.toMillis(7), TimeUnit.MINUTES.toMillis(15))
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)

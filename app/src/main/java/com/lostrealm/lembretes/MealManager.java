@@ -19,9 +19,9 @@
 package com.lostrealm.lembretes;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -30,14 +30,13 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 final class MealManager {
 
     private static MealManager INSTANCE = new MealManager();
 
-    static MealManager getINSTANCE() {
+    static MealManager instance() {
         return INSTANCE;
     }
 
@@ -45,39 +44,36 @@ final class MealManager {
 
     private MealManager() {}
 
-//    public void setMeals(ArrayList<String> values) {
-//        meals = new ArrayList<>();
-//        for (String value : values)
-//            meals.add(new Meal(context, value));
-//        saveObjectToDisk(meals);
-//        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
-//    }
+    void setMeals(Document document) {
+        Element title = document.getElementsByClass("titulo").first();
+        Elements titles = document.getElementsByClass("titulo_cardapio");
+        Elements bodies = document.getElementsByClass("fundo_cardapio");
 
-    void setMeals(Context context, Elements elements) {
         meals = new ArrayList<>();
-        for (Element element : elements)
-            meals.add(new Meal(context, element.html()));
-        saveObjectToDisk(context, meals);
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).commit();
+        for (int i = 1; i < titles.size(); i++) {
+            meals.add(new Meal(title, titles.get(i), bodies.get(i)));
+        }
+//        saveObjectToDisk(context, meals);
+//        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(context.getString(R.string.pref_last_update_key), System.currentTimeMillis()).apply();
     }
 
     Meal getMeal(Context context) {
-        if (meals == null)
-            return null;
+//        if (meals == null)
+//            return null;
+//
+//        boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_menu_key), false);
+//        Calendar calendar = Calendar.getInstance();
+//
+//        for (int i = 0; i < meals.size(); i++) {
+//            if (meals.get(i).getDate().after(calendar)) {
+//                if (meals.get(i).getDate().get(Calendar.HOUR_OF_DAY) < 16)
+//                    return !vegetarian ? meals.get(i) : meals.get(i+1); // TODO: improve this, some restaurants don't have vegetarian option.
+//                else
+//                    return meals.get(i);
+//            }
+//        }
 
-        boolean vegetarian = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_menu_key), false);
-        Calendar calendar = Calendar.getInstance();
-
-        for (int i = 0; i < meals.size(); i++) {
-            if (meals.get(i).getDate().after(calendar)) {
-                if (meals.get(i).getDate().get(Calendar.HOUR_OF_DAY) < 16)
-                    return !vegetarian ? meals.get(i) : meals.get(i+1); // TODO improve this, some restaurants don't have vegetarian option.
-                else
-                    return meals.get(i);
-            }
-        }
-
-        return null;
+        return meals.get(0);
     }
 
     private void saveObjectToDisk(Context context, Object object) {
