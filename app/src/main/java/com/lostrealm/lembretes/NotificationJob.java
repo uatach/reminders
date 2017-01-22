@@ -30,7 +30,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.evernote.android.job.Job;
-import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
 import java.util.concurrent.TimeUnit;
@@ -47,7 +46,8 @@ final class NotificationJob extends Job {
     protected Result onRunJob(Params params) {
         Context context = getContext();
 
-        boolean enabled = PreferenceManager.getDefaultSharedPreferences(context)
+        boolean enabled = PreferenceManager
+                .getDefaultSharedPreferences(context)
                 .getBoolean(context.getString(R.string.pref_always_on_key), false);
 
         NotificationManager manager = (NotificationManager) context
@@ -63,7 +63,7 @@ final class NotificationJob extends Job {
         Notification.Builder builder = new Notification.Builder(context)
                 .setAutoCancel(false)
                 .setContentText(meal.getDescriptionShort())
-                .setContentTitle(meal.getTitle())
+                .setContentTitle(meal.getTitleShort())
                 .setOngoing(true)
                 .setPriority(Notification.PRIORITY_LOW)
                 .setSmallIcon(R.drawable.ic_autorenew_white_24dp)

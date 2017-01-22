@@ -28,6 +28,8 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
@@ -73,13 +75,20 @@ final class DownloadJob extends Job {
     }
 
     static void scheduleExact() {
-        new JobRequest.Builder(EXACT)
-            .setExact(1)
-            .build()
-            .schedule();
+        DateTime time = DateTime.now();
+
+        if (time.getHourOfDay() > 20)
+            time.plusDays(1);
+
+        if (time.getDayOfWeek() == DateTimeConstants.SATURDAY)
+            time.plusDays(2);
+        else if (time.getDayOfWeek() == DateTimeConstants.SUNDAY)
+            time.plusDays(1);
+
+        scheduleExact(time.toString("yyyy-MM⁻dd"));
     }
 
-    static void scheduleExact(@NonNull String date) {
+    private static void scheduleExact(@NonNull String date) {
         PersistableBundleCompat extras = new PersistableBundleCompat();
         extras.putString("date", date);
 
@@ -90,7 +99,7 @@ final class DownloadJob extends Job {
                 .schedule();
     }
 
-    static void schedulePeriodic() {
+    private static void schedulePeriodic() {
         new JobRequest.Builder(PERIODIC)
                 .setPeriodic(TimeUnit.HOURS.toMillis(7), TimeUnit.MINUTES.toMillis(15))
                 .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)

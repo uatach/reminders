@@ -70,7 +70,7 @@ public final class MainIntentService extends IntentService {
 //        Notification.Builder builder = new Notification.Builder(this)
 //                .setAutoCancel(true)
 //                .setContentText(meal.getSummary())
-//                .setContentTitle(meal.getTitle())
+//                .setContentTitle(meal.getTitleFull())
 //                .setOngoing(false)
 //                .setPriority(Notification.PRIORITY_MAX)
 //                .setSmallIcon(R.drawable.ic_alarm_white_24dp);

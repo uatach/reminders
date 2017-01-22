@@ -41,7 +41,9 @@ public final class AboutActivity extends Activity {
     }
 
     public void openProjectPage(View view) {
-        this.startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(getString(R.string.project_url))), getString(R.string.about_activity_button_action)));
+        final String title = getString(R.string.about_activity_button_action);
+        final Uri uri = Uri.parse(getString(R.string.project_url));
+        startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW).setData(uri), title));
     }
 
 }

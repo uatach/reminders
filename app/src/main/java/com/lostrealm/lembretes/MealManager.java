@@ -22,6 +22,8 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -31,7 +33,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 final class MealManager {
@@ -58,15 +59,15 @@ final class MealManager {
     }
 
     Meal getMeal(Context context) {
-        Calendar calendar = Calendar.getInstance();
         boolean vegetarian = PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .getBoolean(context.getString(R.string.pref_menu_key), false);
 
         // TODO: account for holidays
-        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
-                || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
-                || calendar.get(Calendar.HOUR_OF_DAY) < 16)
+        DateTime time = DateTime.now();
+        if (time.getDayOfWeek() == DateTimeConstants.SATURDAY
+                || time.getDayOfWeek() == DateTimeConstants.SUNDAY
+                || time.getHourOfDay() < 16)
             return meals.get(!vegetarian ? 0 : 1);
         return meals.get(!vegetarian ? 2 : 3);
     }

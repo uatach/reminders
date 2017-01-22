@@ -27,14 +27,21 @@ import hugo.weaving.DebugLog;
 
 final class Meal implements Serializable {
 
-    private String title;
+    private String titleShort;
+    private String titleFull;
     private String type;
     private String descriptionShort;
     private String descriptionFull;
 
     @DebugLog
     Meal(Element title, Element meal, Element body) {
-        this.title = title.text()
+        this.titleShort = title.text()
+                .replaceFirst(".*\\(", "")
+                .replaceFirst("\\).*", "")
+                .concat(" - " + meal.text())
+                .toUpperCase();
+
+        this.titleFull = title.text()
                 .replaceAll(" - ", "\n")
                 .concat("\n" + meal.text())
                 .toUpperCase();
@@ -43,24 +50,29 @@ final class Meal implements Serializable {
 
         Elements lines = body.getElementsByTag("td");
 
-        this.descriptionShort = this.title.replaceFirst(".*\\n", "").replaceAll("\\n", " - ");
-        this.descriptionShort += " - " + lines.get(1).text().toUpperCase();
+        this.descriptionShort = lines.get(1).text()
+                .replaceFirst(".*: ", "")
+                .toUpperCase();
 
-        this.descriptionFull = this.title;
+        this.descriptionFull = this.titleFull;
         for (Element e : lines) {
             this.descriptionFull += "\n" + e.text().toUpperCase();
         }
     }
 
-    public String getTitle() {
-        return title;
+    String getTitleShort() {
+        return titleShort;
     }
 
-    public String getDescriptionShort() {
+    String getTitleFull() {
+        return titleFull;
+    }
+
+    String getDescriptionShort() {
         return descriptionShort;
     }
 
-    public String getDescriptionFull() {
+    String getDescriptionFull() {
         return descriptionFull;
     }
 
